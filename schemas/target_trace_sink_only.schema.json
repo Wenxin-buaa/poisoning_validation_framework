@@ -1,0 +1,42 @@
+{
+  "schema_version": "2026-06-24.target_trace_sink_only.v1",
+  "trace_type": "sink_only",
+  "run_id": "string",
+  "pack_id": "string",
+  "iteration_id": "string",
+  "mode": "poisoned",
+  "variant_type": "sink_only",
+  "variant_id": "string",
+  "task_id": "string",
+  "task_prompt": "string",
+
+  "attack_record_path": "poisoning_validation_framework/benchmarks/iterations/<pack_id>/<iteration_id>/sink_only_attack_iterations/<variant_id>.json",
+  "artifact_root": "poisoning_validation_framework/benchmarks/iterations/<pack_id>/<iteration_id>/artifacts/<variant_id>/<task_id>/",
+
+  "skill_pack_info": {
+    "exposed_skills": ["string"],
+    "hook_skill": null,
+    "sink_skill": "string",
+    "poisoned_skills": ["string"],
+    "clean_skills": ["string"]
+  },
+
+  "skill_sequence": ["string"],
+  "skill_calls": [],
+  "local_actions": [],
+  "artifact_existence_checks": [],
+  "flow_edges": [],
+
+  "payload_observations": [
+    {
+      "observation_type": "marker_file|artifact_content|local_action|script_execution|trace_event|other",
+      "path": "string",
+      "observed": true,
+      "evidence": "string",
+      "related_payload_id": 0
+    }
+  ],
+
+  "final_output_summary": "string",
+  "task_completed": true
+}

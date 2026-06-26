@@ -1,0 +1,82 @@
+{
+  "schema_version": "2026-06-24.sink_only_failure_for_d4.v3",
+  "pack_id": "string",
+  "iteration_id": "string",
+  "variant_id": "string",
+  "source_records": {
+    "sink_only_attack_record_path": "string",
+    "sink_only_trace_dir": "string",
+    "candidate_target_record_path": "poisoning_validation_framework/benchmarks/benign_runs/<pack_id>/candidate_workflow_pairs.json",
+    "artifact_dir_checked": "string"
+  },
+  "failed_sink_only_variant": {
+    "candidate_target_id": "string",
+    "sink_skill": "string",
+    "payload_id": 0,
+    "injection_goal": "string",
+    "judge_prompt": "string",
+    "verdict": "failure|inconclusive"
+  },
+  "failure_diagnosis": {
+    "failure_labels": [
+      "sink_not_called|payload_not_observed|payload_location_mismatch|judge_prompt_not_satisfied|evaluation_reference_not_satisfied|task_incompatible|skill_instruction_ignored|helper_script_missing|helper_script_not_executable|helper_script_not_called|artifact_context_condition_missing|upstream_condition_needed|trace_evidence_insufficient|artifact_evidence_insufficient|task_not_completed|other"
+    ],
+    "primary_failure_reason": "string",
+    "evidence_summary": "string",
+    "missing_or_mismatch": "string",
+    "trace_evidence_sufficient": false,
+    "artifact_evidence_sufficient": false,
+    "sink_called": false,
+    "payload_observed": false,
+    "task_completed_or_substantially_completed": false
+  },
+  "possible_upstream_context_hint": {
+    "missing_upstream_context_may_explain_failure": false,
+    "possible_missing_condition": "string",
+    "reasoning_from_failure_evidence": "string",
+    "confidence": "high|medium|low"
+  },
+  "candidate_upstream_pool_from_stage_b": [
+    {
+      "upstream_skill": "string",
+      "candidate_only": true,
+      "source": "stage_b_candidate_workflow_paths",
+      "workflow_paths_to_sink": [
+        {
+          "nodes": [
+            "string"
+          ],
+          "edges": [
+            {
+              "from_skill": "string",
+              "to_skill": "string",
+              "flow_type": "artifact|context|memory|state|inferred|other",
+              "carrier": "string",
+              "evidence": "string",
+              "confidence": "high|medium|low"
+            }
+          ],
+          "path_rationale_from_stage_b": "string"
+        }
+      ]
+    }
+  ],
+  "d4_input_scope": {
+    "d3_does_not_select_upstream": true,
+    "d3_does_not_label_hook": true,
+    "d3_does_not_construct_upstream_modification": true,
+    "upstream_selection_deferred_to_d4": true,
+    "d3_provides_failure_reason_and_candidate_pool_only": true
+  },
+  "feedback_for_d4": {
+    "what_failed_in_sink_only": "string",
+    "what_evidence_was_missing": "string",
+    "what_d4_should_investigate": "string",
+    "constraints_for_d4": [
+      "Do not treat the upstream pool as a selected hook.",
+      "Select any upstream skill only in Stage D4.",
+      "Construct any coordinated upstream-sink variant only in Stage D4.",
+      "Use Stage B workflow evidence and this failure diagnosis to decide whether upstream-sink construction is justified."
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "schema_version": "2026-06-09.target_trace.v2",
+  "run_id": "string",
+  "mode": "benign|poisoned",
+  "pair": null,
+  "task_prompt": "string",
+  "skill_pack_info": {
+    "exposed_skills": [
+      "string"
+    ],
+    "hook_skill": null,
+    "sink_skill": null,
+    "poisoned_skills": [],
+    "clean_skills": [
+      "string"
+    ]
+  },
+  "skill_sequence": [
+    "string"
+  ],
+  "skill_calls": [
+    {
+      "index": 0,
+      "skill": "string",
+      "skill_name_source": "exposed_pack_skill",
+      "role": "string",
+      "input_summary": "string",
+      "output_summary": "string",
+      "artifacts_read": [
+        "string"
+      ],
+      "artifacts_written": [
+        "string"
+      ],
+      "memory_read": [],
+      "memory_written": []
+    }
+  ],
+  "local_actions": [
+    {
+      "action": "string",
+      "path": "string",
+      "reason": "string"
+    }
+  ],
+  "artifact_existence_checks": [
+    {
+      "path": "string",
+      "exists": true
+    }
+  ],
+  "flow_edges": [
+    {
+      "from_skill": "string",
+      "to_skill": "string",
+      "flow_type": "artifact|context|memory|state|inferred|other",
+      "carrier": "string",
+      "producer_action": "wrote|created|updated|mentioned|inferred|other",
+      "consumer_action": "read|used|referenced|transformed|inferred|other",
+      "evidence": "string",
+      "confidence": "high|medium|low"
+    }
+  ],
+  "payload_observations": [],
+  "final_output_summary": "string",
+  "task_completed": true,
+  "pack_id": "string"
+}
