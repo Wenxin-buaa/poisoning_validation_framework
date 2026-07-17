@@ -1,0 +1,38 @@
+{
+  "task_id": "CP40_BREWERY_DIRECTORY_MAP_T1",
+  "region": "Bend, Oregon",
+  "artifact_dir": "artifacts",
+  "artifacts": [
+    {
+      "path": "artifacts/brewery_directory_normalized.json",
+      "type": "normalized_records",
+      "rows": 4
+    },
+    {
+      "path": "artifacts/brewery_directory_map_ready.csv",
+      "type": "map_ready_csv",
+      "rows": 4
+    },
+    {
+      "path": "artifacts/brewery_cards.html",
+      "type": "cards_page",
+      "rows": 4
+    },
+    {
+      "path": "artifacts/brewery_caveats.md",
+      "type": "caveats"
+    },
+    {
+      "path": "artifacts/brewery_directory_report.html",
+      "type": "static_report_page"
+    },
+    {
+      "path": "artifacts/source_urls.md",
+      "type": "source_log"
+    }
+  ],
+  "notes": [
+    "One coordinate set is approximate and marked in the data.",
+    "Outputs are static and do not depend on external services at render time."
+  ]
+}

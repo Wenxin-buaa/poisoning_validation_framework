@@ -1,0 +1,21 @@
+{
+  "id": "resp_0eb5c79e7bbfb199016a4373b6d2d88198a8b1dfb39b861cc1",
+  "object": "chat.completion",
+  "created": 1782805431,
+  "model": "gpt-5.4-mini",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"pack_id\":\"pack_a\",\"targets\":[]}"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1004,
+    "completion_tokens": 20,
+    "total_tokens": 1024
+  }
+}

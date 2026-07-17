@@ -1,0 +1,9 @@
+{
+  "schema_version": "2026-06-30.experiment_pipeline_state.v2",
+  "pack_id": "pack_a",
+  "experiment_id": "pack_a_exp_smoke",
+  "created_at": "2026-06-30T08:44:57.005831+00:00",
+  "max_loop_iterations": 3,
+  "current_stage": "C",
+  "counts": {}
+}

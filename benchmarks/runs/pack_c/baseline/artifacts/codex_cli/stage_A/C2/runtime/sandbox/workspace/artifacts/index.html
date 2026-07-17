@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document Automation Pilot Review</title>
+  <style>
+    :root {
+      --ink: #1e1e1e;
+      --paper: #ffffff;
+      --line: #d7dde3;
+      --blue: #0066ff;
+      --cyan: #00cfd8;
+      --muted: #60717e;
+      --soft: #f4f7fa;
+      --success: #148a5d;
+      --warning: #b46010;
+      --shadow: 0 20px 60px rgba(30, 30, 30, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "DejaVu Sans", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(0, 102, 255, 0.08), transparent 34%),
+        linear-gradient(315deg, rgba(0, 207, 216, 0.1), transparent 30%),
+        var(--paper);
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 30px 0 38px;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+      gap: 28px;
+      align-items: stretch;
+      min-height: 430px;
+    }
+
+    .hero {
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 8px;
+      padding: clamp(28px, 5vw, 58px);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -110px auto;
+      width: 310px;
+      height: 310px;
+      border: 34px solid rgba(0, 207, 216, 0.42);
+      transform: rotate(18deg);
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-family: "DejaVu Sans", "Segoe UI", sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5.4rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 670px;
+      margin: 28px 0 0;
+      color: #e7edf3;
+      font-size: clamp(1rem, 1.8vw, 1.25rem);
+    }
+
+    .recommendation {
+      margin-top: 34px;
+      display: inline-grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+      max-width: 650px;
+      padding: 16px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--blue);
+      color: white;
+      font-weight: 800;
+      flex: none;
+    }
+
+    .recommendation strong {
+      display: block;
+      font-size: 0.96rem;
+      color: #ffffff;
+    }
+
+    .recommendation span {
+      color: #dce5ed;
+      font-size: 0.92rem;
+    }
+
+    .summary-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 26px;
+      box-shadow: 0 14px 36px rgba(30, 30, 30, 0.08);
+    }
+
+    .summary-panel h2,
+    .section-title h2 {
+      margin: 0;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 18px;
+      margin: 25px 0 0;
+    }
+
+    .summary-item {
+      border-left: 4px solid var(--blue);
+      padding-left: 16px;
+    }
+
+    .summary-item strong {
+      display: block;
+      font-size: 1.08rem;
+      margin-bottom: 4px;
+    }
+
+    .summary-item span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .metrics {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric-card {
+      min-height: 190px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 22px rgba(30, 30, 30, 0.06);
+    }
+
+    .metric-name {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    .metric-values {
+      display: flex;
+      align-items: flex-end;
+      gap: 11px;
+      margin-top: 16px;
+    }
+
+    .baseline {
+      color: #8997a3;
+      text-decoration: line-through;
+      font-size: 1.45rem;
+      font-weight: 700;
+    }
+
+    .pilot {
+      color: var(--ink);
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 0.9;
+      font-weight: 800;
+    }
+
+    .unit {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+
+    .delta {
+      width: fit-content;
+      margin-top: 18px;
+      color: var(--success);
+      background: #e8f5ef;
+      border: 1px solid #c4eadb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .delta.warn { color: var(--warning); background: #fff4e8; border-color: #f4d8b7; }
+
+    .bottom-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .tag {
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    li {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #34434d;
+    }
+
+    li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-top: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 5px rgba(0, 207, 216, 0.12);
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: right;
+    }
+
+    @media (max-width: 900px) {
+      main { width: min(100% - 24px, 680px); padding-top: 14px; }
+      .masthead,
+      .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .hero { min-height: auto; }
+    }
+
+    @media (max-width: 560px) {
+      .hero,
+      .summary-panel,
+      .section,
+      .metric-card {
+        padding: 18px;
+      }
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+      .recommendation {
+        grid-template-columns: 1fr;
+      }
+      .section-title {
+        display: grid;
+        gap: 6px;
+      }
+      .footer-note { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="masthead" aria-label="Executive pilot summary">
+      <div class="hero">
+        <div class="eyebrow">Document Automation Pilot Review</div>
+        <h1>Continue the pilot for one more quarter.</h1>
+        <p>Template standardization and workflow automation cut document turnaround from five days to two while reviewers reported fewer formatting issues.</p>
+        <div class="recommendation">
+          <div class="mark">Q+</div>
+          <div>
+            <strong>Recommended message</strong>
+            <span>Add a reviewer checklist, clarify final-review ownership, and publish a shared theme package before scaling.</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="summary-panel" aria-label="Pilot highlights">
+        <h2>Executive Memo</h2>
+        <div class="summary-list">
+          <div class="summary-item">
+            <strong>Faster cycle time</strong>
+            <span>Average turnaround moved from five days to two days during the pilot.</span>
+          </div>
+          <div class="summary-item">
+            <strong>Cleaner review queue</strong>
+            <span>Formatting rework dropped after standard templates were introduced.</span>
+          </div>
+          <div class="summary-item">
+            <strong>Scaling package</strong>
+            <span>The team wants a concise memo, PDF export, and five-slide summary deck.</span>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="metrics" aria-label="Pilot metrics">
+      <article class="metric-card">
+        <div>
+          <div class="metric-name">Turnaround Time</div>
+          <div class="metric-values"><span class="baseline">5</span><span class="pilot">2</span><span class="unit">days</span></div>
+        </div>
+        <div class="delta">60% faster</div>
+      </article>
+      <article class="metric-card">
+        <div>
+          <div class="metric-name">Formatting Rework</div>
+          <div class="metric-values"><span class="baseline">14</span><span class="pilot">4</span><span class="unit">count</span></div>
+        </div>
+        <div class="delta">10 fewer issues</div>
+      </article>
+      <article class="metric-card">
+        <div>
+          <div class="metric-name">Reviewer Satisfaction</div>
+          <div class="metric-values"><span class="baseline">3.4</span><span class="pilot">4.5</span><span class="unit">score</span></div>
+        </div>
+        <div class="delta">+1.1 score</div>
+      </article>
+      <article class="metric-card">
+        <div>
+          <div class="metric-name">Documents Processed</div>
+          <div class="metric-values"><span class="baseline">18</span><span class="pilot">42</span><span class="unit">count</span></div>
+        </div>
+        <div class="delta warn">2.3x throughput</div>
+      </article>
+    </section>
+
+    <section class="bottom-grid">
+      <div class="section">
+        <div class="section-title">
+          <h2>Next Quarter Controls</h2>
+          <span class="tag">Pilot Extension</span>
+        </div>
+        <ul>
+          <li>Introduce a reviewer checklist for data completeness, formatting, and approval routing.</li>
+          <li>Name an accountable final-review owner for each document batch before production starts.</li>
+          <li>Keep template changes centralized in the shared theme package.</li>
+        </ul>
+      </div>
+      <div class="section">
+        <div class="section-title">
+          <h2>Deliverables</h2>
+          <span class="tag">Executive Ready</span>
+        </div>
+        <ul>
+          <li>Concise executive memo that frames the decision and measurable pilot gains.</li>
+          <li>PDF export for distribution to reviewers and operations leadership.</li>
+          <li>Five-slide summary deck covering outcome, metrics, risks, controls, and recommendation.</li>
+        </ul>
+      </div>
+    </section>
+    <p class="footer-note">Theme: Tech Innovation | Source: benchmark brief and metrics fixture.</p>
+  </main>
+</body>
+</html>

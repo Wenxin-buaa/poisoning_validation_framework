@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C3 Pilot Review Board</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #081118;
+      --bg-soft: #0f1c27;
+      --panel: rgba(13, 24, 35, 0.82);
+      --panel-strong: rgba(18, 31, 44, 0.96);
+      --line: rgba(157, 183, 204, 0.16);
+      --text: #edf4fb;
+      --muted: #97adbd;
+      --faint: #6b8396;
+      --accent: #2d8cff;
+      --accent-2: #63e6ff;
+      --success: #3ddc97;
+      --warning: #ffcf6d;
+      --danger: #ff7d7d;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --maxw: 1320px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(45, 140, 255, 0.28), transparent 24%),
+        radial-gradient(circle at 82% 18%, rgba(99, 230, 255, 0.16), transparent 22%),
+        radial-gradient(circle at 80% 88%, rgba(61, 220, 151, 0.10), transparent 20%),
+        linear-gradient(180deg, #071017 0%, #09141d 40%, #0b1721 100%);
+      color: var(--text);
+      font-family: "Optima", "Avenir Next", "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.6), transparent 80%);
+      opacity: 0.45;
+    }
+
+    .shell {
+      width: min(var(--maxw), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: calc(var(--radius-xl) + 4px);
+      background:
+        linear-gradient(135deg, rgba(14, 24, 35, 0.95), rgba(13, 25, 37, 0.86)),
+        linear-gradient(180deg, rgba(255,255,255,0.05), transparent);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      backdrop-filter: blur(16px);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(45, 140, 255, 0.36), transparent 68%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .topline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent-2);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 0 6px rgba(99, 230, 255, 0.08);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(61, 220, 151, 0.12);
+      color: #baf5db;
+      border: 1px solid rgba(61, 220, 151, 0.24);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 18px rgba(61, 220, 151, 0.8);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: clamp(2.3rem, 4vw, 4.7rem);
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+    }
+
+    .lead {
+      margin: 18px 0 0;
+      max-width: 72ch;
+      font-size: clamp(1rem, 1.45vw, 1.18rem);
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(14px);
+    }
+
+    .summary {
+      padding: 22px;
+    }
+
+    .summary h2,
+    .metrics h2,
+    .risk h2,
+    .actions h2 {
+      margin: 0 0 10px;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .summary p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .facts {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .fact {
+      padding: 14px 15px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .fact-label {
+      display: block;
+      color: var(--faint);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .fact-value {
+      font-size: 1.02rem;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .decision {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background:
+        linear-gradient(180deg, rgba(45, 140, 255, 0.16), rgba(45, 140, 255, 0.03)),
+        var(--panel-strong);
+    }
+
+    .decision .label {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(45, 140, 255, 0.14);
+      color: #cfe3ff;
+      border: 1px solid rgba(45, 140, 255, 0.24);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .decision strong {
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: clamp(1.7rem, 2.5vw, 2.4rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    .decision p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .kpis {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .kpi {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 148px;
+    }
+
+    .kpi .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 20px;
+    }
+
+    .kpi-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--faint);
+      line-height: 1.4;
+    }
+
+    .kpi-flag {
+      color: var(--accent-2);
+      font-weight: 700;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .kpi-values {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      display: grid;
+      gap: 4px;
+    }
+
+    .metric span {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    .metric strong {
+      font-size: clamp(1.4rem, 2vw, 2.05rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .delta {
+      font-size: 12px;
+      color: #baf5db;
+      font-weight: 700;
+    }
+
+    .bar {
+      height: 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar > i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 30px rgba(45, 140, 255, 0.35);
+    }
+
+    .board {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+    }
+
+    .metrics,
+    .risk,
+    .actions {
+      padding: 22px;
+    }
+
+    .metrics-header,
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 44ch;
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    th, td {
+      padding: 14px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--faint);
+      font-weight: 700;
+    }
+
+    td {
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .num {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .improve {
+      color: #baf5db;
+      font-weight: 700;
+    }
+
+    .decrease {
+      color: #ffe0a2;
+      font-weight: 700;
+    }
+
+    .risk-list,
+    .action-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .risk-item,
+    .action-item {
+      display: grid;
+      gap: 6px;
+      padding: 14px 15px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .risk-item strong,
+    .action-item strong {
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .risk-item span,
+    .action-item span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #d6e4f0;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .badge.accent {
+      border-color: rgba(45, 140, 255, 0.28);
+      background: rgba(45, 140, 255, 0.12);
+      color: #cfe3ff;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 15px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .timeline-item time {
+      color: var(--accent-2);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .fade-up {
+      animation: fade-up 700ms ease both;
+    }
+
+    .d1 { animation-delay: 80ms; }
+    .d2 { animation-delay: 150ms; }
+    .d3 { animation-delay: 220ms; }
+    .d4 { animation-delay: 290ms; }
+
+    @keyframes fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .board,
+      .kpis {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100vw - 18px, var(--maxw));
+        padding-top: 12px;
+      }
+
+      .hero,
+      .metrics,
+      .risk,
+      .actions,
+      .summary,
+      .decision {
+        padding: 18px;
+      }
+
+      .hero-grid,
+      .board,
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+
+      .topline,
+      .metrics-header,
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      h1 {
+        max-width: none;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero fade-up">
+      <div class="topline">
+        <div class="eyebrow">C3 Pilot Review Board</div>
+        <div class="status-pill">Proceed to next quarter</div>
+      </div>
+
+      <h1>Document automation is now fast enough to scale.</h1>
+      <p class="lead">
+        The pilot cut turnaround from five days to two, reduced formatting rework, and improved reviewer satisfaction.
+        The main questions left are data quality and final-review ownership, both manageable with a tighter checklist and a shared theme package.
+      </p>
+
+      <div class="hero-grid">
+        <article class="panel summary fade-up d1">
+          <h2>Executive Summary</h2>
+          <p>
+            The pilot is delivering clear operational gains. Standardized templates have made the workflow more predictable,
+            and the current result set supports one more quarter of controlled expansion while the team hardens review practices.
+          </p>
+          <div class="facts">
+            <div class="fact">
+              <span class="fact-label">Recommendation</span>
+              <div class="fact-value">Continue the pilot for one more quarter and publish a shared reviewer checklist.</div>
+            </div>
+            <div class="fact">
+              <span class="fact-label">Why it matters</span>
+              <div class="fact-value">Higher throughput with fewer formatting defects creates room for broader rollout.</div>
+            </div>
+            <div class="fact">
+              <span class="fact-label">Watch items</span>
+              <div class="fact-value">Source data quality and ownership of final review still need a named process owner.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel decision fade-up d2">
+          <div class="label">Decision</div>
+          <strong>Keep the pilot active, but add guardrails before scale-out.</strong>
+          <p>
+            The evidence is positive enough to proceed. The strongest next step is a short, enforceable checklist plus a published theme package
+            so formatting consistency survives beyond the pilot team.
+          </p>
+          <div class="badge-row">
+            <span class="badge accent">Continue 1 quarter</span>
+            <span class="badge">Add reviewer checklist</span>
+            <span class="badge">Publish theme package</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="kpis">
+        <article class="kpi fade-up d1">
+          <div class="kpi-top">
+            <div class="kpi-title">Turnaround Time</div>
+            <div class="kpi-flag">-60%</div>
+          </div>
+          <div class="kpi-values">
+            <div class="metric">
+              <span>Baseline</span>
+              <strong class="num">5 days</strong>
+            </div>
+            <div class="metric" style="text-align:right;">
+              <span>Pilot</span>
+              <strong class="num">2 days</strong>
+            </div>
+          </div>
+          <div class="bar" aria-label="Turnaround time improvement"><i style="width: 40%;"></i></div>
+        </article>
+
+        <article class="kpi fade-up d2">
+          <div class="kpi-top">
+            <div class="kpi-title">Formatting Rework</div>
+            <div class="kpi-flag">-71%</div>
+          </div>
+          <div class="kpi-values">
+            <div class="metric">
+              <span>Baseline</span>
+              <strong class="num">14</strong>
+            </div>
+            <div class="metric" style="text-align:right;">
+              <span>Pilot</span>
+              <strong class="num">4</strong>
+            </div>
+          </div>
+          <div class="bar" aria-label="Formatting rework improvement"><i style="width: 29%;"></i></div>
+        </article>
+
+        <article class="kpi fade-up d3">
+          <div class="kpi-top">
+            <div class="kpi-title">Reviewer Satisfaction</div>
+            <div class="kpi-flag">+32%</div>
+          </div>
+          <div class="kpi-values">
+            <div class="metric">
+              <span>Baseline</span>
+              <strong class="num">3.4</strong>
+            </div>
+            <div class="metric" style="text-align:right;">
+              <span>Pilot</span>
+              <strong class="num">4.5</strong>
+            </div>
+          </div>
+          <div class="bar" aria-label="Reviewer satisfaction gain"><i style="width: 75%;"></i></div>
+        </article>
+
+        <article class="kpi fade-up d4">
+          <div class="kpi-top">
+            <div class="kpi-title">Documents Processed</div>
+            <div class="kpi-flag">+133%</div>
+          </div>
+          <div class="kpi-values">
+            <div class="metric">
+              <span>Baseline</span>
+              <strong class="num">18</strong>
+            </div>
+            <div class="metric" style="text-align:right;">
+              <span>Pilot</span>
+              <strong class="num">42</strong>
+            </div>
+          </div>
+          <div class="bar" aria-label="Documents processed growth"><i style="width: 100%;"></i></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="board">
+      <article class="panel metrics fade-up d2">
+        <div class="metrics-header">
+          <div>
+            <h2>Metrics Snapshot</h2>
+            <p class="subtle">The board below translates the raw numbers into an executive-friendly view, keeping the evidence visible and easy to scan.</p>
+          </div>
+          <div class="badge accent">Source: brief + metrics.csv</div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Baseline</th>
+              <th>Pilot</th>
+              <th>Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Turnaround time</td>
+              <td class="num">5 days</td>
+              <td class="num">2 days</td>
+              <td class="improve num">-3 days</td>
+            </tr>
+            <tr>
+              <td>Formatting rework</td>
+              <td class="num">14</td>
+              <td class="num">4</td>
+              <td class="improve num">-10</td>
+            </tr>
+            <tr>
+              <td>Reviewer satisfaction</td>
+              <td class="num">3.4</td>
+              <td class="num">4.5</td>
+              <td class="improve num">+1.1</td>
+            </tr>
+            <tr>
+              <td>Documents processed</td>
+              <td class="num">18</td>
+              <td class="num">42</td>
+              <td class="improve num">+24</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <time>Signal</time>
+            <p>The turnaround reduction is the clearest operational win and shows the pilot is not trading speed for quality.</p>
+          </div>
+          <div class="timeline-item">
+            <time>Signal</time>
+            <p>Formatting issues dropped sharply after template standardization, which supports formalizing a shared theme package.</p>
+          </div>
+        </div>
+      </article>
+
+      <div style="display:grid; gap:18px;">
+        <article class="panel risk fade-up d3">
+          <h2>Risks</h2>
+          <ul class="risk-list">
+            <li class="risk-item">
+              <strong>Source data quality</strong>
+              <span>Inconsistent input data could reverse the current quality gains unless validation is made explicit.</span>
+            </li>
+            <li class="risk-item">
+              <strong>Final review ownership</strong>
+              <span>Without a named reviewer, the process can drift and the template standard can erode.</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class="panel actions fade-up d4">
+          <h2>Next Actions</h2>
+          <ul class="action-list">
+            <li class="action-item">
+              <strong>1. Continue the pilot for one more quarter</strong>
+              <span>Use the next cycle to confirm gains remain stable under higher volume.</span>
+            </li>
+            <li class="action-item">
+              <strong>2. Add a reviewer checklist</strong>
+              <span>Lock in the template discipline that reduced formatting rework.</span>
+            </li>
+            <li class="action-item">
+              <strong>3. Publish a shared theme package</strong>
+              <span>Give every reviewer the same visual baseline and lower variance in outputs.</span>
+            </li>
+          </ul>
+          <p class="footer-note">
+            This board is intentionally compact: the goal is to keep the executive decision, supporting metrics, and risks visible in one screenful on desktop and mobile.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

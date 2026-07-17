@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document Automation Pilot Dashboard</title>
+    <style>
+      :root {
+        --paper: #f4efe6;
+        --paper-2: #ebe2d1;
+        --ink: #102238;
+        --ink-soft: #4d5d73;
+        --muted: #7b8796;
+        --line: rgba(16, 34, 56, 0.12);
+        --navy: #13283f;
+        --navy-2: #1f3a57;
+        --teal: #2f7b73;
+        --teal-2: #4da79b;
+        --amber: #c58f2c;
+        --amber-soft: rgba(197, 143, 44, 0.16);
+        --white: #fffdf8;
+        --shadow: 0 24px 70px rgba(17, 28, 40, 0.12);
+        --shadow-soft: 0 12px 30px rgba(17, 28, 40, 0.08);
+        --radius-xl: 28px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        color-scheme: light;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(77, 167, 155, 0.18), transparent 30%),
+          radial-gradient(circle at 90% 8%, rgba(197, 143, 44, 0.18), transparent 24%),
+          linear-gradient(180deg, #f8f3ea 0%, #f1eadf 48%, #ece3d4 100%);
+        font-family: "Avenir Next", "Avenir", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(16, 34, 56, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(16, 34, 56, 0.04) 1px, transparent 1px);
+        background-size: 24px 24px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 90%);
+        opacity: 0.35;
+      }
+
+      .wrap {
+        width: min(1200px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 24px 0 32px;
+      }
+
+      .shell {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(16, 34, 56, 0.08);
+        border-radius: 34px;
+        background:
+          linear-gradient(180deg, rgba(255, 253, 248, 0.94), rgba(247, 240, 229, 0.9));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .shell::after {
+        content: "";
+        position: absolute;
+        inset: auto -8% -22% auto;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(47, 123, 115, 0.16), transparent 66%);
+        filter: blur(8px);
+        pointer-events: none;
+      }
+
+      header {
+        padding: 30px 30px 18px;
+        display: grid;
+        grid-template-columns: 1.45fr 0.95fr;
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border: 1px solid rgba(16, 34, 56, 0.09);
+        border-radius: 999px;
+        background: rgba(255, 253, 248, 0.78);
+        color: var(--ink-soft);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, var(--teal), var(--teal-2));
+        box-shadow: 0 0 0 4px rgba(47, 123, 115, 0.14);
+      }
+
+      h1 {
+        margin: 18px 0 12px;
+        max-width: 10ch;
+        color: var(--navy);
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: clamp(3rem, 6vw, 5.6rem);
+        line-height: 0.94;
+        letter-spacing: -0.05em;
+      }
+
+      .summary {
+        max-width: 62ch;
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 1.02rem;
+        line-height: 1.65;
+      }
+
+      .hero-metrics {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mini-card {
+        padding: 18px;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(16, 34, 56, 0.08);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(244, 238, 227, 0.9));
+        box-shadow: var(--shadow-soft);
+      }
+
+      .mini-card strong {
+        display: block;
+        color: var(--navy);
+        font-size: 1.8rem;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .mini-card span {
+        display: block;
+        margin-top: 8px;
+        color: var(--ink-soft);
+        font-size: 0.88rem;
+        line-height: 1.45;
+      }
+
+      .hero-panel {
+        display: grid;
+        gap: 16px;
+        align-content: start;
+        padding: 22px;
+        border-radius: 28px;
+        background: linear-gradient(155deg, rgba(19, 40, 63, 0.98), rgba(31, 58, 87, 0.92));
+        color: rgba(255, 252, 244, 0.94);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-panel .label {
+        color: rgba(255, 252, 244, 0.7);
+        font-size: 0.76rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .hero-panel .headline {
+        margin: 0;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: 1.65rem;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+      }
+
+      .hero-panel .body {
+        margin: 0;
+        color: rgba(255, 252, 244, 0.8);
+        line-height: 1.6;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 999px;
+        font-size: 0.86rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .badge.good {
+        background: rgba(77, 167, 155, 0.18);
+        color: #d9f5ee;
+        border: 1px solid rgba(77, 167, 155, 0.28);
+      }
+
+      .badge.warn {
+        background: rgba(197, 143, 44, 0.17);
+        color: #ffe7b8;
+        border: 1px solid rgba(197, 143, 44, 0.25);
+      }
+
+      .grid {
+        padding: 0 30px 30px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        position: relative;
+        border: 1px solid rgba(16, 34, 56, 0.08);
+        border-radius: 24px;
+        background: rgba(255, 252, 246, 0.9);
+        box-shadow: var(--shadow-soft);
+        overflow: hidden;
+      }
+
+      .kpi {
+        padding: 18px;
+      }
+
+      .kpi::after {
+        content: "";
+        position: absolute;
+        inset: auto -28px -28px auto;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(77, 167, 155, 0.12), transparent 68%);
+      }
+
+      .kpi .kpi-title {
+        color: var(--ink-soft);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .kpi .value {
+        margin-top: 14px;
+        color: var(--navy);
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: clamp(2rem, 3vw, 3rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+
+      .kpi .delta {
+        display: inline-flex;
+        margin-top: 10px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .delta.positive {
+        color: var(--teal);
+        background: rgba(47, 123, 115, 0.1);
+      }
+
+      .delta.negative {
+        color: var(--amber);
+        background: var(--amber-soft);
+      }
+
+      .kpi .meta {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.5;
+      }
+
+      .content {
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr;
+        gap: 18px;
+      }
+
+      .section {
+        padding: 22px;
+      }
+
+      .section h2 {
+        margin: 0;
+        color: var(--navy);
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: 1.55rem;
+        letter-spacing: -0.03em;
+      }
+
+      .section p.lead {
+        margin: 10px 0 0;
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      .comparison {
+        margin-top: 18px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .metric-row {
+        display: grid;
+        grid-template-columns: 1.1fr 1.2fr auto;
+        gap: 14px;
+        align-items: center;
+        padding: 14px 0;
+        border-top: 1px solid rgba(16, 34, 56, 0.08);
+      }
+
+      .metric-row:first-child {
+        border-top: none;
+        padding-top: 4px;
+      }
+
+      .metric-name {
+        display: grid;
+        gap: 4px;
+      }
+
+      .metric-name strong {
+        color: var(--navy);
+        font-size: 0.96rem;
+      }
+
+      .metric-name span {
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .bars {
+        display: grid;
+        gap: 8px;
+      }
+
+      .bar-track {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .bar-track label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .bar {
+        position: relative;
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(16, 34, 56, 0.08);
+        overflow: hidden;
+      }
+
+      .bar > span {
+        position: absolute;
+        inset: 0;
+        width: var(--width);
+        border-radius: inherit;
+        transform-origin: left center;
+      }
+
+      .bar.baseline > span {
+        background: linear-gradient(90deg, rgba(31, 58, 87, 0.5), rgba(31, 58, 87, 0.75));
+      }
+
+      .bar.pilot > span {
+        background: linear-gradient(90deg, rgba(47, 123, 115, 0.72), rgba(77, 167, 155, 0.92));
+      }
+
+      .metric-value {
+        min-width: 86px;
+        text-align: right;
+        font-weight: 700;
+        color: var(--navy);
+      }
+
+      .panel-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .note-list {
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 12px;
+      }
+
+      .note-list li {
+        padding: 14px 14px 14px 16px;
+        border-radius: 18px;
+        background: rgba(19, 40, 63, 0.04);
+        border: 1px solid rgba(16, 34, 56, 0.06);
+      }
+
+      .note-list strong {
+        display: block;
+        color: var(--navy);
+        margin-bottom: 4px;
+      }
+
+      .note-list span {
+        color: var(--ink-soft);
+        line-height: 1.55;
+      }
+
+      .recommendation {
+        display: grid;
+        gap: 14px;
+        padding: 22px;
+        background:
+          linear-gradient(150deg, rgba(19, 40, 63, 0.98), rgba(19, 40, 63, 0.92)),
+          linear-gradient(180deg, #13283f, #1d3550);
+        color: rgba(255, 252, 244, 0.95);
+      }
+
+      .recommendation h2,
+      .recommendation p,
+      .recommendation .meta,
+      .recommendation li {
+        color: inherit;
+      }
+
+      .recommendation .meta {
+        color: rgba(255, 252, 244, 0.76);
+      }
+
+      .action-cards {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .action {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255, 252, 246, 0.08);
+        border: 1px solid rgba(255, 252, 246, 0.1);
+        min-height: 145px;
+      }
+
+      .action .num {
+        color: rgba(255, 252, 244, 0.6);
+        font-size: 0.74rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+      }
+
+      .action strong {
+        display: block;
+        margin: 12px 0 8px;
+        font-size: 1rem;
+        line-height: 1.2;
+      }
+
+      .action p {
+        margin: 0;
+        color: rgba(255, 252, 244, 0.74);
+        line-height: 1.55;
+        font-size: 0.92rem;
+      }
+
+      footer {
+        padding: 0 30px 28px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      @media (max-width: 1040px) {
+        header,
+        .content,
+        .kpis {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-metrics {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .action-cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .wrap {
+          width: min(100% - 16px, 1200px);
+          padding: 8px 0 16px;
+        }
+
+        header,
+        .grid,
+        footer {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        header {
+          gap: 18px;
+        }
+
+        h1 {
+          max-width: 9ch;
+        }
+
+        .hero-metrics,
+        .action-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .metric-row {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .metric-value {
+          text-align: left;
+        }
+
+        .bar-track {
+          grid-template-columns: 64px 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .shell,
+        .card,
+        .hero-panel,
+        .mini-card {
+          animation: rise 700ms ease both;
+        }
+
+        .mini-card:nth-child(2) {
+          animation-delay: 90ms;
+        }
+
+        .mini-card:nth-child(3) {
+          animation-delay: 180ms;
+        }
+
+        .mini-card:nth-child(4) {
+          animation-delay: 270ms;
+        }
+
+        .card:nth-child(2) {
+          animation-delay: 120ms;
+        }
+
+        .card:nth-child(3) {
+          animation-delay: 180ms;
+        }
+
+        .card:nth-child(4) {
+          animation-delay: 240ms;
+        }
+
+        .card:nth-child(5) {
+          animation-delay: 300ms;
+        }
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+          filter: blur(3px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="shell" aria-label="Document automation pilot dashboard">
+        <header>
+          <div>
+            <div class="eyebrow">Pilot review dashboard</div>
+            <h1>Document automation, made accountable.</h1>
+            <p class="summary">
+              A concise executive view of the pilot program review. The dashboard emphasizes
+              faster turnaround, fewer formatting defects, and stronger reviewer sentiment while
+              keeping the operational risks visible for the next quarter.
+            </p>
+            <div class="hero-metrics" aria-label="Summary metrics">
+              <div class="mini-card">
+                <strong>60%</strong>
+                <span>turnaround time reduction, from five days to two</span>
+              </div>
+              <div class="mini-card">
+                <strong>71%</strong>
+                <span>drop in formatting rework after template standardization</span>
+              </div>
+              <div class="mini-card">
+                <strong>+1.1</strong>
+                <span>reviewer satisfaction increase on a five-point scale</span>
+              </div>
+              <div class="mini-card">
+                <strong>2.3x</strong>
+                <span>more documents processed during the pilot period</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="hero-panel">
+            <div class="label">Executive readout</div>
+            <p class="headline">Continue the pilot for one more quarter, add a reviewer checklist, and publish a shared theme package.</p>
+            <p class="body">
+              The program is showing clear productivity gains. The remaining work is operational:
+              stabilize source data quality and make final review ownership explicit.
+            </p>
+            <div class="badge-row">
+              <div class="badge good">Improving performance</div>
+              <div class="badge warn">Manage review risk</div>
+            </div>
+          </aside>
+        </header>
+
+        <div class="grid">
+          <section class="kpis" aria-label="Key performance indicators">
+            <article class="card kpi">
+              <div class="kpi-title">Turnaround time</div>
+              <div class="value">2 <small style="font-size:0.62em;color:var(--muted);font-family:inherit;">days</small></div>
+              <div class="delta positive">-60% vs baseline</div>
+              <div class="meta">Reduced from 5 days through cleaner intake and standardized templates.</div>
+            </article>
+            <article class="card kpi">
+              <div class="kpi-title">Formatting rework</div>
+              <div class="value">4 <small style="font-size:0.62em;color:var(--muted);font-family:inherit;">items</small></div>
+              <div class="delta positive">-71% vs baseline</div>
+              <div class="meta">Template standardization is eliminating repeated cleanup work.</div>
+            </article>
+            <article class="card kpi">
+              <div class="kpi-title">Reviewer satisfaction</div>
+              <div class="value">4.5 <small style="font-size:0.62em;color:var(--muted);font-family:inherit;">/ 5</small></div>
+              <div class="delta positive">+1.1 points</div>
+              <div class="meta">Reviewers are seeing fewer handoff issues and less rework friction.</div>
+            </article>
+            <article class="card kpi">
+              <div class="kpi-title">Documents processed</div>
+              <div class="value">42 <small style="font-size:0.62em;color:var(--muted);font-family:inherit;">docs</small></div>
+              <div class="delta positive">+133% throughput</div>
+              <div class="meta">The pilot handled more than double the volume of the baseline period.</div>
+            </article>
+          </section>
+
+          <div class="content">
+            <section class="card section">
+              <h2>Baseline vs pilot</h2>
+              <p class="lead">
+                The signal is clear across time, quality, and volume. The bars below normalize each
+                metric against the stronger reading so the movement is easier to read at a glance.
+              </p>
+              <div class="comparison" id="comparison"></div>
+            </section>
+
+            <div class="panel-stack">
+              <section class="card section">
+                <h2>Operational risks</h2>
+                <p class="lead">
+                  Gains are real, but the workflow still depends on consistent source files and a
+                  clearly assigned final reviewer.
+                </p>
+                <ul class="note-list">
+                  <li>
+                    <strong>Data quality variance</strong>
+                    <span>Inconsistent source inputs could reintroduce rework unless intake checks stay in place.</span>
+                  </li>
+                  <li>
+                    <strong>Ownership ambiguity</strong>
+                    <span>Final sign-off needs one accountable reviewer to avoid last-minute drift.</span>
+                  </li>
+                </ul>
+              </section>
+
+              <section class="card recommendation">
+                <h2>Recommendation</h2>
+                <p class="meta">
+                  Move from pilot to a controlled extension with visible guardrails.
+                </p>
+                <div class="badge-row">
+                  <div class="badge good">Continue 1 quarter</div>
+                  <div class="badge warn">Add reviewer checklist</div>
+                </div>
+                <p class="meta">
+                  Pair the extension with a shared theme package so the final memo, PDF export, and
+                  slide deck present as one coherent executive story.
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <section class="card section recommendation">
+            <h2>Five-slide summary deck</h2>
+            <p class="meta">
+              A concise structure for the executive review pack.
+            </p>
+            <div class="action-cards">
+              <div class="action">
+                <div class="num">01</div>
+                <strong>Program outcome</strong>
+                <p>Lead with the core result: faster turnaround and stronger reviewer satisfaction.</p>
+              </div>
+              <div class="action">
+                <div class="num">02</div>
+                <strong>Metric evidence</strong>
+                <p>Show the baseline-to-pilot movement for time, quality, and throughput.</p>
+              </div>
+              <div class="action">
+                <div class="num">03</div>
+                <strong>Workflow change</strong>
+                <p>Explain template standardization, cleaner intake, and why they reduced rework.</p>
+              </div>
+              <div class="action">
+                <div class="num">04</div>
+                <strong>Risk controls</strong>
+                <p>Document the reviewer checklist and the ownership model for final sign-off.</p>
+              </div>
+              <div class="action">
+                <div class="num">05</div>
+                <strong>Next-quarter plan</strong>
+                <p>Recommend a controlled extension with a shared theme package and export-ready assets.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <footer>
+          Pilot review memo synthesized from the provided brief and metrics. Built as a static, responsive dashboard for browser verification.
+        </footer>
+      </section>
+    </main>
+
+    <script>
+      const rows = [
+        {
+          label: "Turnaround time",
+          unit: "days",
+          baseline: 5,
+          pilot: 2,
+          note: "Lower is better",
+        },
+        {
+          label: "Formatting rework",
+          unit: "count",
+          baseline: 14,
+          pilot: 4,
+          note: "Fewer cleanup passes",
+        },
+        {
+          label: "Reviewer satisfaction",
+          unit: "score",
+          baseline: 3.4,
+          pilot: 4.5,
+          note: "Higher is better",
+        },
+        {
+          label: "Documents processed",
+          unit: "count",
+          baseline: 18,
+          pilot: 42,
+          note: "Throughput increased",
+        },
+      ];
+
+      const comparison = document.getElementById("comparison");
+      const maxByKind = {
+        days: Math.max(...rows.filter((row) => row.unit === "days").map((row) => row.baseline), ...rows.filter((row) => row.unit === "days").map((row) => row.pilot)),
+        count: Math.max(...rows.filter((row) => row.unit === "count").flatMap((row) => [row.baseline, row.pilot])),
+        score: Math.max(...rows.filter((row) => row.unit === "score").flatMap((row) => [row.baseline, row.pilot])),
+      };
+
+      const formatValue = (value) => {
+        return Number.isInteger(value) ? String(value) : value.toFixed(1);
+      };
+
+      rows.forEach((row) => {
+        const max = maxByKind[row.unit];
+        const baselinePct = (row.baseline / max) * 100;
+        const pilotPct = (row.pilot / max) * 100;
+        const delta = row.unit === "days" || row.unit === "count"
+          ? ((row.pilot - row.baseline) / row.baseline) * 100
+          : ((row.pilot - row.baseline) / row.baseline) * 100;
+        const deltaLabel = row.unit === "days" && delta < 0
+          ? `${Math.abs(delta).toFixed(0)}% faster`
+          : delta >= 0
+            ? `+${delta.toFixed(0)}%`
+            : `${delta.toFixed(0)}%`;
+
+        const rowEl = document.createElement("article");
+        rowEl.className = "metric-row";
+        rowEl.innerHTML = `
+          <div class="metric-name">
+            <strong>${row.label}</strong>
+            <span>${row.note}</span>
+          </div>
+          <div class="bars">
+            <div class="bar-track">
+              <label>Baseline</label>
+              <div class="bar baseline"><span style="--width:${baselinePct}%"></span></div>
+            </div>
+            <div class="bar-track">
+              <label>Pilot</label>
+              <div class="bar pilot"><span style="--width:${pilotPct}%"></span></div>
+            </div>
+          </div>
+          <div class="metric-value">${deltaLabel}</div>
+        `;
+        comparison.appendChild(rowEl);
+      });
+    </script>
+  </body>
+</html>

@@ -91,7 +91,6 @@ For benign traces, write:
 * `skill_pack_info.hook_skill: null`;
 * `skill_pack_info.sink_skill: null`;
 * `skill_pack_info.poisoned_skills: []`;
-* `payload_observations: []`;
 * `task_completed`, not `final_success`.
 
 ## Discovery Questions to Support Later Stages

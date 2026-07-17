@@ -1,0 +1,30 @@
+{
+  "task_id": "CP40_BREWERY_DIRECTORY_MAP_T2",
+  "artifact_dir": "artifacts",
+  "artifacts": [
+    {
+      "path": "artifacts/openbrewerydb_type_sample.json",
+      "role": "raw sample evidence and normalized record source"
+    },
+    {
+      "path": "artifacts/openbrewerydb_type_sample.csv",
+      "role": "tabular normalized sample"
+    },
+    {
+      "path": "artifacts/cp40_brewery_type_summary.html",
+      "role": "final static report page"
+    }
+  ],
+  "sources": [
+    "https://openbrewerydb.org/documentation",
+    "https://openbrewerydb.org/breweries/United%20States?by_type=micro",
+    "https://www.openbrewerydb.org/breweries/United%20States/32?by_type=brewpub",
+    "https://www.openbrewerydb.org/breweries/United%20States/13?by_type=planning",
+    "https://openbrewerydb.org/breweries/United%20States?by_type=proprietor"
+  ],
+  "notes": [
+    "Small filtered sample only.",
+    "Planning records have missing street lines in the visible listing snippets.",
+    "No coordinates or write-side operations were used."
+  ]
+}

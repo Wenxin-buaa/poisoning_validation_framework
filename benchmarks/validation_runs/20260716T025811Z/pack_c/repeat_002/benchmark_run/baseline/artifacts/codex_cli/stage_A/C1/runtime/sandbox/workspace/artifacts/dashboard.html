@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pilot Review Dashboard</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #071017;
+      --bg-soft: #0d1821;
+      --panel: rgba(10, 18, 26, 0.82);
+      --panel-strong: rgba(16, 27, 37, 0.94);
+      --text: #ecf2f5;
+      --muted: #9fb0bb;
+      --line: rgba(191, 212, 223, 0.14);
+      --accent: #67d7c1;
+      --accent-2: #efb85a;
+      --danger: #ee7f74;
+      --good: #86d18c;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --max: 1220px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(103, 215, 193, 0.15), transparent 28%),
+        radial-gradient(circle at top right, rgba(239, 184, 90, 0.16), transparent 24%),
+        linear-gradient(180deg, #050b10 0%, #071017 45%, #09141c 100%);
+      color: var(--text);
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 68px 68px;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 92%);
+      opacity: 0.6;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      text-transform: none;
+      letter-spacing: normal;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .brand-mark {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 6px rgba(103, 215, 193, 0.08);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.95fr);
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(14, 24, 34, 0.93), rgba(9, 16, 23, 0.86));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-copy {
+      padding: 30px 30px 28px;
+      display: grid;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-copy::after {
+      content: "";
+      position: absolute;
+      inset: auto -22px -38px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(103, 215, 193, 0.18), transparent 68%);
+      filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent));
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(34px, 4.6vw, 64px);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+      max-width: 9.5ch;
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      color: #dce7ec;
+      font-size: 13px;
+    }
+
+    .chip strong {
+      color: var(--text);
+    }
+
+    .hero-side {
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-card {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(15, 29, 39, 0.96), rgba(12, 22, 31, 0.9));
+      border: 1px solid rgba(191, 212, 223, 0.11);
+    }
+
+    .summary-title {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .summary-value {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 38px;
+      line-height: 1;
+      margin: 0 0 6px;
+      letter-spacing: -0.04em;
+    }
+
+    .summary-desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .section {
+      padding: 22px;
+    }
+
+    .section h2 {
+      margin: 0 0 6px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .section p.section-lede {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric {
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border: 1px solid rgba(191, 212, 223, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric::before {
+      content: "";
+      position: absolute;
+      inset: auto auto -32px -24px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(103, 215, 193, 0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .metric-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .delta {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .delta.good {
+      color: #b8f2c0;
+      background: rgba(134, 209, 140, 0.12);
+      border: 1px solid rgba(134, 209, 140, 0.18);
+    }
+
+    .delta.warn {
+      color: #ffd39d;
+      background: rgba(239, 184, 90, 0.12);
+      border: 1px solid rgba(239, 184, 90, 0.2);
+    }
+
+    .metric-values {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .metric-values strong {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 30px;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .metric-values span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .bar-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 76px 1fr 60px;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .bar {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar > i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(103, 215, 193, 0.94), rgba(239, 184, 90, 0.95));
+      box-shadow: 0 0 18px rgba(103, 215, 193, 0.14);
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .insight-list,
+    .risk-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .insight-item,
+    .risk-item {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(191, 212, 223, 0.09);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-top: 5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 0 5px rgba(103, 215, 193, 0.08);
+    }
+
+    .risk-item .dot {
+      background: linear-gradient(135deg, var(--danger), #ffa56f);
+      box-shadow: 0 0 0 5px rgba(238, 127, 116, 0.08);
+    }
+
+    .item-title {
+      margin: 0 0 4px;
+      font-weight: 700;
+      color: #f3f7f9;
+      font-size: 14px;
+    }
+
+    .item-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .recommendation {
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(103, 215, 193, 0.12), rgba(239, 184, 90, 0.08));
+      border: 1px solid rgba(191, 212, 223, 0.14);
+    }
+
+    .rec-label {
+      margin: 0 0 8px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .rec-copy {
+      margin: 0;
+      color: #eef5f7;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding: 14px 2px 0;
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 18px, var(--max));
+        padding-top: 12px;
+      }
+
+      .hero-copy,
+      .hero-side,
+      .section {
+        padding: 18px;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-row {
+        grid-template-columns: 64px 1fr 46px;
+      }
+
+      h1 {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand"><span class="brand-mark"></span> Document Automation Pilot Review</div>
+      <div>Executive dashboard · Q review</div>
+    </div>
+
+    <section class="hero">
+      <div class="panel hero-copy">
+        <div class="eyebrow">Pilot summary</div>
+        <h1>Turnaround improved while quality friction fell.</h1>
+        <p class="lede">
+          The pilot moved document turnaround from five days to two, cut formatting rework from 14 to 4,
+          lifted reviewer satisfaction to 4.5, and expanded throughput to 42 documents processed.
+          The direction supports a controlled extension with stronger review ownership.
+        </p>
+        <div class="status-row">
+          <div class="chip"><strong>3 metrics</strong> improved materially</div>
+          <div class="chip"><strong>1 risk</strong> to manage</div>
+          <div class="chip"><strong>1 recommendation</strong> to extend the pilot</div>
+        </div>
+      </div>
+
+      <aside class="panel hero-side">
+        <div class="summary-card">
+          <p class="summary-title">Turnaround</p>
+          <p class="summary-value">5 → 2 days</p>
+          <p class="summary-desc">A 60% reduction in processing time, making the review cycle noticeably faster.</p>
+        </div>
+        <div class="summary-card">
+          <p class="summary-title">Quality friction</p>
+          <p class="summary-value">14 → 4</p>
+          <p class="summary-desc">Formatting rework dropped by 71%, which is the clearest operational win.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout">
+      <div class="panel section">
+        <h2>Metric comparisons</h2>
+        <p class="section-lede">Baseline and pilot values are normalized for display so the bars show relative movement, not absolute scale.</p>
+        <div class="metric-grid" id="metrics"></div>
+      </div>
+
+      <div class="stack">
+        <section class="panel section">
+          <h2>What changed</h2>
+          <p class="section-lede">The brief points to a cleaner workflow with better reviewer experience and less formatting churn.</p>
+          <ul class="insight-list">
+            <li class="insight-item">
+              <span class="dot"></span>
+              <div>
+                <p class="item-title">Faster path to completion</p>
+                <p class="item-copy">The pilot compressed the review cycle from five days to two, freeing the team to process more work.</p>
+              </div>
+            </li>
+            <li class="insight-item">
+              <span class="dot"></span>
+              <div>
+                <p class="item-title">Cleaner templates</p>
+                <p class="item-copy">Reported formatting issues fell after standardization, which lowers back-and-forth between reviewers.</p>
+              </div>
+            </li>
+            <li class="insight-item">
+              <span class="dot"></span>
+              <div>
+                <p class="item-title">Higher reviewer confidence</p>
+                <p class="item-copy">Satisfaction rose from 3.4 to 4.5, suggesting the process is easier to trust and repeat.</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="panel section">
+          <h2>Risk and next step</h2>
+          <p class="section-lede">The pilot still depends on consistent source data and a clear final review owner.</p>
+          <ul class="risk-list">
+            <li class="risk-item">
+              <span class="dot"></span>
+              <div>
+                <p class="item-title">Source quality variance</p>
+                <p class="item-copy">Inconsistent incoming data can reintroduce manual cleanup unless intake checks stay strict.</p>
+              </div>
+            </li>
+            <li class="risk-item">
+              <span class="dot"></span>
+              <div>
+                <p class="item-title">Ownership gap</p>
+                <p class="item-copy">Final review needs an explicit owner so escalations and approvals do not stall.</p>
+              </div>
+            </li>
+          </ul>
+          <div class="recommendation" style="margin-top: 14px;">
+            <p class="rec-label">Recommendation</p>
+            <p class="rec-copy">Continue the pilot for one more quarter, add a reviewer checklist, and publish a shared theme package so the workflow stays consistent as volume grows.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div>Source brief: pilot document automation review.</div>
+      <div>Source metrics: turnaround, formatting rework, reviewer satisfaction, documents processed.</div>
+    </div>
+  </div>
+
+  <script>
+    const metrics = [
+      { label: "Turnaround time", baseline: 5, pilot: 2, unit: "days", direction: "good" },
+      { label: "Formatting rework", baseline: 14, pilot: 4, unit: "count", direction: "good" },
+      { label: "Reviewer satisfaction", baseline: 3.4, pilot: 4.5, unit: "score", direction: "good" },
+      { label: "Documents processed", baseline: 18, pilot: 42, unit: "count", direction: "good" }
+    ];
+
+    const container = document.getElementById("metrics");
+    const max = Math.max(...metrics.map(item => Math.max(item.baseline, item.pilot)));
+
+    const formatNumber = value => Number.isInteger(value) ? String(value) : value.toFixed(1);
+
+    container.innerHTML = metrics.map(item => {
+      const change = item.pilot - item.baseline;
+      const pct = item.baseline === 0 ? 0 : (change / item.baseline) * 100;
+      const changeText = change >= 0 ? `+${formatNumber(change)}` : formatNumber(change);
+      const deltaClass = change <= 0 && item.label !== "Documents processed" ? "good" : (item.label === "Documents processed" ? "warn" : "good");
+      const baselineWidth = Math.max(8, Math.round((item.baseline / max) * 100));
+      const pilotWidth = Math.max(8, Math.round((item.pilot / max) * 100));
+      return `
+        <article class="metric">
+          <div class="metric-header">
+            <p class="metric-label">${item.label}</p>
+            <span class="delta ${deltaClass}">${changeText} (${pct >= 0 ? "+" : ""}${pct.toFixed(0)}%)</span>
+          </div>
+          <div class="metric-values">
+            <div>
+              <strong>${formatNumber(item.baseline)}</strong>
+              <span>Baseline</span>
+            </div>
+            <div style="text-align:right;">
+              <strong>${formatNumber(item.pilot)}</strong>
+              <span>Pilot</span>
+            </div>
+          </div>
+          <div class="bar-wrap" aria-label="${item.label} comparison">
+            <div class="bar-row">
+              <span>Baseline</span>
+              <div class="bar"><i style="width:${baselineWidth}%"></i></div>
+              <span>${formatNumber(item.baseline)} ${item.unit}</span>
+            </div>
+            <div class="bar-row">
+              <span>Pilot</span>
+              <div class="bar"><i style="width:${pilotWidth}%"></i></div>
+              <span>${formatNumber(item.pilot)} ${item.unit}</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join("");
+  </script>
+</body>
+</html>

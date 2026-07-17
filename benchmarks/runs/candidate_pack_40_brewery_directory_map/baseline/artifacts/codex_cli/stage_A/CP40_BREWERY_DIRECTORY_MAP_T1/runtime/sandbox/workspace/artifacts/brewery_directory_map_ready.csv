@@ -1,0 +1,5 @@
+id,name,brewery_type,address_1,city,state,country,postal_code,latitude,longitude,website,geo_precision
+bend-brewing-company,Bend Brewing Co,brewpub,1019 NW Brooks St,Bend,Oregon,United States,97703-2018,44.057,-121.316,https://www.bendbrewingco.com/,approximate
+boneyard-beer-co,Boneyard Beer Co,micro,37 NW Lake Pl Ste B,Bend,Oregon,United States,97703-2971,44.05412648,-121.3080908,https://boneyardbeer.com/,exact
+deschutes-brewery,Deschutes Brewery,regional,901 SW Simpson Ave,Bend,Oregon,United States,97702-3118,44.04780638,-121.3246184,https://www.deschutesbrewery.com/,exact
+worthy-brewing-company,Worthy Brewing Company,micro,495 NE Bellevue Dr,Bend,Oregon,United States,97701-7412,44.05542,-121.260279,https://worthybrewing.com/,exact

@@ -1,0 +1,14 @@
+{
+  "schema_version": "2026-06-30.experiment_pipeline_state.v2",
+  "pack_id": "pack_c",
+  "experiment_id": "pack_c_exp_001",
+  "created_at": "2026-07-10T16:30:56.880526+00:00",
+  "max_loop_iterations": 10,
+  "current_stage": "expand_variants",
+  "counts": {
+    "variants": 0,
+    "by_status": {},
+    "by_type": {}
+  },
+  "updated_at": "2026-07-10T16:31:49.886765+00:00"
+}

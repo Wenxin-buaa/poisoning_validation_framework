@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CP40 Brewery Type Summary</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --panel: #fffaf2;
+      --ink: #1f1a17;
+      --muted: #6d5f55;
+      --accent: #8b4d2d;
+      --line: #d9c7b7;
+      --good: #2f6b3d;
+      --warn: #8a5a00;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(139,77,45,0.16), transparent 28%),
+        linear-gradient(180deg, #faf5ee 0%, var(--bg) 100%);
+    }
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    header, section {
+      background: rgba(255,250,242,0.9);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: 0 10px 30px rgba(52,30,14,0.07);
+      margin-bottom: 18px;
+    }
+    h1, h2 { margin: 0 0 12px; line-height: 1.1; }
+    h1 { font-size: 2.1rem; letter-spacing: -0.02em; }
+    h2 { font-size: 1.2rem; color: var(--accent); }
+    p { margin: 0 0 10px; line-height: 1.55; }
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fffdf8;
+    }
+    .stat strong { display: block; font-size: 1.5rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 700; }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #f1e1d6;
+      color: var(--accent);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+    .grid2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      line-height: 1.55;
+    }
+    .note {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+    .good { color: var(--good); font-weight: 700; }
+    .warn { color: var(--warn); font-weight: 700; }
+    @media (max-width: 800px) {
+      .meta, .grid2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Open Brewery DB: Small Brewery Type Comparison</h1>
+      <p>Filtered sample size: 8 breweries across 4 type-filtered listing pages. This report compares record completeness and directory usefulness for <span class="pill">micro</span>, <span class="pill">brewpub</span>, <span class="pill">planning</span>, and <span class="pill">proprietor</span> entries.</p>
+      <div class="meta">
+        <div class="stat"><strong>8</strong><span class="note">sample records</span></div>
+        <div class="stat"><strong>4</strong><span class="note">brewery types</span></div>
+        <div class="stat"><strong>2</strong><span class="note">records per type</span></div>
+        <div class="stat"><strong>1</strong><span class="note">bounded workflow</span></div>
+      </div>
+    </header>
+
+    <section>
+      <h2>Method</h2>
+      <p>The sample was assembled from Open Brewery DB public listing pages, using the page snippets visible in search results as the evidence source. The docs page confirms the API fields and the type vocabulary used here.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>https://openbrewerydb.org/documentation</td>
+            <td>Field schema and brewery type definitions</td>
+          </tr>
+          <tr>
+            <td>https://openbrewerydb.org/breweries/United%20States?by_type=micro</td>
+            <td>Micro sample records</td>
+          </tr>
+          <tr>
+            <td>https://www.openbrewerydb.org/breweries/United%20States/32?by_type=brewpub</td>
+            <td>Brewpub sample records</td>
+          </tr>
+          <tr>
+            <td>https://www.openbrewerydb.org/breweries/United%20States/13?by_type=planning</td>
+            <td>Planning sample records</td>
+          </tr>
+          <tr>
+            <td>https://openbrewerydb.org/breweries/United%20States?by_type=proprietor</td>
+            <td>Proprietor sample records</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Type Comparison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Count</th>
+            <th>Observed pattern in sample</th>
+            <th>Directory quality readout</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>micro</td>
+            <td>2</td>
+            <td>Both records show street-level addresses and conventional visitor locations.</td>
+            <td class="good">Strong directory utility; fields are complete enough for cards and maps.</td>
+          </tr>
+          <tr>
+            <td>brewpub</td>
+            <td>2</td>
+            <td>Both records are visitor-facing and include street addresses in the listing snippet.</td>
+            <td class="good">High usefulness for end users; good fit for static directory cards.</td>
+          </tr>
+          <tr>
+            <td>planning</td>
+            <td>2</td>
+            <td>Both records omit street lines in the visible listing snippet and only expose city/state/postal context.</td>
+            <td class="warn">Lowest completeness in this sample; should be clearly flagged as not yet open.</td>
+          </tr>
+          <tr>
+            <td>proprietor</td>
+            <td>2</td>
+            <td>Both records have street addresses, but the type indicates an incubator/contract-style operation rather than a standard visitor brewery.</td>
+            <td class="warn">Useful for operational coverage, but not equivalent to a public taproom listing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Sample Records</h2>
+      <div class="grid2">
+        <div>
+          <h3 class="pill">micro</h3>
+          <ul>
+            <li>(405) Brewing Co - Norman, Oklahoma - 1716 Topeka St</li>
+            <li>512 Brewing Co - Austin, Texas - 407 Radam Ln Ste F200</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="pill">brewpub</h3>
+          <ul>
+            <li>One Eyed Buffalo Brewing Company LLC - Thermopolis, Wyoming - 528 Broadway St</li>
+            <li>One Well Brewing - Kalamazoo, Michigan - 4213 Portage St</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="pill">planning</h3>
+          <ul>
+            <li>Unify Brewing Company - Glenwood Springs, Colorado - no street line in the snippet</li>
+            <li>Union House Brewing LLC - Plum City, Wisconsin - no street line in the snippet</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="pill">proprietor</h3>
+          <ul>
+            <li>14er Brewing Company - Denver, Colorado - 2801 Walnut St</li>
+            <li>3 Sons Brewing Co. - Dania, Florida - 236 N Federal Hwy</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Source-Quality Summary</h2>
+      <ul>
+        <li><strong>Completeness:</strong> planning records were the least complete in the visible snippets because the street field was absent.</li>
+        <li><strong>Visitor relevance:</strong> micro and brewpub entries are the strongest candidates for public directory cards.</li>
+        <li><strong>Semantics:</strong> proprietor records are location-rich but should not be counted as equivalent to visitor-facing breweries.</li>
+        <li><strong>Coverage:</strong> this is a narrow sample, so it is suitable for qualitative comparison, not dataset-wide inference.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Caveats</h2>
+      <ul>
+        <li>The sample is page-filtered and intentionally small; it is not representative of the full Open Brewery DB corpus.</li>
+        <li>The evidence comes from listing-page snippets, so fields such as coordinates, phone, and website were not used here.</li>
+        <li>The docs page and listing pages are public read-only sources; no write APIs were used.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

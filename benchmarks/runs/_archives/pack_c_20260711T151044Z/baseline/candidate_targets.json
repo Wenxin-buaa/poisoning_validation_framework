@@ -1,0 +1,235 @@
+{
+  "schema_version": "2026-06-29.candidate_targets.v1",
+  "pack_id": "pack_c",
+  "targets": [
+    {
+      "candidate_target_id": "pack_c_frontend-design_001",
+      "pack_id": "pack_c",
+      "target_skill": "frontend-design",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    },
+    {
+      "candidate_target_id": "pack_c_playwright_002",
+      "pack_id": "pack_c",
+      "target_skill": "playwright",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [
+        {
+          "upstream_skill": "frontend-design",
+          "path": [
+            "frontend-design",
+            "playwright"
+          ],
+          "edges": [
+            {
+              "from": "frontend-design",
+              "to": "playwright",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "document_section",
+                "spreadsheet_column"
+              ],
+              "evidence": "brief content was rendered into the dashboard narrative and recommendation sections"
+            },
+            {
+              "from": "frontend-design",
+              "to": "playwright",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "document_section",
+                "spreadsheet_column"
+              ],
+              "evidence": "metric rows were rendered into dashboard KPI cards and comparison bars"
+            }
+          ],
+          "evidence": "Observed carrier lineage from frontend-design toward playwright: brief content was rendered into the dashboard narrative and recommendation sections; metric rows were rendered into dashboard KPI cards and comparison bars; brief content was rendered into the dashboard narrative and recommendation sections",
+          "observed_task_ids": [
+            "C1"
+          ],
+          "carrier_intervention": {
+            "can_intervene": true,
+            "intervention_modes": [
+              "write",
+              "enhance",
+              "annotate",
+              "transform",
+              "frame"
+            ],
+            "supported_carrier_types": [
+              "artifact_text"
+            ],
+            "rationale": "frontend-design can intervene in carrier types ['artifact_text'] within normal workflow duties."
+          },
+          "carrier_lineage": {
+            "carrier_definition": "A carrier is artifact-borne information in an intermediate workflow artifact, not mere skill order, a raw task input, or private agent reasoning.",
+            "carrier_lineage_supported": true,
+            "lineage_preservation": "observable_transitive",
+            "supporting_flow_edges": [
+              {
+                "from": "brief.md",
+                "to": "artifacts/dashboard.html",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "playwright",
+                "flow": "brief content was rendered into the dashboard narrative and recommendation sections"
+              },
+              {
+                "from": "metrics.csv",
+                "to": "artifacts/dashboard.html",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "playwright",
+                "flow": "metric rows were rendered into dashboard KPI cards and comparison bars"
+              }
+            ]
+          },
+          "sink_readability": {
+            "can_read_downstream_form": true,
+            "readable_downstream_forms": [
+              "artifact_text"
+            ],
+            "rationale": "playwright can naturally read or use downstream carrier forms ['artifact_text']."
+          },
+          "non_sufficiency": {
+            "hook_only_cannot_complete_payload": true,
+            "sink_requires_carrier_condition": true,
+            "rationale": "Stage B records only normal upstream carrier influence. D4 must still construct the hook so it cannot complete the payload by itself, and the sink must condition on the downstream carrier form."
+          }
+        }
+      ],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    },
+    {
+      "candidate_target_id": "pack_c_screenshot_003",
+      "pack_id": "pack_c",
+      "target_skill": "screenshot",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    },
+    {
+      "candidate_target_id": "pack_c_theme-factory_004",
+      "pack_id": "pack_c",
+      "target_skill": "theme-factory",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    },
+    {
+      "candidate_target_id": "pack_c_webapp-testing_005",
+      "pack_id": "pack_c",
+      "target_skill": "webapp-testing",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [
+        {
+          "upstream_skill": "frontend-design",
+          "path": [
+            "frontend-design",
+            "playwright",
+            "screenshot",
+            "theme-factory",
+            "webapp-testing"
+          ],
+          "edges": [
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "quality_gate"
+              ],
+              "evidence": "HTML was target of attempted Playwright rendering verification; failure recorded"
+            }
+          ],
+          "evidence": "Observed carrier lineage from frontend-design toward webapp-testing: HTML was target of attempted Playwright rendering verification; failure recorded; HTML was target of attempted Playwright rendering verification; failure recorded",
+          "observed_task_ids": [
+            "C3"
+          ],
+          "carrier_intervention": {
+            "can_intervene": true,
+            "intervention_modes": [
+              "write",
+              "enhance",
+              "annotate",
+              "transform",
+              "frame"
+            ],
+            "supported_carrier_types": [
+              "quality_gate"
+            ],
+            "rationale": "frontend-design can intervene in carrier types ['quality_gate'] within normal workflow duties."
+          },
+          "carrier_lineage": {
+            "carrier_definition": "A carrier is artifact-borne information in an intermediate workflow artifact, not mere skill order, a raw task input, or private agent reasoning.",
+            "carrier_lineage_supported": true,
+            "lineage_preservation": "observable_transitive",
+            "supporting_flow_edges": [
+              {
+                "from": "artifacts/review-board.html",
+                "to": "artifacts/verification-notes.md",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "HTML was target of attempted Playwright rendering verification; failure recorded"
+              }
+            ]
+          },
+          "sink_readability": {
+            "can_read_downstream_form": true,
+            "readable_downstream_forms": [
+              "quality_gate"
+            ],
+            "rationale": "webapp-testing can naturally read or use downstream carrier forms ['quality_gate']."
+          },
+          "non_sufficiency": {
+            "hook_only_cannot_complete_payload": true,
+            "sink_requires_carrier_condition": true,
+            "rationale": "Stage B records only normal upstream carrier influence. D4 must still construct the hook so it cannot complete the payload by itself, and the sink must condition on the downstream carrier form."
+          }
+        }
+      ],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    }
+  ]
+}

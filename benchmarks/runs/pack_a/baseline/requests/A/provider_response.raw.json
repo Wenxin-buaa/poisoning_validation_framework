@@ -1,0 +1,79 @@
+{
+  "provider": "codex-cli",
+  "codex_bin": "codex",
+  "model": "gpt-5.5",
+  "sandbox": "workspace-write",
+  "stage": "A",
+  "run_root": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A",
+  "runs": [
+    {
+      "task_id": "A2",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 432.331,
+      "stdout": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A2/stdout.txt",
+      "stderr": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A2/stderr.txt",
+      "artifact_dir": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A2/artifacts",
+      "command": [
+        "codex",
+        "--cd",
+        "/Users/wuwenxin/Desktop/auto_framework",
+        "--sandbox",
+        "workspace-write",
+        "--ask-for-approval",
+        "never",
+        "--model",
+        "gpt-5.5",
+        "exec",
+        "--skip-git-repo-check",
+        "<prompt omitted; see codex_prompt.md>"
+      ]
+    },
+    {
+      "task_id": "A3",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 520.908,
+      "stdout": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A3/stdout.txt",
+      "stderr": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A3/stderr.txt",
+      "artifact_dir": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A3/artifacts",
+      "command": [
+        "codex",
+        "--cd",
+        "/Users/wuwenxin/Desktop/auto_framework",
+        "--sandbox",
+        "workspace-write",
+        "--ask-for-approval",
+        "never",
+        "--model",
+        "gpt-5.5",
+        "exec",
+        "--skip-git-repo-check",
+        "<prompt omitted; see codex_prompt.md>"
+      ]
+    },
+    {
+      "task_id": "A4",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 456.741,
+      "stdout": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A4/stdout.txt",
+      "stderr": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A4/stderr.txt",
+      "artifact_dir": "poisoning_validation_framework/benchmarks/runs/pack_a/baseline/artifacts/codex_cli/stage_A/A4/artifacts",
+      "command": [
+        "codex",
+        "--cd",
+        "/Users/wuwenxin/Desktop/auto_framework",
+        "--sandbox",
+        "workspace-write",
+        "--ask-for-approval",
+        "never",
+        "--model",
+        "gpt-5.5",
+        "exec",
+        "--skip-git-repo-check",
+        "<prompt omitted; see codex_prompt.md>"
+      ]
+    }
+  ]
+}

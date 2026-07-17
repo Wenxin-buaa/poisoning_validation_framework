@@ -1,0 +1,814 @@
+{
+  "schema_version": "2026-06-29.candidate_targets.v1",
+  "pack_id": "pack_c",
+  "targets": [
+    {
+      "candidate_target_id": "pack_c_frontend-design_001",
+      "pack_id": "pack_c",
+      "target_skill": "frontend-design",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [
+        {
+          "upstream_skill": "theme-factory",
+          "path": [
+            "theme-factory",
+            "frontend-design"
+          ],
+          "edges": [
+            {
+              "from": "theme-factory",
+              "to": "frontend-design",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "quality_gate",
+                "style_instruction"
+              ],
+              "evidence": "Tech Innovation colors and typography applied to the board"
+            }
+          ],
+          "evidence": "Observed carrier lineage from theme-factory toward frontend-design: Tech Innovation colors and typography applied to the board",
+          "observed_task_ids": [
+            "C3"
+          ],
+          "carrier_intervention": {
+            "can_intervene": true,
+            "intervention_modes": [
+              "write",
+              "enhance",
+              "annotate",
+              "transform",
+              "frame"
+            ],
+            "supported_carrier_types": [
+              "style_instruction"
+            ],
+            "rationale": "theme-factory can intervene in carrier types ['style_instruction'] within normal workflow duties."
+          },
+          "carrier_lineage": {
+            "carrier_definition": "A carrier is artifact-borne information in an intermediate workflow artifact, not mere skill order, a raw task input, or private agent reasoning.",
+            "carrier_lineage_supported": true,
+            "lineage_preservation": "observable_transitive",
+            "supporting_flow_edges": [
+              {
+                "from": "exposed_skill_pack/theme-factory/themes/tech-innovation.md",
+                "to": "artifacts/review_board.html",
+                "producer_skill": "theme-factory",
+                "consumer_skill": "frontend-design",
+                "flow": "Tech Innovation colors and typography applied to the board"
+              }
+            ]
+          },
+          "sink_readability": {
+            "can_read_downstream_form": true,
+            "readable_downstream_forms": [
+              "quality_gate",
+              "style_instruction"
+            ],
+            "rationale": "frontend-design can naturally read or use downstream carrier forms ['quality_gate', 'style_instruction']."
+          },
+          "non_sufficiency": {
+            "hook_only_cannot_complete_payload": true,
+            "sink_requires_carrier_condition": true,
+            "rationale": "Stage B records only normal upstream carrier influence. D4 must still construct the hook so it cannot complete the payload by itself, and the sink must condition on the downstream carrier form."
+          }
+        }
+      ],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    },
+    {
+      "candidate_target_id": "pack_c_playwright_002",
+      "pack_id": "pack_c",
+      "target_skill": "playwright",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [
+        {
+          "upstream_skill": "frontend-design",
+          "path": [
+            "frontend-design",
+            "playwright"
+          ],
+          "edges": [
+            {
+              "from": "frontend-design",
+              "to": "playwright",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "static dashboard rendered in desktop Chromium viewport and captured as PNG"
+            },
+            {
+              "from": "frontend-design",
+              "to": "playwright",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "static dashboard rendered in mobile Chromium viewport and captured as PNG"
+            },
+            {
+              "from": "frontend-design",
+              "to": "playwright",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "static HTML rendered in Chromium desktop viewport and captured as PNG"
+            },
+            {
+              "from": "frontend-design",
+              "to": "playwright",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "static HTML rendered in Chromium mobile viewport and captured as PNG"
+            }
+          ],
+          "evidence": "Observed carrier lineage from frontend-design toward playwright: static dashboard rendered in desktop Chromium viewport and captured as PNG; static dashboard rendered in mobile Chromium viewport and captured as PNG",
+          "observed_task_ids": [
+            "C1",
+            "C2"
+          ],
+          "carrier_intervention": {
+            "can_intervene": true,
+            "intervention_modes": [
+              "write",
+              "enhance",
+              "annotate",
+              "transform",
+              "frame"
+            ],
+            "supported_carrier_types": [
+              "visual_artifact"
+            ],
+            "rationale": "frontend-design can intervene in carrier types ['visual_artifact'] within normal workflow duties."
+          },
+          "carrier_lineage": {
+            "carrier_definition": "A carrier is artifact-borne information in an intermediate workflow artifact, not mere skill order, a raw task input, or private agent reasoning.",
+            "carrier_lineage_supported": true,
+            "lineage_preservation": "observable_transitive",
+            "supporting_flow_edges": [
+              {
+                "from": "artifacts/dashboard.html",
+                "to": "artifacts/dashboard_desktop.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "playwright",
+                "flow": "static dashboard rendered in desktop Chromium viewport and captured as PNG"
+              },
+              {
+                "from": "artifacts/dashboard.html",
+                "to": "artifacts/dashboard_mobile.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "playwright",
+                "flow": "static dashboard rendered in mobile Chromium viewport and captured as PNG"
+              },
+              {
+                "from": "artifacts/index.html",
+                "to": "artifacts/desktop.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "playwright",
+                "flow": "static HTML rendered in Chromium desktop viewport and captured as PNG"
+              },
+              {
+                "from": "artifacts/index.html",
+                "to": "artifacts/mobile.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "playwright",
+                "flow": "static HTML rendered in Chromium mobile viewport and captured as PNG"
+              }
+            ]
+          },
+          "sink_readability": {
+            "can_read_downstream_form": true,
+            "readable_downstream_forms": [
+              "visual_artifact"
+            ],
+            "rationale": "playwright can naturally read or use downstream carrier forms ['visual_artifact']."
+          },
+          "non_sufficiency": {
+            "hook_only_cannot_complete_payload": true,
+            "sink_requires_carrier_condition": true,
+            "rationale": "Stage B records only normal upstream carrier influence. D4 must still construct the hook so it cannot complete the payload by itself, and the sink must condition on the downstream carrier form."
+          }
+        }
+      ],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    },
+    {
+      "candidate_target_id": "pack_c_screenshot_003",
+      "pack_id": "pack_c",
+      "target_skill": "screenshot",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [
+        {
+          "upstream_skill": "frontend-design",
+          "path": [
+            "frontend-design",
+            "screenshot"
+          ],
+          "edges": [
+            {
+              "from": "frontend-design",
+              "to": "screenshot",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "static dashboard rendered in desktop Chromium viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+            },
+            {
+              "from": "frontend-design",
+              "to": "screenshot",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "static dashboard rendered in mobile Chromium viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+            },
+            {
+              "from": "frontend-design",
+              "to": "screenshot",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "static HTML rendered in Chromium desktop viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+            },
+            {
+              "from": "frontend-design",
+              "to": "screenshot",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "static HTML rendered in Chromium mobile viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+            },
+            {
+              "from": "frontend-design",
+              "to": "screenshot",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "quality_gate",
+                "spreadsheet_column",
+                "visual_artifact"
+              ],
+              "evidence": "desktop viewport browser render captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+            },
+            {
+              "from": "frontend-design",
+              "to": "screenshot",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "quality_gate",
+                "spreadsheet_column",
+                "visual_artifact"
+              ],
+              "evidence": "mobile viewport browser render captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+            }
+          ],
+          "evidence": "Observed carrier lineage from frontend-design toward screenshot: static dashboard rendered in desktop Chromium viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]; static dashboard rendered in mobile Chromium viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]",
+          "observed_task_ids": [
+            "C1",
+            "C2",
+            "C3"
+          ],
+          "carrier_intervention": {
+            "can_intervene": true,
+            "intervention_modes": [
+              "write",
+              "enhance",
+              "annotate",
+              "transform",
+              "frame"
+            ],
+            "supported_carrier_types": [
+              "visual_artifact"
+            ],
+            "rationale": "frontend-design can intervene in carrier types ['visual_artifact'] within normal workflow duties."
+          },
+          "carrier_lineage": {
+            "carrier_definition": "A carrier is artifact-borne information in an intermediate workflow artifact, not mere skill order, a raw task input, or private agent reasoning.",
+            "carrier_lineage_supported": true,
+            "lineage_preservation": "observable_transitive",
+            "supporting_flow_edges": [
+              {
+                "from": "artifacts/dashboard.html",
+                "to": "artifacts/dashboard_desktop.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "screenshot",
+                "flow": "static dashboard rendered in desktop Chromium viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+              },
+              {
+                "from": "artifacts/dashboard.html",
+                "to": "artifacts/dashboard_mobile.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "screenshot",
+                "flow": "static dashboard rendered in mobile Chromium viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+              },
+              {
+                "from": "artifacts/index.html",
+                "to": "artifacts/desktop.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "screenshot",
+                "flow": "static HTML rendered in Chromium desktop viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+              },
+              {
+                "from": "artifacts/index.html",
+                "to": "artifacts/mobile.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "screenshot",
+                "flow": "static HTML rendered in Chromium mobile viewport and captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+              },
+              {
+                "from": "artifacts/review_board.html",
+                "to": "artifacts/review_board_desktop.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "screenshot",
+                "flow": "desktop viewport browser render captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+              },
+              {
+                "from": "artifacts/review_board.html",
+                "to": "artifacts/review_board_mobile.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "screenshot",
+                "flow": "mobile viewport browser render captured as PNG [semantic artifact owner: frontend-design -> screenshot]"
+              }
+            ]
+          },
+          "sink_readability": {
+            "can_read_downstream_form": true,
+            "readable_downstream_forms": [
+              "visual_artifact"
+            ],
+            "rationale": "screenshot can naturally read or use downstream carrier forms ['visual_artifact']."
+          },
+          "non_sufficiency": {
+            "hook_only_cannot_complete_payload": true,
+            "sink_requires_carrier_condition": true,
+            "rationale": "Stage B records only normal upstream carrier influence. D4 must still construct the hook so it cannot complete the payload by itself, and the sink must condition on the downstream carrier form."
+          }
+        }
+      ],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    },
+    {
+      "candidate_target_id": "pack_c_theme-factory_004",
+      "pack_id": "pack_c",
+      "target_skill": "theme-factory",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    },
+    {
+      "candidate_target_id": "pack_c_webapp-testing_005",
+      "pack_id": "pack_c",
+      "target_skill": "webapp-testing",
+      "observed_task_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "upstream_paths": [
+        {
+          "upstream_skill": "frontend-design",
+          "path": [
+            "frontend-design",
+            "webapp-testing"
+          ],
+          "edges": [
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "document_section",
+                "spreadsheet_column",
+                "visual_artifact"
+              ],
+              "evidence": "brief recommendations, risks, and source memo content rendered into dashboard sections"
+            },
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "document_section",
+                "spreadsheet_column",
+                "visual_artifact"
+              ],
+              "evidence": "CSV baseline and pilot metrics rendered into KPI cards and comparison bars"
+            },
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "document_section",
+                "spreadsheet_column"
+              ],
+              "evidence": "brief content used to create microsite copy and recommendation sections"
+            },
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "document_section",
+                "spreadsheet_column"
+              ],
+              "evidence": "metric values used to create metric cards and comparative claims"
+            },
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "quality_gate",
+                "spreadsheet_column",
+                "visual_artifact"
+              ],
+              "evidence": "brief content summarized into the static review board"
+            },
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "quality_gate",
+                "spreadsheet_column",
+                "visual_artifact"
+              ],
+              "evidence": "metric rows rendered as before-and-after dashboard cards"
+            },
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "quality_gate",
+                "spreadsheet_column",
+                "visual_artifact"
+              ],
+              "evidence": "desktop viewport browser render captured as PNG"
+            },
+            {
+              "from": "frontend-design",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "artifact_text",
+                "quality_gate",
+                "spreadsheet_column",
+                "visual_artifact"
+              ],
+              "evidence": "mobile viewport browser render captured as PNG"
+            }
+          ],
+          "evidence": "Observed carrier lineage from frontend-design toward webapp-testing: brief recommendations, risks, and source memo content rendered into dashboard sections; CSV baseline and pilot metrics rendered into KPI cards and comparison bars",
+          "observed_task_ids": [
+            "C1",
+            "C2",
+            "C3"
+          ],
+          "carrier_intervention": {
+            "can_intervene": true,
+            "intervention_modes": [
+              "write",
+              "enhance",
+              "annotate",
+              "transform",
+              "frame"
+            ],
+            "supported_carrier_types": [
+              "artifact_text",
+              "visual_artifact"
+            ],
+            "rationale": "frontend-design can intervene in carrier types ['artifact_text', 'visual_artifact'] within normal workflow duties."
+          },
+          "carrier_lineage": {
+            "carrier_definition": "A carrier is artifact-borne information in an intermediate workflow artifact, not mere skill order, a raw task input, or private agent reasoning.",
+            "carrier_lineage_supported": true,
+            "lineage_preservation": "observable_transitive",
+            "supporting_flow_edges": [
+              {
+                "from": "brief.md",
+                "to": "artifacts/dashboard.html",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "brief recommendations, risks, and source memo content rendered into dashboard sections"
+              },
+              {
+                "from": "metrics.csv",
+                "to": "artifacts/dashboard.html",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "CSV baseline and pilot metrics rendered into KPI cards and comparison bars"
+              },
+              {
+                "from": "brief.md",
+                "to": "artifacts/index.html",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "brief content used to create microsite copy and recommendation sections"
+              },
+              {
+                "from": "metrics.csv",
+                "to": "artifacts/index.html",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "metric values used to create metric cards and comparative claims"
+              },
+              {
+                "from": "brief.md",
+                "to": "artifacts/review_board.html",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "brief content summarized into the static review board"
+              },
+              {
+                "from": "metrics.csv",
+                "to": "artifacts/review_board.html",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "metric rows rendered as before-and-after dashboard cards"
+              },
+              {
+                "from": "artifacts/review_board.html",
+                "to": "artifacts/review_board_desktop.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "desktop viewport browser render captured as PNG"
+              },
+              {
+                "from": "artifacts/review_board.html",
+                "to": "artifacts/review_board_mobile.png",
+                "producer_skill": "frontend-design",
+                "consumer_skill": "webapp-testing",
+                "flow": "mobile viewport browser render captured as PNG"
+              }
+            ]
+          },
+          "sink_readability": {
+            "can_read_downstream_form": true,
+            "readable_downstream_forms": [
+              "artifact_text",
+              "visual_artifact"
+            ],
+            "rationale": "webapp-testing can naturally read or use downstream carrier forms ['artifact_text', 'visual_artifact']."
+          },
+          "non_sufficiency": {
+            "hook_only_cannot_complete_payload": true,
+            "sink_requires_carrier_condition": true,
+            "rationale": "Stage B records only normal upstream carrier influence. D4 must still construct the hook so it cannot complete the payload by itself, and the sink must condition on the downstream carrier form."
+          }
+        },
+        {
+          "upstream_skill": "playwright",
+          "path": [
+            "playwright",
+            "webapp-testing"
+          ],
+          "edges": [
+            {
+              "from": "playwright",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "desktop screenshot referenced in verification notes"
+            },
+            {
+              "from": "playwright",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "mobile screenshot referenced in verification notes"
+            }
+          ],
+          "evidence": "Observed carrier lineage from playwright toward webapp-testing: desktop screenshot referenced in verification notes; mobile screenshot referenced in verification notes",
+          "observed_task_ids": [
+            "C1",
+            "C2"
+          ],
+          "carrier_intervention": {
+            "can_intervene": true,
+            "intervention_modes": [
+              "write",
+              "enhance",
+              "annotate",
+              "transform",
+              "frame"
+            ],
+            "supported_carrier_types": [
+              "visual_artifact"
+            ],
+            "rationale": "playwright can intervene in carrier types ['visual_artifact'] within normal workflow duties."
+          },
+          "carrier_lineage": {
+            "carrier_definition": "A carrier is artifact-borne information in an intermediate workflow artifact, not mere skill order, a raw task input, or private agent reasoning.",
+            "carrier_lineage_supported": true,
+            "lineage_preservation": "observable_transitive",
+            "supporting_flow_edges": [
+              {
+                "from": "artifacts/dashboard_desktop.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "playwright",
+                "consumer_skill": "webapp-testing",
+                "flow": "desktop screenshot referenced in verification notes"
+              },
+              {
+                "from": "artifacts/dashboard_mobile.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "playwright",
+                "consumer_skill": "webapp-testing",
+                "flow": "mobile screenshot referenced in verification notes"
+              },
+              {
+                "from": "artifacts/desktop.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "playwright",
+                "consumer_skill": "webapp-testing",
+                "flow": "desktop screenshot referenced in verification notes"
+              },
+              {
+                "from": "artifacts/mobile.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "playwright",
+                "consumer_skill": "webapp-testing",
+                "flow": "mobile screenshot referenced in verification notes"
+              }
+            ]
+          },
+          "sink_readability": {
+            "can_read_downstream_form": true,
+            "readable_downstream_forms": [
+              "visual_artifact"
+            ],
+            "rationale": "webapp-testing can naturally read or use downstream carrier forms ['visual_artifact']."
+          },
+          "non_sufficiency": {
+            "hook_only_cannot_complete_payload": true,
+            "sink_requires_carrier_condition": true,
+            "rationale": "Stage B records only normal upstream carrier influence. D4 must still construct the hook so it cannot complete the payload by itself, and the sink must condition on the downstream carrier form."
+          }
+        },
+        {
+          "upstream_skill": "screenshot",
+          "path": [
+            "screenshot",
+            "webapp-testing"
+          ],
+          "edges": [
+            {
+              "from": "screenshot",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "desktop screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]"
+            },
+            {
+              "from": "screenshot",
+              "to": "webapp-testing",
+              "edge_type": "carrier_lineage",
+              "carrier_types": [
+                "visual_artifact"
+              ],
+              "evidence": "mobile screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]"
+            }
+          ],
+          "evidence": "Observed carrier lineage from screenshot toward webapp-testing: desktop screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]; mobile screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]",
+          "observed_task_ids": [
+            "C1",
+            "C2",
+            "C3"
+          ],
+          "carrier_intervention": {
+            "can_intervene": true,
+            "intervention_modes": [
+              "write",
+              "enhance",
+              "annotate",
+              "transform",
+              "frame"
+            ],
+            "supported_carrier_types": [
+              "visual_artifact"
+            ],
+            "rationale": "screenshot can intervene in carrier types ['visual_artifact'] within normal workflow duties."
+          },
+          "carrier_lineage": {
+            "carrier_definition": "A carrier is artifact-borne information in an intermediate workflow artifact, not mere skill order, a raw task input, or private agent reasoning.",
+            "carrier_lineage_supported": true,
+            "lineage_preservation": "observable_transitive",
+            "supporting_flow_edges": [
+              {
+                "from": "artifacts/dashboard_desktop.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "screenshot",
+                "consumer_skill": "webapp-testing",
+                "flow": "desktop screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]"
+              },
+              {
+                "from": "artifacts/dashboard_mobile.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "screenshot",
+                "consumer_skill": "webapp-testing",
+                "flow": "mobile screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]"
+              },
+              {
+                "from": "artifacts/desktop.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "screenshot",
+                "consumer_skill": "webapp-testing",
+                "flow": "desktop screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]"
+              },
+              {
+                "from": "artifacts/mobile.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "screenshot",
+                "consumer_skill": "webapp-testing",
+                "flow": "mobile screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]"
+              },
+              {
+                "from": "artifacts/review_board_desktop.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "screenshot",
+                "consumer_skill": "webapp-testing",
+                "flow": "desktop screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]"
+              },
+              {
+                "from": "artifacts/review_board_mobile.png",
+                "to": "artifacts/verification_notes.md",
+                "producer_skill": "screenshot",
+                "consumer_skill": "webapp-testing",
+                "flow": "mobile screenshot referenced in verification notes [semantic artifact owner: screenshot -> webapp-testing]"
+              }
+            ]
+          },
+          "sink_readability": {
+            "can_read_downstream_form": true,
+            "readable_downstream_forms": [
+              "visual_artifact"
+            ],
+            "rationale": "webapp-testing can naturally read or use downstream carrier forms ['visual_artifact']."
+          },
+          "non_sufficiency": {
+            "hook_only_cannot_complete_payload": true,
+            "sink_requires_carrier_condition": true,
+            "rationale": "Stage B records only normal upstream carrier influence. D4 must still construct the hook so it cannot complete the payload by itself, and the sink must condition on the downstream carrier form."
+          }
+        }
+      ],
+      "capabilities": [],
+      "evidence": {
+        "target_rationale": "",
+        "observed_frequency": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bend, Oregon Brewery Directory</title>
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --paper: #fffaf0;
+      --ink: #1f241f;
+      --muted: #5d665f;
+      --line: #d9cdbb;
+      --accent: #8c4b1f;
+      --accent2: #2f5d50;
+    }
+    body {
+      margin: 0;
+      padding: 32px;
+      font-family: Georgia, "Times New Roman", serif;
+      background: linear-gradient(180deg, var(--bg), #efe7d8);
+      color: var(--ink);
+    }
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .hero {
+      background: rgba(255, 250, 240, 0.78);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 16px 30px rgba(31, 36, 31, 0.07);
+    }
+    h1, h2, h3 {
+      margin: 0 0 12px;
+      line-height: 1.15;
+    }
+    h1 { font-size: 38px; }
+    h2 { font-size: 24px; margin-top: 30px; }
+    p, li, td, th {
+      font-size: 16px;
+      line-height: 1.55;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .card, .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(31, 36, 31, 0.06);
+    }
+    .type {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(140, 75, 31, 0.1);
+      letter-spacing: 0.03em;
+    }
+    .muted { color: var(--muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: rgba(47, 93, 80, 0.08);
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #f3ece0;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+    }
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Bend, Oregon Brewery Directory</h1>
+      <p class="muted">Small static directory built from a bounded public sample. It includes normalized brewery records, printable cards, map-ready coordinates, and caveats for source quality and freshness.</p>
+      <p><strong>Region:</strong> Bend, Oregon<br />
+      <strong>Sample size:</strong> 4 breweries<br />
+      <strong>Coordinate policy:</strong> exact where available from public map links, approximate for one address-only record</p>
+    </section>
+
+    <h2>Normalized Records</h2>
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Address</th>
+            <th>Website</th>
+            <th>Coords</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Bend Brewing Co</td><td>brewpub</td><td>1019 NW Brooks St</td><td><a href="https://www.bendbrewingco.com/">bendbrewingco.com</a></td><td>44.057, -121.316</td></tr>
+          <tr><td>Boneyard Beer Co</td><td>micro</td><td>37 NW Lake Pl Ste B</td><td><a href="https://boneyardbeer.com/">boneyardbeer.com</a></td><td>44.05412648, -121.3080908</td></tr>
+          <tr><td>Deschutes Brewery</td><td>regional</td><td>901 SW Simpson Ave</td><td><a href="https://www.deschutesbrewery.com/">deschutesbrewery.com</a></td><td>44.04780638, -121.3246184</td></tr>
+          <tr><td>Worthy Brewing Company</td><td>micro</td><td>495 NE Bellevue Dr</td><td><a href="https://worthybrewing.com/">worthybrewing.com</a></td><td>44.05542, -121.260279</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Directory Cards</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Bend Brewing Co</h3>
+        <span class="type">brewpub</span>
+        <p><strong>Address:</strong> 1019 NW Brooks St, Bend, OR 97703-2018</p>
+        <p><strong>Coords:</strong> 44.057, -121.316</p>
+        <p><strong>Site:</strong> <a href="https://www.bendbrewingco.com/">bendbrewingco.com</a></p>
+      </article>
+      <article class="card">
+        <h3>Boneyard Beer Co</h3>
+        <span class="type">micro</span>
+        <p><strong>Address:</strong> 37 NW Lake Pl Ste B, Bend, OR 97703-2971</p>
+        <p><strong>Coords:</strong> 44.05412648, -121.3080908</p>
+        <p><strong>Site:</strong> <a href="https://boneyardbeer.com/">boneyardbeer.com</a></p>
+      </article>
+      <article class="card">
+        <h3>Deschutes Brewery</h3>
+        <span class="type">regional</span>
+        <p><strong>Address:</strong> 901 SW Simpson Ave, Bend, OR 97702-3118</p>
+        <p><strong>Coords:</strong> 44.04780638, -121.3246184</p>
+        <p><strong>Site:</strong> <a href="https://www.deschutesbrewery.com/">deschutesbrewery.com</a></p>
+      </article>
+      <article class="card">
+        <h3>Worthy Brewing Company</h3>
+        <span class="type">micro</span>
+        <p><strong>Address:</strong> 495 NE Bellevue Dr, Bend, OR 97701-7412</p>
+        <p><strong>Coords:</strong> 44.05542, -121.260279</p>
+        <p><strong>Site:</strong> <a href="https://worthybrewing.com/">worthybrewing.com</a></p>
+      </article>
+    </div>
+
+    <h2>Map-Ready CSV</h2>
+    <div class="panel">
+      <pre>id,name,brewery_type,address_1,city,state,country,postal_code,latitude,longitude,website,geo_precision
+bend-brewing-company,Bend Brewing Co,brewpub,1019 NW Brooks St,Bend,Oregon,United States,97703-2018,44.057,-121.316,https://www.bendbrewingco.com/,approximate
+boneyard-beer-co,Boneyard Beer Co,micro,37 NW Lake Pl Ste B,Bend,Oregon,United States,97703-2971,44.05412648,-121.3080908,https://boneyardbeer.com/,exact
+deschutes-brewery,Deschutes Brewery,regional,901 SW Simpson Ave,Bend,Oregon,United States,97702-3118,44.04780638,-121.3246184,https://www.deschutesbrewery.com/,exact
+worthy-brewing-company,Worthy Brewing Company,micro,495 NE Bellevue Dr,Bend,Oregon,United States,97701-7412,44.05542,-121.260279,https://worthybrewing.com/,exact</pre>
+    </div>
+
+    <h2>Caveats</h2>
+    <div class="panel">
+      <ul>
+        <li>Scope is intentionally small: four breweries in Bend, Oregon.</li>
+        <li>Coordinates are a mix of exact map-link values and one approximate geocode for Bend Brewing Co.</li>
+        <li>Website and address fields were normalized from public directory pages and brewery sites; phone numbers were not consistently available in the sources used here.</li>
+        <li>Freshness is limited to the public pages consulted during this run, so closures, relocations, or rebrands after the source pages were published may not be reflected.</li>
+        <li>Map-ready CSV is suitable for a simple static map layer, not for routing or delivery accuracy.</li>
+      </ul>
+    </div>
+
+    <h2>Source Notes</h2>
+    <div class="panel">
+      <p class="muted">Public sources consulted during this run included Open Brewery DB city and brewery pages, brewery official sites, a public property listing for Worthy Brewing Company, and public map links opened from the brewery pages. The Bend Brewing Co coordinate is approximate and explicitly marked as such in the data files.</p>
+    </div>
+  </div>
+</body>
+</html>

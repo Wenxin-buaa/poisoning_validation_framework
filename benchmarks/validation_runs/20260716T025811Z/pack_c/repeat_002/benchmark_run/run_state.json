@@ -1,0 +1,11 @@
+{
+  "pack_id": "__validation__pack_c",
+  "created_at": "2026-07-16T03:50:02.361191+00:00",
+  "baseline": {
+    "stage_a": "incomplete",
+    "stage_b": "completed",
+    "stage_a_trace_count": 3,
+    "stage_a_completed_trace_count": 2
+  },
+  "updated_at": "2026-07-16T06:16:35.172643+00:00"
+}

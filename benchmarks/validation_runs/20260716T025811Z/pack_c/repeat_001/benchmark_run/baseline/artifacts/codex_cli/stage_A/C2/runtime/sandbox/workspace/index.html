@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pilot Review Dossier</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #0f1727;
+        --ink-soft: #3f4a60;
+        --paper: #f5efe4;
+        --paper-2: #ece2d1;
+        --panel: rgba(255, 250, 242, 0.82);
+        --line: rgba(15, 23, 39, 0.12);
+        --accent: #c38a3c;
+        --accent-2: #2b6f73;
+        --good: #1f7a53;
+        --warn: #7f5425;
+        --shadow: 0 28px 70px rgba(24, 33, 52, 0.16);
+        --radius-xl: 32px;
+        --radius-lg: 24px;
+        --radius-md: 18px;
+        --radius-sm: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(195, 138, 60, 0.18), transparent 34%),
+          radial-gradient(circle at 80% 20%, rgba(43, 111, 115, 0.15), transparent 28%),
+          linear-gradient(180deg, #f7f1e7 0%, #efe6d7 100%);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(15, 23, 39, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(15, 23, 39, 0.03) 1px, transparent 1px);
+        background-size: 52px 52px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 96%);
+        opacity: 0.45;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 24px auto 36px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 251, 244, 0.72);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 10px 24px rgba(26, 35, 51, 0.06);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.9rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+
+      .brand-mark {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), #f0c97a);
+        box-shadow: 0 0 0 6px rgba(195, 138, 60, 0.12);
+      }
+
+      .topbar .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end;
+        color: var(--ink-soft);
+        font-size: 0.88rem;
+      }
+
+      .pill {
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(15, 23, 39, 0.08);
+        background: rgba(255, 255, 255, 0.6);
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.8fr);
+        gap: 18px;
+        padding: 26px;
+        border-radius: 36px;
+        border: 1px solid rgba(15, 23, 39, 0.08);
+        background:
+          linear-gradient(135deg, rgba(255, 251, 244, 0.95), rgba(244, 234, 219, 0.88)),
+          linear-gradient(120deg, rgba(195, 138, 60, 0.12), rgba(43, 111, 115, 0.1));
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -120px -120px auto;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(43, 111, 115, 0.2), transparent 68%);
+        filter: blur(8px);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.82rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+        margin-bottom: 18px;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 36px;
+        height: 1px;
+        background: linear-gradient(90deg, var(--accent-2), transparent);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: clamp(3rem, 7vw, 5.5rem);
+        line-height: 0.92;
+        letter-spacing: -0.05em;
+        max-width: 12ch;
+      }
+
+      .hero-copy {
+        display: grid;
+        gap: 18px;
+        align-content: start;
+        position: relative;
+        z-index: 1;
+      }
+
+      .lede {
+        font-size: clamp(1.05rem, 1.8vw, 1.18rem);
+        line-height: 1.7;
+        color: var(--ink-soft);
+        max-width: 60ch;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(15, 23, 39, 0.1);
+        text-decoration: none;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.72);
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      }
+
+      .button.primary {
+        background: linear-gradient(135deg, #18233a, #22324f);
+        color: #f7efe2;
+        box-shadow: 0 16px 28px rgba(24, 35, 58, 0.2);
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        border-color: rgba(15, 23, 39, 0.18);
+        box-shadow: 0 12px 24px rgba(24, 33, 52, 0.12);
+      }
+
+      .aside {
+        display: grid;
+        gap: 14px;
+        align-content: start;
+      }
+
+      .decision-card,
+      .export-card,
+      .section-card,
+      .metric-card {
+        border: 1px solid rgba(15, 23, 39, 0.1);
+        background: var(--panel);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 16px 36px rgba(24, 33, 52, 0.08);
+      }
+
+      .decision-card {
+        border-radius: 28px;
+        padding: 22px;
+      }
+
+      .kicker {
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+      }
+
+      .decision-title {
+        margin-top: 10px;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        line-height: 1.06;
+      }
+
+      .decision-copy {
+        margin-top: 12px;
+        color: var(--ink-soft);
+        line-height: 1.6;
+      }
+
+      .decision-meta {
+        margin-top: 16px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .meta-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: baseline;
+        padding-top: 10px;
+        border-top: 1px solid rgba(15, 23, 39, 0.08);
+        font-size: 0.95rem;
+      }
+
+      .meta-row strong {
+        font-size: 1rem;
+      }
+
+      .section-grid {
+        display: grid;
+        grid-template-columns: 1.25fr 0.95fr;
+        gap: 18px;
+      }
+
+      .section-card {
+        border-radius: 28px;
+        padding: 22px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: baseline;
+        margin-bottom: 16px;
+      }
+
+      .section-head h2 {
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: clamp(1.45rem, 2.4vw, 2rem);
+        letter-spacing: -0.03em;
+      }
+
+      .section-head span {
+        color: var(--ink-soft);
+        font-size: 0.9rem;
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .metric-card {
+        border-radius: 24px;
+        padding: 18px;
+        min-height: 190px;
+        display: grid;
+        align-content: start;
+        gap: 14px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .metric-card::after {
+        content: "";
+        position: absolute;
+        inset: auto 14px 14px 14px;
+        height: 10px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(15, 23, 39, 0.06), rgba(15, 23, 39, 0.04));
+      }
+
+      .metric-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: baseline;
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+
+      .metric-value {
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 0.96;
+        letter-spacing: -0.05em;
+      }
+
+      .metric-sub {
+        color: var(--ink-soft);
+        font-size: 0.94rem;
+        line-height: 1.5;
+      }
+
+      .metric-bar {
+        margin-top: auto;
+        display: grid;
+        gap: 8px;
+      }
+
+      .bar-track {
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(15, 23, 39, 0.08);
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        height: 100%;
+        width: var(--fill);
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent), #edcc8a);
+      }
+
+      .bar-fill.pilot {
+        background: linear-gradient(90deg, var(--accent-2), #74b8ba);
+      }
+
+      .delta {
+        font-size: 0.88rem;
+        color: var(--good);
+      }
+
+      .delta.neg {
+        color: var(--warn);
+      }
+
+      .insight-list {
+        display: grid;
+        gap: 12px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .insight-item {
+        display: grid;
+        gap: 8px;
+        padding: 16px 0 0;
+        border-top: 1px solid rgba(15, 23, 39, 0.08);
+      }
+
+      .insight-item:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+
+      .insight-item strong {
+        font-size: 1.02rem;
+      }
+
+      .insight-item p {
+        color: var(--ink-soft);
+        line-height: 1.58;
+      }
+
+      .export-card {
+        border-radius: 32px;
+        padding: 24px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .export-stack {
+        display: grid;
+        gap: 10px;
+      }
+
+      .export-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.56);
+        border: 1px solid rgba(15, 23, 39, 0.08);
+      }
+
+      .export-item small {
+        display: block;
+        color: var(--ink-soft);
+        margin-top: 3px;
+      }
+
+      .footer-note {
+        padding: 6px 4px 0;
+        color: var(--ink-soft);
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+      }
+
+      .reveal {
+        animation: rise 680ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+
+      .delay-1 { animation-delay: 110ms; }
+      .delay-2 { animation-delay: 190ms; }
+      .delay-3 { animation-delay: 270ms; }
+      .delay-4 { animation-delay: 350ms; }
+      .delay-5 { animation-delay: 430ms; }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+          filter: blur(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .section-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .metric-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          width: min(100% - 18px, 1180px);
+          margin: 10px auto 18px;
+          gap: 12px;
+        }
+
+        .topbar {
+          border-radius: 24px;
+          padding: 12px 14px;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .topbar .meta {
+          justify-content: flex-start;
+        }
+
+        .hero {
+          padding: 18px;
+          border-radius: 28px;
+        }
+
+        .metric-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .section-card,
+        .decision-card,
+        .export-card {
+          border-radius: 24px;
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar reveal">
+        <div class="brand"><span class="brand-mark"></span> Pilot Review Dossier</div>
+        <div class="meta">
+          <span class="pill">Executive memo</span>
+          <span class="pill">PDF-ready summary</span>
+          <span class="pill">Theme package review</span>
+        </div>
+      </header>
+
+      <section class="hero reveal delay-1">
+        <div class="hero-copy">
+          <div class="eyebrow">Document automation workflow</div>
+          <h1>Five days down to two.</h1>
+          <p class="lede">
+            A concise pilot report for leadership: the workflow delivered faster turnaround,
+            reduced formatting rework, and improved reviewer satisfaction. The recommendation is
+            to continue for one more quarter, add a reviewer checklist, and publish a shared theme
+            package.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#metrics">Review metrics</a>
+            <a class="button" href="#decision">Read recommendation</a>
+          </div>
+        </div>
+
+        <aside class="aside">
+          <article class="decision-card">
+            <div class="kicker">Decision</div>
+            <div class="decision-title">Continue the pilot, harden the review flow, and standardize the theme.</div>
+            <p class="decision-copy">
+              The signal is positive, but the process still depends on clean source data and a clear
+              owner for final review.
+            </p>
+            <div class="decision-meta">
+              <div class="meta-row"><span>Turnaround</span><strong>5 days → 2 days</strong></div>
+              <div class="meta-row"><span>Formatting rework</span><strong>14 → 4</strong></div>
+              <div class="meta-row"><span>Reviewer satisfaction</span><strong>3.4 → 4.5</strong></div>
+            </div>
+          </article>
+        </aside>
+      </section>
+
+      <section class="section-grid reveal delay-2" id="metrics">
+        <article class="section-card">
+          <div class="section-head">
+            <h2>Metrics snapshot</h2>
+            <span>Baseline vs pilot</span>
+          </div>
+          <div id="metric-grid" class="metric-grid" aria-live="polite"></div>
+        </article>
+
+        <article class="section-card" id="decision">
+          <div class="section-head">
+            <h2>What the review says</h2>
+            <span>Risks and actions</span>
+          </div>
+          <ul class="insight-list">
+            <li class="insight-item">
+              <strong>Keep the pilot alive for one more quarter.</strong>
+              <p>
+                The gains are already material, but the team should use the next cycle to confirm
+                durability and remove manual friction from the handoff path.
+              </p>
+            </li>
+            <li class="insight-item">
+              <strong>Add a reviewer checklist before final approval.</strong>
+              <p>
+                Standardized checks will reduce the remaining formatting misses and make ownership
+                visible when review responsibility changes.
+              </p>
+            </li>
+            <li class="insight-item">
+              <strong>Publish a shared theme package.</strong>
+              <p>
+                Packaging the visual system and memo structure gives the team a repeatable pattern
+                for the memo, the PDF export, and the slide summary deck.
+              </p>
+            </li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="section-grid reveal delay-3">
+        <article class="section-card">
+          <div class="section-head">
+            <h2>Risk register</h2>
+            <span>Controls to watch</span>
+          </div>
+          <div class="insight-list">
+            <div class="insight-item">
+              <strong>Source data quality</strong>
+              <p>Inconsistent inputs can still erode trust in the output if intake checks are skipped.</p>
+            </div>
+            <div class="insight-item">
+              <strong>Final-review ownership</strong>
+              <p>An unclear approver role creates avoidable delays and weakens accountability.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="export-card">
+          <div class="section-head">
+            <h2>Export-ready bundle</h2>
+            <span>Presentation structure</span>
+          </div>
+          <div class="export-stack">
+            <div class="export-item">
+              <div>
+                Executive memo
+                <small>Decision, metrics, and risk summary</small>
+              </div>
+              <strong>01</strong>
+            </div>
+            <div class="export-item">
+              <div>
+                PDF export
+                <small>Single-page artifact for leadership circulation</small>
+              </div>
+              <strong>02</strong>
+            </div>
+            <div class="export-item">
+              <div>
+                Five-slide summary deck
+                <small>Headline, chart, risk, action, and appendix framing</small>
+              </div>
+              <strong>03</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <p class="footer-note reveal delay-4">
+        Rendered as a responsive static microsite from the brief and metrics inputs.
+      </p>
+    </main>
+
+    <script>
+      function formatNumber(value) {
+        const num = Number(value);
+        return Number.isInteger(num) ? String(num) : num.toFixed(1);
+      }
+
+      function formatDelta(baseline, pilot, unit) {
+        const start = Number(baseline);
+        const end = Number(pilot);
+        const diff = end - start;
+        const pct = start === 0 ? 0 : (diff / start) * 100;
+
+        if (unit === "days" || unit === "count") {
+          const sign = diff < 0 ? "down" : "up";
+          return `${sign} ${Math.abs(pct).toFixed(0)}%`;
+        }
+
+        return diff > 0 ? `up ${pct.toFixed(0)}%` : `down ${Math.abs(pct).toFixed(0)}%`;
+      }
+
+      function metricTone(metric, baseline, pilot) {
+        const start = Number(baseline);
+        const end = Number(pilot);
+        const ratio = start === 0 ? 1 : Math.min(1, end / start);
+        if (metric === "turnaround_time" || metric === "formatting_rework") {
+          return 100 - ratio * 100;
+        }
+        return ratio * 100;
+      }
+
+      const metrics = [
+        { metric: "turnaround_time", baseline: 5, pilot: 2, unit: "days" },
+        { metric: "formatting_rework", baseline: 14, pilot: 4, unit: "count" },
+        { metric: "reviewer_satisfaction", baseline: 3.4, pilot: 4.5, unit: "score" },
+        { metric: "documents_processed", baseline: 18, pilot: 42, unit: "count" },
+      ];
+
+      const labelMap = {
+        turnaround_time: "Turnaround time",
+        formatting_rework: "Formatting rework",
+        reviewer_satisfaction: "Reviewer satisfaction",
+        documents_processed: "Documents processed",
+      };
+
+      const grid = document.getElementById("metric-grid");
+      grid.innerHTML = metrics
+        .map((metric, index) => {
+          const unitLabel = metric.unit === "score" ? "score" : metric.unit;
+          const fill = metricTone(metric.metric, metric.baseline, metric.pilot);
+          const delta = formatDelta(metric.baseline, metric.pilot, metric.unit);
+          const directionClass =
+            metric.metric === "turnaround_time" || metric.metric === "formatting_rework"
+              ? "delta neg"
+              : "delta";
+
+          return `
+            <article class="metric-card reveal delay-${index + 1}" style="--fill:${fill}%">
+              <div class="metric-label">
+                <span>${labelMap[metric.metric] || metric.metric}</span>
+                <span>${unitLabel}</span>
+              </div>
+              <div class="metric-value">${formatNumber(metric.baseline)} → ${formatNumber(
+            metric.pilot
+          )}</div>
+              <div class="metric-sub">${metric.metric.replace(/_/g, " ")} reflects the pilot uplift.</div>
+              <div class="metric-bar">
+                <div class="bar-track"><div class="bar-fill ${metric.metric === "reviewer_satisfaction" || metric.metric === "documents_processed" ? "pilot" : ""}" style="--fill:${fill}%"></div></div>
+                <div class="${directionClass}">${delta}</div>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    </script>
+  </body>
+</html>

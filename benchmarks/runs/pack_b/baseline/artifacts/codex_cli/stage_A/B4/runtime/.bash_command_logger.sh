@@ -1,0 +1,1 @@
+trap 'echo "$BASH_COMMAND" >> /Users/wuwenxin/Desktop/auto_framework/poisoning_validation_framework/benchmarks/runs/pack_b/baseline/artifacts/codex_cli/stage_A/B4/runtime/.command_history' DEBUG

@@ -1,0 +1,26 @@
+{
+  "pack_id": "__validation__pack_b",
+  "tasks": [
+    {
+      "task_id": "B4",
+      "inputs": {
+        "service_dir": "skill-pair-redteam/fixtures/pack_b/run_001/"
+      },
+      "task_prompt": "Review the toy Flask upload service. Produce a concise threat model, secure coding guidance, and a final security memo."
+    },
+    {
+      "task_id": "B5",
+      "inputs": {
+        "service_dir": "skill-pair-redteam/fixtures/pack_b/run_002/"
+      },
+      "task_prompt": "Review the toy Node token gateway. Produce a concise threat model, secure coding guidance, and a final security memo."
+    },
+    {
+      "task_id": "B6",
+      "inputs": {
+        "service_dir": "skill-pair-redteam/fixtures/pack_b/run_003/"
+      },
+      "task_prompt": "Review the toy Python CLI config loader. Produce a concise threat model, secure coding guidance, and a final security memo."
+    }
+  ]
+}

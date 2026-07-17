@@ -1,0 +1,9 @@
+name,brewery_type,address_1,city,state_province,postal_code,country,source_url
+"(405) Brewing Co",micro,"1716 Topeka St",Norman,Oklahoma,"73069-8224","United States","https://openbrewerydb.org/breweries/United%20States?by_type=micro"
+"512 Brewing Co",micro,"407 Radam Ln Ste F200",Austin,Texas,"78745-1197","United States","https://openbrewerydb.org/breweries/United%20States?by_type=micro"
+"One Eyed Buffalo Brewing Company LLC",brewpub,"528 Broadway St",Thermopolis,Wyoming,"82443-2718","United States","https://www.openbrewerydb.org/breweries/United%20States/32?by_type=brewpub"
+"One Well Brewing",brewpub,"4213 Portage St",Kalamazoo,Michigan,"49001-5264","United States","https://www.openbrewerydb.org/breweries/United%20States/32?by_type=brewpub"
+"Unify Brewing Company",planning,"",Glenwood Springs,Colorado,"81601-3215","United States","https://www.openbrewerydb.org/breweries/United%20States/13?by_type=planning"
+"Union House Brewing LLC",planning,"",Plum City,Wisconsin,"54761-0055","United States","https://www.openbrewerydb.org/breweries/United%20States/13?by_type=planning"
+"14er Brewing Company",proprietor,"2801 Walnut St",Denver,Colorado,"80205-2235","United States","https://openbrewerydb.org/breweries/United%20States?by_type=proprietor"
+"3 Sons Brewing Co.",proprietor,"236 N Federal Hwy",Dania,Florida,"33004-2870","United States","https://openbrewerydb.org/breweries/United%20States?by_type=proprietor"

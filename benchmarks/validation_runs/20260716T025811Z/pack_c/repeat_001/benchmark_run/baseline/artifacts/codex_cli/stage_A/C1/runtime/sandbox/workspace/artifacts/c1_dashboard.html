@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pilot Review Dashboard</title>
+    <style>
+      :root {
+        --bg: #09111f;
+        --bg-soft: rgba(15, 29, 52, 0.84);
+        --panel: rgba(8, 19, 36, 0.9);
+        --panel-strong: rgba(11, 25, 46, 0.98);
+        --line: rgba(190, 230, 228, 0.16);
+        --text: #f5f0e8;
+        --muted: #a4b4c8;
+        --teal: #3cc4bf;
+        --teal-soft: #8ce7df;
+        --cream: #f1eadf;
+        --amber: #ffca7a;
+        --green: #72d39f;
+        --red: #ff8f8f;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+        --radius-xl: 30px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        background:
+          radial-gradient(circle at 12% 14%, rgba(60, 196, 191, 0.2), transparent 24%),
+          radial-gradient(circle at 85% 18%, rgba(255, 202, 122, 0.16), transparent 25%),
+          radial-gradient(circle at 50% 82%, rgba(140, 231, 223, 0.12), transparent 28%),
+          linear-gradient(180deg, #08111d 0%, #0d1728 45%, #09111f 100%);
+        color: var(--text);
+        letter-spacing: 0.01em;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.96), rgba(0, 0, 0, 0.4) 85%, transparent);
+        opacity: 0.35;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(120deg, rgba(255, 255, 255, 0.02), transparent 30%),
+          linear-gradient(0deg, rgba(3, 7, 14, 0.12), rgba(3, 7, 14, 0.12));
+        mix-blend-mode: screen;
+      }
+
+      .page {
+        width: min(1420px, calc(100vw - 40px));
+        margin: 0 auto;
+        padding: 28px 0 40px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .masthead {
+        display: grid;
+        grid-template-columns: 1.5fr 0.85fr;
+        gap: 20px;
+        align-items: stretch;
+        margin-bottom: 20px;
+      }
+
+      .hero,
+      .summary,
+      .metric-card,
+      .panel {
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(11, 24, 45, 0.96), rgba(7, 17, 31, 0.96));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      .hero {
+        border-radius: var(--radius-xl);
+        padding: 30px 30px 28px;
+        position: relative;
+        overflow: hidden;
+        min-height: 320px;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: auto -12% -45% auto;
+        width: 380px;
+        height: 380px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(60, 196, 191, 0.18), transparent 68%);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        border-radius: 22px;
+        border: 1px solid rgba(140, 231, 223, 0.08);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(140, 231, 223, 0.18);
+        color: var(--teal-soft);
+        background: rgba(20, 42, 55, 0.55);
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--teal);
+        box-shadow: 0 0 0 6px rgba(60, 196, 191, 0.15);
+      }
+
+      h1,
+      h2,
+      h3,
+      .display {
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+
+      .display {
+        font-size: clamp(44px, 6vw, 76px);
+        line-height: 0.94;
+        margin: 18px 0 18px;
+        max-width: 11ch;
+      }
+
+      .lead {
+        max-width: 62ch;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.72;
+        margin-bottom: 18px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 20px;
+        align-items: end;
+      }
+
+      .callout {
+        border-radius: 22px;
+        padding: 18px 18px 16px;
+        background: linear-gradient(180deg, rgba(17, 34, 59, 0.92), rgba(7, 15, 28, 0.92));
+        border: 1px solid rgba(140, 231, 223, 0.18);
+      }
+
+      .callout .label {
+        display: block;
+        color: var(--teal-soft);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        margin-bottom: 10px;
+      }
+
+      .callout .answer {
+        font-family: "Iowan Old Style", Georgia, serif;
+        font-size: clamp(24px, 3vw, 36px);
+        line-height: 1.1;
+        margin-bottom: 10px;
+      }
+
+      .callout p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .meta-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .meta-chip {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--cream);
+        font-size: 13px;
+      }
+
+      .summary {
+        border-radius: var(--radius-xl);
+        padding: 20px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .summary-card {
+        padding: 18px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .summary-card h3 {
+        font-size: 15px;
+        margin-bottom: 10px;
+        color: var(--cream);
+      }
+
+      .summary-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .summary-list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .summary-list strong {
+        color: var(--text);
+        font-weight: 650;
+        white-space: nowrap;
+      }
+
+      .status-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .status-row:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .status-key {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+      }
+
+      .status-value {
+        color: var(--text);
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .metric-card {
+        border-radius: 24px;
+        padding: 20px;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .metric-card::before {
+        content: "";
+        position: absolute;
+        inset: auto -30px -40px auto;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(60, 196, 191, 0.16), transparent 68%);
+      }
+
+      .metric-title {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+
+      .metric-value {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        font-family: "Iowan Old Style", Georgia, serif;
+        font-size: 42px;
+        line-height: 1;
+      }
+
+      .metric-value small {
+        font-family: inherit;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .metric-delta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--cream);
+      }
+
+      .metric-delta .pill {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(60, 196, 191, 0.14);
+        color: var(--teal-soft);
+        border: 1px solid rgba(60, 196, 191, 0.18);
+      }
+
+      .metric-delta.is-up .pill {
+        background: rgba(114, 211, 159, 0.14);
+        border-color: rgba(114, 211, 159, 0.18);
+        color: #9de8bc;
+      }
+
+      .metric-delta.is-down .pill {
+        background: rgba(255, 143, 143, 0.14);
+        border-color: rgba(255, 143, 143, 0.18);
+        color: #ffc1c1;
+      }
+
+      .metric-note {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+        margin-top: auto;
+      }
+
+      .insight-grid {
+        grid-template-columns: 1.5fr 0.95fr;
+        margin-top: 18px;
+      }
+
+      .panel {
+        border-radius: var(--radius-xl);
+        padding: 24px;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: end;
+        margin-bottom: 18px;
+      }
+
+      .panel-header h2 {
+        font-size: clamp(24px, 3vw, 34px);
+      }
+
+      .panel-header p {
+        margin: 0;
+        color: var(--muted);
+        max-width: 48ch;
+        line-height: 1.6;
+      }
+
+      .bar-list {
+        display: grid;
+        gap: 16px;
+      }
+
+      .bar-item {
+        display: grid;
+        grid-template-columns: 1.2fr 1.8fr auto;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .bar-name {
+        display: grid;
+        gap: 6px;
+      }
+
+      .bar-name strong {
+        font-size: 15px;
+      }
+
+      .bar-name span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .bar-track {
+        position: relative;
+        height: 22px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .bar-track::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.07), transparent 24%),
+          linear-gradient(90deg, rgba(60, 196, 191, 0.14), rgba(60, 196, 191, 0.14));
+        opacity: 0.25;
+      }
+
+      .bar-fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, rgba(60, 196, 191, 0.9), rgba(140, 231, 223, 0.78));
+        box-shadow: 0 10px 24px rgba(60, 196, 191, 0.3);
+        transform-origin: left center;
+        transform: scaleX(var(--scale, 0.5));
+        transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .bar-fill.alt {
+        background: linear-gradient(90deg, rgba(255, 202, 122, 0.92), rgba(255, 170, 82, 0.78));
+        box-shadow: 0 10px 24px rgba(255, 202, 122, 0.22);
+      }
+
+      .bar-values {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+        color: var(--cream);
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      .bar-values small {
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .quote {
+        display: grid;
+        gap: 12px;
+      }
+
+      .quote p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .quote strong {
+        color: var(--text);
+      }
+
+      .actions {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .actions li {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 12px;
+        align-items: start;
+        color: var(--muted);
+        line-height: 1.55;
+        font-size: 14px;
+      }
+
+      .bullet {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #07202c;
+        background: linear-gradient(180deg, var(--teal-soft), var(--teal));
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .risk-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .risk {
+        padding: 14px 14px 14px 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .risk .tag {
+        display: inline-flex;
+        margin-bottom: 8px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: rgba(255, 143, 143, 0.12);
+        color: #ffbcbc;
+        border: 1px solid rgba(255, 143, 143, 0.16);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .risk p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+        font-size: 14px;
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        color: rgba(241, 234, 223, 0.72);
+        font-size: 12px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        text-align: right;
+      }
+
+      .appear {
+        opacity: 0;
+        transform: translateY(14px);
+        animation: rise 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .delay-1 {
+        animation-delay: 110ms;
+      }
+
+      .delay-2 {
+        animation-delay: 220ms;
+      }
+
+      .delay-3 {
+        animation-delay: 330ms;
+      }
+
+      .delay-4 {
+        animation-delay: 440ms;
+      }
+
+      .delay-5 {
+        animation-delay: 550ms;
+      }
+
+      .delay-6 {
+        animation-delay: 660ms;
+      }
+
+      @keyframes rise {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 1120px) {
+        .masthead,
+        .hero-grid,
+        .insight-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .metric-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .hero {
+          min-height: auto;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .page {
+          width: min(100vw - 20px, 100%);
+          padding-top: 10px;
+        }
+
+        .hero,
+        .summary,
+        .panel,
+        .metric-card {
+          border-radius: 20px;
+        }
+
+        .hero,
+        .panel,
+        .summary {
+          padding: 18px;
+        }
+
+        .display {
+          font-size: clamp(34px, 12vw, 50px);
+        }
+
+        .metric-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .bar-item {
+          grid-template-columns: 1fr;
+        }
+
+        .bar-values {
+          justify-content: space-between;
+        }
+
+        .panel-header {
+          align-items: start;
+          flex-direction: column;
+        }
+
+        .footer-note {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="masthead">
+        <article class="hero appear">
+          <span class="eyebrow">Executive memo / document automation pilot</span>
+          <h1 class="display">Two-day turnaround, cleaner review cycle.</h1>
+          <div class="hero-grid">
+            <div>
+              <p class="lead">
+                The pilot materially improved throughput and reviewer experience. Formatting issues dropped after
+                template standardization, and the operating rhythm is now stable enough for a controlled extension.
+              </p>
+              <div class="meta-strip">
+                <span class="meta-chip">Continue for one more quarter</span>
+                <span class="meta-chip">Add a reviewer checklist</span>
+                <span class="meta-chip">Publish shared theme package</span>
+              </div>
+            </div>
+            <div class="callout">
+              <span class="label">Recommended message</span>
+              <div class="answer">Keep the pilot, tighten review ownership, and standardize the finish line.</div>
+              <p>
+                The numbers support expansion, but the review layer still needs clearer accountability and cleaner
+                source-data discipline before scale-up.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="summary appear delay-1">
+          <div class="summary-card">
+            <h3>Decision status</h3>
+            <div class="status-row">
+              <div class="status-key">Recommendation</div>
+              <div class="status-value">Continue</div>
+            </div>
+            <div class="status-row">
+              <div class="status-key">Scope</div>
+              <div class="status-value">1 quarter</div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <h3>Primary risks</h3>
+            <div class="risk-list">
+              <div class="risk">
+                <span class="tag">Data quality</span>
+                <p>Inconsistent source data can still force avoidable cleanup work and slow the handoff.</p>
+              </div>
+              <div class="risk">
+                <span class="tag">Ownership</span>
+                <p>Final review responsibility needs to be explicit so exceptions do not stall at the end.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="grid metric-grid">
+        <article class="metric-card appear delay-2">
+          <div class="metric-title">Turnaround time</div>
+          <div class="metric-value"><span id="turnaround-pilot">2</span><small>days</small></div>
+          <div class="metric-delta is-down"><span class="pill">-60%</span> from 5 days baseline</div>
+          <p class="metric-note">The pilot cut elapsed time sharply while keeping the editorial flow readable.</p>
+        </article>
+
+        <article class="metric-card appear delay-3">
+          <div class="metric-title">Formatting rework</div>
+          <div class="metric-value"><span id="rework-pilot">4</span><small>items</small></div>
+          <div class="metric-delta is-down"><span class="pill">-71%</span> from 14 baseline</div>
+          <p class="metric-note">Template standardization reduced rework enough to make the output feel predictable.</p>
+        </article>
+
+        <article class="metric-card appear delay-4">
+          <div class="metric-title">Reviewer satisfaction</div>
+          <div class="metric-value"><span id="satisfaction-pilot">4.5</span><small>/ 5</small></div>
+          <div class="metric-delta is-up"><span class="pill">+32%</span> from 3.4 baseline</div>
+          <p class="metric-note">Reviewers reported less friction and a cleaner approval experience overall.</p>
+        </article>
+
+        <article class="metric-card appear delay-5">
+          <div class="metric-title">Documents processed</div>
+          <div class="metric-value"><span id="docs-pilot">42</span><small>count</small></div>
+          <div class="metric-delta is-up"><span class="pill">+133%</span> from 18 baseline</div>
+          <p class="metric-note">Throughput more than doubled, which supports a cautious next-phase expansion.</p>
+        </article>
+      </section>
+
+      <section class="grid insight-grid">
+        <article class="panel appear delay-5">
+          <div class="panel-header">
+            <div>
+              <h2>Baseline vs pilot comparison</h2>
+              <p>Relative scale bars keep the trade-offs visible at a glance: faster turnaround, less rework, higher satisfaction, and materially more volume.</p>
+            </div>
+          </div>
+          <div class="bar-list" id="bar-list"></div>
+          <div class="footer-note">Pilot review memo rendered from the brief and metrics.csv</div>
+        </article>
+
+        <aside class="panel stack appear delay-6">
+          <div class="quote">
+            <div class="eyebrow" style="width: fit-content;">Execution notes</div>
+            <p>
+              <strong>What changed:</strong> the process now completes in two days rather than five, with fewer format
+              exceptions and better reviewer sentiment.
+            </p>
+            <p>
+              <strong>What still needs work:</strong> the source data pipeline and the final sign-off path should be
+              tightened before the pilot becomes the default operating model.
+            </p>
+          </div>
+
+          <div class="summary-card" style="background: rgba(255,255,255,0.03);">
+            <h3>Next actions</h3>
+            <ul class="actions">
+              <li><span class="bullet">1</span><span>Continue the pilot for one more quarter to validate the gains under broader load.</span></li>
+              <li><span class="bullet">2</span><span>Add a reviewer checklist so the last-mile approval path is explicit and repeatable.</span></li>
+              <li><span class="bullet">3</span><span>Publish the shared theme package to keep documents and reporting visually aligned.</span></li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script>
+      const metrics = [
+        {
+          key: "Turnaround time",
+          summary: "Lower is better",
+          baseline: 5,
+          pilot: 2,
+          unit: "days",
+          baselineLabel: "Baseline 5 days",
+          pilotLabel: "Pilot 2 days",
+          baselineScale: 1,
+          pilotScale: 0.4,
+        },
+        {
+          key: "Formatting rework",
+          summary: "Lower is better",
+          baseline: 14,
+          pilot: 4,
+          unit: "count",
+          baselineLabel: "Baseline 14",
+          pilotLabel: "Pilot 4",
+          baselineScale: 1,
+          pilotScale: 0.29,
+        },
+        {
+          key: "Reviewer satisfaction",
+          summary: "Higher is better",
+          baseline: 3.4,
+          pilot: 4.5,
+          unit: "score",
+          baselineLabel: "Baseline 3.4",
+          pilotLabel: "Pilot 4.5",
+          baselineScale: 0.76,
+          pilotScale: 1,
+        },
+        {
+          key: "Documents processed",
+          summary: "Higher is better",
+          baseline: 18,
+          pilot: 42,
+          unit: "count",
+          baselineLabel: "Baseline 18",
+          pilotLabel: "Pilot 42",
+          baselineScale: 0.43,
+          pilotScale: 1,
+        },
+      ];
+
+      const list = document.getElementById("bar-list");
+
+      function deltaText(metric) {
+        const diff = metric.pilot - metric.baseline;
+        const percent = metric.baseline === 0 ? 0 : Math.abs((diff / metric.baseline) * 100);
+        const rounded = Math.round(percent);
+        const direction = metric.key === "Turnaround time" || metric.key === "Formatting rework" ? "decrease" : "increase";
+        if (direction === "decrease") {
+          return `<span class="pill">-${rounded}%</span> improvement vs baseline`;
+        }
+        return `<span class="pill">+${rounded}%</span> improvement vs baseline`;
+      }
+
+      list.innerHTML = metrics
+        .map(
+          (metric, index) => `
+            <div class="bar-item appear delay-${Math.min(index + 2, 6)}">
+              <div class="bar-name">
+                <strong>${metric.key}</strong>
+                <span>${metric.summary}</span>
+              </div>
+              <div class="bar-track" aria-hidden="true">
+                <div class="bar-fill" style="--scale:${metric.baselineScale}; opacity:0.48;"></div>
+                <div class="bar-fill alt" style="--scale:${metric.pilotScale};"></div>
+              </div>
+              <div class="bar-values">
+                <span><small>B</small> ${metric.baseline}</span>
+                <span><small>P</small> ${metric.pilot}</span>
+              </div>
+            </div>
+          `,
+        )
+        .join("");
+
+      const bars = document.querySelectorAll(".bar-fill");
+      requestAnimationFrame(() => {
+        bars.forEach((bar) => {
+          bar.style.transform = `scaleX(${bar.style.getPropertyValue("--scale") || 0})`;
+        });
+      });
+    </script>
+  </body>
+</html>

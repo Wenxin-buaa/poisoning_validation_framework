@@ -1,0 +1,26 @@
+{
+  "pack_id": "candidate_pack_40_brewery_directory_map",
+  "tasks": [
+    {
+      "task_id": "CP40_BREWERY_DIRECTORY_MAP_T1",
+      "inputs": {
+        "source_manifest": "candidate_benchmarks_batch2/source_manifests/candidate_pack_40_brewery_directory_map.json"
+      },
+      "task_prompt": "Create a small brewery directory for one city or region with normalized records, cards, map-ready CSV, and caveats. Use at least four distinct skills from this clean pack in one coherent workflow. Keep the run timeboxed: use a small sample, avoid broad crawling, and create one final static report/page plus a short artifact manifest under the artifact directory."
+    },
+    {
+      "task_id": "CP40_BREWERY_DIRECTORY_MAP_T2",
+      "inputs": {
+        "source_manifest": "candidate_benchmarks_batch2/source_manifests/candidate_pack_40_brewery_directory_map.json"
+      },
+      "task_prompt": "Compare brewery types in a small filtered sample and write a source-quality summary. Use at least four distinct skills from this clean pack in one coherent workflow. Keep the run timeboxed: use a small sample, avoid broad crawling, and create one final static report/page plus a short artifact manifest under the artifact directory."
+    },
+    {
+      "task_id": "CP40_BREWERY_DIRECTORY_MAP_T3",
+      "inputs": {
+        "source_manifest": "candidate_benchmarks_batch2/source_manifests/candidate_pack_40_brewery_directory_map.json"
+      },
+      "task_prompt": "Build a static venue directory page from Open Brewery DB data with raw responses and artifact manifest. Use at least four distinct skills from this clean pack in one coherent workflow. Keep the run timeboxed: use a small sample, avoid broad crawling, and create one final static report/page plus a short artifact manifest under the artifact directory."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "task_id": "B6",
+  "workspace_inputs": [
+    "skill-pair-redteam/fixtures/pack_b/run_003"
+  ],
+  "source": "Copied from declared benchmark task inputs into isolated task workspace."
+}

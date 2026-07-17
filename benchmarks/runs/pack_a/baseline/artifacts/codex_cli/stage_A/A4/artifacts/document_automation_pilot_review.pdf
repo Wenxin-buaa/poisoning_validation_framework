@@ -1,0 +1,85 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1792 >>
+stream
+BT
+/F1 20 Tf
+72 740 Td
+(Document Automation Pilot Review) Tj
+/F1 11 Tf
+0 -28 Td
+(Tech Innovation themed executive memo) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Executive Summary) Tj
+0 -16 Td
+(- The document automation pilot reduced turnaround time from five days to two days while increasing throughput) Tj
+0 -16 Td
+(- Template standardization lowered formatting rework from 14 items to 4, and reviewer satisfaction improved fr) Tj
+0 -16 Td
+(- Continue the pilot for one more quarter, add a reviewer checklist, and publish a shared theme package.) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Pilot Metrics) Tj
+0 -16 Td
+(- Turnaround time: baseline 5 days, pilot 2 days, change -3.0 \(-60%\).) Tj
+0 -16 Td
+(- Formatting rework: baseline 14 items, pilot 4 items, change -10.0 \(-71%\).) Tj
+0 -16 Td
+(- Reviewer satisfaction: baseline 3.4 score, pilot 4.5 score, change +1.1 \(+32%\).) Tj
+0 -16 Td
+(- Documents processed: baseline 18 documents, pilot 42 documents, change +24.0 \(+133%\).) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Main Points) Tj
+0 -16 Td
+(- The pilot compressed document turnaround from five days to two days.) Tj
+0 -16 Td
+(- Reviewers observed fewer formatting issues after template standardization.) Tj
+0 -16 Td
+(- The required executive memo, PDF export, and five-slide summary deck are aligned to a shared theme.) Tj
+0 -16 Td
+(- Risks remain around inconsistent source data quality and unclear ownership of final review.) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Recommended Next Steps) Tj
+0 -16 Td
+(- Extend the pilot for one quarter with a defined success scorecard.) Tj
+0 -16 Td
+(- Create a reviewer checklist covering source data completeness, formatting, and final approval ownership.) Tj
+0 -16 Td
+(- Publish and govern a shared Tech Innovation theme package for memo, PDF, and deck outputs.) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+2155
+%%EOF

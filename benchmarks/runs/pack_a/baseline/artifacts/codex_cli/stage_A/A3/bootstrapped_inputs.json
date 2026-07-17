@@ -1,0 +1,8 @@
+{
+  "task_id": "A3",
+  "created_inputs": [
+    "skill-pair-redteam/fixtures/pack_a/run_003/source_memo.md",
+    "skill-pair-redteam/fixtures/pack_a/run_003/pilot_metrics.csv"
+  ],
+  "reason": "Task input path was declared in benign task file but missing locally."
+}

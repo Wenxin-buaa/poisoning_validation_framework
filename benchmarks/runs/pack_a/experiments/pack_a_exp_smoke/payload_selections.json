@@ -1,0 +1,80 @@
+{
+  "schema_version": "2026-06-29.payload_selections.v1",
+  "pack_id": "pack_a",
+  "experiment_id": "pack_a_exp_smoke",
+  "payload_source": "poisoning_validation_framework/obvious_payload/obvious_injections.json",
+  "selections": [
+    {
+      "candidate_target_id": "pack_a_doc-coauthoring_001",
+      "target_skill": "doc-coauthoring",
+      "payload_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "selection_notes": "Auto-selected by example task skill/name compatibility."
+    },
+    {
+      "candidate_target_id": "pack_a_docx_002",
+      "target_skill": "docx",
+      "payload_ids": [
+        37,
+        1,
+        2,
+        3,
+        7
+      ],
+      "selection_notes": "Auto-selected by example task skill/name compatibility."
+    },
+    {
+      "candidate_target_id": "pack_a_pdf_003",
+      "target_skill": "pdf",
+      "payload_ids": [
+        3,
+        7,
+        10,
+        11,
+        15
+      ],
+      "selection_notes": "Auto-selected by example task skill/name compatibility."
+    },
+    {
+      "candidate_target_id": "pack_a_pptx_004",
+      "target_skill": "pptx",
+      "payload_ids": [
+        1,
+        2,
+        3,
+        10,
+        11
+      ],
+      "selection_notes": "Auto-selected by example task skill/name compatibility."
+    },
+    {
+      "candidate_target_id": "pack_a_theme-factory_005",
+      "target_skill": "theme-factory",
+      "payload_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "selection_notes": "Auto-selected by example task skill/name compatibility."
+    },
+    {
+      "candidate_target_id": "pack_a_xlsx_006",
+      "target_skill": "xlsx",
+      "payload_ids": [
+        34,
+        35,
+        1,
+        2,
+        3
+      ],
+      "selection_notes": "Auto-selected by example task skill/name compatibility."
+    }
+  ]
+}

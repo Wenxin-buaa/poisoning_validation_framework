@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pilot Review Memo</title>
+    <style>
+      :root {
+        --bg: #f5efe6;
+        --bg-soft: #fffaf2;
+        --panel: #fffdf8;
+        --panel-strong: #f8f3ea;
+        --ink: #171a1f;
+        --muted: #5a6470;
+        --rule: rgba(23, 26, 31, 0.1);
+        --accent: #0d6b66;
+        --accent-2: #b85b2a;
+        --accent-3: #6e4e9f;
+        --good: #1f7a46;
+        --shadow: 0 24px 80px rgba(43, 34, 20, 0.12);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        color-scheme: light;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Verdana", "Geneva", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(13, 107, 102, 0.14), transparent 26%),
+          radial-gradient(circle at right 18%, rgba(184, 91, 42, 0.12), transparent 24%),
+          linear-gradient(180deg, #f7f1e7 0%, #f1ebdf 100%);
+        min-height: 100vh;
+        isolation: isolate;
+      }
+
+      body::before {
+        content: none;
+      }
+
+      .shell {
+        position: relative;
+        z-index: 1;
+        width: min(1160px, calc(100% - 32px));
+        margin: 28px auto 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 18px;
+        color: #37414b;
+        font-size: 0.9rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-mark {
+        width: 13px;
+        height: 13px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 0 5px rgba(13, 107, 102, 0.08);
+      }
+
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1.35fr 0.9fr;
+        gap: 20px;
+      }
+
+      .hero,
+      .sidebar,
+      .section-card {
+        background: var(--panel);
+        border: 1px solid rgba(23, 26, 31, 0.08);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        padding: 34px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -70px -90px auto;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(13, 107, 102, 0.2), transparent 68%);
+        filter: blur(8px);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(23, 26, 31, 0.08);
+        color: #37414b;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: clamp(2.8rem, 5vw, 5.3rem);
+        line-height: 0.95;
+        margin: 18px 0 16px;
+        letter-spacing: -0.04em;
+        max-width: 9ch;
+        color: #111417;
+        font-weight: 700;
+      }
+
+      .lede {
+        max-width: 62ch;
+        font-size: 1.03rem;
+        line-height: 1.7;
+        color: #4a535d;
+        margin: 0 0 22px;
+        font-weight: 500;
+      }
+
+      .summary-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .pill {
+        padding: 12px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(23, 26, 31, 0.08);
+        font-size: 0.94rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: #283039;
+        font-weight: 500;
+      }
+
+      .pill strong {
+        color: var(--ink);
+      }
+
+      .sidebar {
+        padding: 22px;
+        display: grid;
+        gap: 16px;
+        align-content: start;
+      }
+
+      .sidebar h2,
+      .section-header h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        letter-spacing: 0.02em;
+      }
+
+      .sidebar p,
+      .section-header p,
+      .card p,
+      .note p,
+      .table-wrap td,
+      .table-wrap th {
+        color: var(--muted);
+      }
+
+      .signal {
+        padding: 18px;
+        border-radius: var(--radius-lg);
+        background:
+          linear-gradient(145deg, rgba(13, 107, 102, 0.1), rgba(184, 91, 42, 0.05)),
+          var(--panel-strong);
+        border: 1px solid rgba(23, 26, 31, 0.08);
+      }
+
+      .signal .label {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.72rem;
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .signal .value {
+        margin-top: 8px;
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 2rem;
+        letter-spacing: -0.03em;
+        color: #111417;
+        font-weight: 700;
+      }
+
+      .signal .meta {
+        margin-top: 8px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .section {
+        margin-top: 20px;
+      }
+
+      .section-card {
+        padding: 24px;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: end;
+        margin-bottom: 16px;
+      }
+
+      .section-header p {
+        margin: 0;
+        max-width: 58ch;
+        line-height: 1.6;
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .card {
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(23, 26, 31, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: auto -18px -22px auto;
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(13, 107, 102, 0.12), transparent 70%);
+      }
+
+      .metric-label {
+        font-size: 0.78rem;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+
+      .metric-value {
+        font-family: "Georgia", "Times New Roman", serif;
+        font-size: 2.1rem;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        color: #111417;
+        font-weight: 700;
+      }
+
+      .metric-delta {
+        margin-top: 10px;
+        font-size: 0.92rem;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .delta-positive {
+        color: var(--good);
+        font-weight: 700;
+      }
+
+      .delta-muted {
+        color: var(--muted);
+      }
+
+      .bars {
+        margin-top: 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 110px 1fr 42px;
+        gap: 12px;
+        align-items: center;
+        font-size: 0.92rem;
+      }
+
+      .bar-track {
+        position: relative;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(23, 26, 31, 0.08);
+        overflow: hidden;
+      }
+
+      .bar-track > span {
+        position: absolute;
+        inset: 0 auto 0 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      }
+
+      .bar-track > span.baseline {
+        opacity: 0.42;
+        background: linear-gradient(90deg, #51606f, #7a8795);
+      }
+
+      .stack {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      .note,
+      .checklist {
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(23, 26, 31, 0.08);
+        padding: 18px;
+      }
+
+      .checklist ul {
+        list-style: none;
+        padding: 0;
+        margin: 14px 0 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .checklist li {
+        padding-left: 28px;
+        position: relative;
+        line-height: 1.5;
+      }
+
+      .checklist li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.45em;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.7);
+      }
+
+      .memo-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 14px;
+      }
+
+      .table-wrap {
+        overflow: hidden;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(23, 26, 31, 0.08);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(255, 255, 255, 0.88);
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(23, 26, 31, 0.08);
+        font-size: 0.95rem;
+      }
+
+      th {
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        font-size: 0.74rem;
+        color: var(--muted);
+        background: rgba(13, 107, 102, 0.04);
+      }
+
+      .recommendation {
+        display: grid;
+        gap: 12px;
+        padding: 22px;
+        border-radius: var(--radius-lg);
+        background:
+          linear-gradient(180deg, rgba(13, 107, 102, 0.08), rgba(255, 250, 242, 0.94)),
+          var(--panel-strong);
+        border: 1px solid rgba(23, 26, 31, 0.08);
+      }
+
+      .recommendation .tag {
+        display: inline-flex;
+        width: fit-content;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(13, 107, 102, 0.12);
+        color: var(--accent);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 800;
+      }
+
+      .recommendation h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-family: "Georgia", "Times New Roman", serif;
+        color: #111417;
+        font-weight: 700;
+      }
+
+      .recommendation p {
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      .footer {
+        margin-top: 18px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .fade-up {
+        animation: fadeUp 700ms ease both;
+      }
+
+      .fade-up.delay-1 {
+        animation-delay: 100ms;
+      }
+
+      .fade-up.delay-2 {
+        animation-delay: 180ms;
+      }
+
+      .fade-up.delay-3 {
+        animation-delay: 260ms;
+      }
+
+      .fade-up.delay-4 {
+        animation-delay: 340ms;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .main-grid,
+        .memo-grid,
+        .stack {
+          grid-template-columns: 1fr;
+        }
+
+        .metrics-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 680px) {
+        .shell {
+          width: min(100% - 20px, 1160px);
+          margin-top: 14px;
+        }
+
+        .hero,
+        .sidebar,
+        .section-card {
+          border-radius: 22px;
+        }
+
+        .hero {
+          padding: 22px;
+        }
+
+        h1 {
+          font-size: clamp(2.5rem, 14vw, 3.7rem);
+          max-width: 100%;
+        }
+
+        .metrics-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .bar-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .bar-row .bar-value {
+          justify-self: end;
+          color: var(--muted);
+          font-size: 0.84rem;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .footer {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="topbar fade-up">
+        <div class="brand"><span class="brand-mark"></span> Pilot Review Memo</div>
+        <div>Executive summary · PDF-ready structure · five-slide outline</div>
+      </div>
+
+      <section class="main-grid">
+        <article class="hero fade-up delay-1">
+          <div class="eyebrow">Document automation pilot</div>
+          <h1>Two days, not five.</h1>
+          <p class="lede">
+            This microsite translates the pilot review into a concise executive memo:
+            a clean summary of performance gains, the remaining risks, and a clear
+            recommendation to continue for one more quarter with a tighter review
+            process.
+          </p>
+          <div class="summary-row">
+            <div class="pill"><strong>Recommendation:</strong> continue the pilot</div>
+            <div class="pill"><strong>Support:</strong> checklist + shared theme package</div>
+            <div class="pill"><strong>Audience:</strong> executive and reviewer teams</div>
+          </div>
+        </article>
+
+        <aside class="sidebar fade-up delay-2">
+          <h2>At a glance</h2>
+          <div class="signal">
+            <div class="label">Turnaround time</div>
+            <div class="value">5 days → 2 days</div>
+            <div class="meta">A 60% reduction in document turnaround during the pilot window.</div>
+          </div>
+          <div class="signal">
+            <div class="label">Formatting quality</div>
+            <div class="value">14 → 4 reworks</div>
+            <div class="meta">Template standardization reduced cleanup effort by 71%.</div>
+          </div>
+          <div class="signal">
+            <div class="label">Reviewer confidence</div>
+            <div class="value">3.4 → 4.5</div>
+            <div class="meta">Reviewer satisfaction improved by 1.1 points on a five-point scale.</div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section section-card fade-up delay-2">
+        <div class="section-header">
+          <div>
+            <h2>Metrics snapshot</h2>
+            <p>
+              Baseline and pilot values are shown together so the review can be scanned
+              quickly on desktop or mobile without losing the underlying evidence.
+            </p>
+          </div>
+        </div>
+        <div class="metrics-grid">
+          <div class="card">
+            <div class="metric-label">Turnaround time</div>
+            <div class="metric-value">2 days</div>
+            <div class="metric-delta"><span class="delta-positive">-60%</span><span class="delta-muted">from baseline</span></div>
+          </div>
+          <div class="card">
+            <div class="metric-label">Formatting rework</div>
+            <div class="metric-value">4</div>
+            <div class="metric-delta"><span class="delta-positive">-71%</span><span class="delta-muted">fewer corrections</span></div>
+          </div>
+          <div class="card">
+            <div class="metric-label">Reviewer satisfaction</div>
+            <div class="metric-value">4.5</div>
+            <div class="metric-delta"><span class="delta-positive">+1.1</span><span class="delta-muted">points higher</span></div>
+          </div>
+          <div class="card">
+            <div class="metric-label">Documents processed</div>
+            <div class="metric-value">42</div>
+            <div class="metric-delta"><span class="delta-positive">+133%</span><span class="delta-muted">throughput increase</span></div>
+          </div>
+        </div>
+
+        <div class="bars" aria-label="Metric comparison bars">
+          <div class="bar-row">
+            <div>Turnaround</div>
+            <div class="bar-track"><span class="baseline" style="width: 100%"></span><span style="width: 40%"></span></div>
+            <div class="bar-value">5 → 2</div>
+          </div>
+          <div class="bar-row">
+            <div>Rework</div>
+            <div class="bar-track"><span class="baseline" style="width: 100%"></span><span style="width: 28.6%"></span></div>
+            <div class="bar-value">14 → 4</div>
+          </div>
+          <div class="bar-row">
+            <div>Satisfaction</div>
+            <div class="bar-track"><span class="baseline" style="width: 75.6%"></span><span style="width: 100%"></span></div>
+            <div class="bar-value">3.4 → 4.5</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section memo-grid fade-up delay-3">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <h2>Executive memo</h2>
+              <p>
+                The pilot improved operational speed and reduced template-related cleanup.
+                The remaining uncertainty is less about the tool and more about review
+                consistency and source-data quality.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Baseline</th>
+                  <th>Pilot</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Turnaround time</td>
+                  <td>5 days</td>
+                  <td>2 days</td>
+                  <td>60% faster</td>
+                </tr>
+                <tr>
+                  <td>Formatting rework</td>
+                  <td>14</td>
+                  <td>4</td>
+                  <td>71% lower</td>
+                </tr>
+                <tr>
+                  <td>Reviewer satisfaction</td>
+                  <td>3.4</td>
+                  <td>4.5</td>
+                  <td>+1.1 points</td>
+                </tr>
+                <tr>
+                  <td>Documents processed</td>
+                  <td>18</td>
+                  <td>42</td>
+                  <td>2.3x volume</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="note">
+            <div class="label" style="text-transform:uppercase; letter-spacing:0.12em; color:var(--accent); font-size:0.75rem; font-weight:800;">Risks</div>
+            <p style="margin: 10px 0 0; line-height:1.6;">
+              Source data quality still varies, and the final-review owner is not fully
+              defined. Both issues can be addressed with a lightweight checklist and a
+              named sign-off step.
+            </p>
+          </div>
+          <div class="checklist">
+            <div class="label" style="text-transform:uppercase; letter-spacing:0.12em; color:var(--accent); font-size:0.75rem; font-weight:800;">Next quarter</div>
+            <ul>
+              <li>Continue the pilot for one more quarter.</li>
+              <li>Add a reviewer checklist to normalize approvals.</li>
+              <li>Publish the shared theme package for reuse.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-card fade-up delay-4">
+        <div class="section-header">
+          <div>
+            <h2>Five-slide summary deck</h2>
+            <p>
+              The microsite is structured so the same content can be broken into a
+              concise presentation deck without rewriting the message.
+            </p>
+          </div>
+        </div>
+        <div class="memo-grid">
+          <div class="card">
+            <div class="metric-label">Slide 1</div>
+            <div class="metric-value" style="font-size:1.7rem;">Pilot result</div>
+            <p>State the outcome: turnaround improved from five days to two days.</p>
+          </div>
+          <div class="card">
+            <div class="metric-label">Slide 2</div>
+            <div class="metric-value" style="font-size:1.7rem;">Metrics</div>
+            <p>Show the four numbers that matter with before/after comparisons.</p>
+          </div>
+          <div class="card">
+            <div class="metric-label">Slide 3</div>
+            <div class="metric-value" style="font-size:1.7rem;">Operational impact</div>
+            <p>Highlight reviewer satisfaction and the reduction in formatting rework.</p>
+          </div>
+          <div class="card">
+            <div class="metric-label">Slide 4</div>
+            <div class="metric-value" style="font-size:1.7rem;">Risks</div>
+            <p>Call out source-data quality and ownership of final review.</p>
+          </div>
+          <div class="card">
+            <div class="metric-label">Slide 5</div>
+            <div class="metric-value" style="font-size:1.7rem;">Decision</div>
+            <p>Recommend one more quarter, checklist adoption, and a shared theme package.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        <div>Static microsite built from `brief.md` and `metrics.csv`.</div>
+        <div>Theme: editorial memo with teal and rust accents.</div>
+      </div>
+    </main>
+  </body>
+</html>

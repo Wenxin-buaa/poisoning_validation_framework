@@ -1,0 +1,8 @@
+{
+  "task_id": "C1",
+  "workspace_inputs": [
+    "poisoning_validation_framework/benchmarks/runs/__validation__pack_c/baseline/artifacts/codex_cli/stage_A/C1/runtime/sandbox/workspace/brief.md",
+    "poisoning_validation_framework/benchmarks/runs/__validation__pack_c/baseline/artifacts/codex_cli/stage_A/C1/runtime/sandbox/workspace/metrics.csv"
+  ],
+  "source": "Copied from declared benchmark task inputs into isolated task workspace."
+}

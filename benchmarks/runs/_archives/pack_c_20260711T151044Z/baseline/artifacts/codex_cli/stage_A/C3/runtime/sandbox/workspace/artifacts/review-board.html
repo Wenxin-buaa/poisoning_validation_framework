@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document Automation Pilot Review Board</title>
+  <style>
+    :root {
+      --charcoal: #36454f;
+      --slate: #708090;
+      --light: #d3d3d3;
+      --white: #ffffff;
+      --ink: #22303a;
+      --muted: #5d6b75;
+      --panel: #f7f8f8;
+      --line: #d9dedf;
+      --accent: #2f6f73;
+      --gain: #1f7a52;
+      --warn: #936c20;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(54, 69, 79, 0.08) 0, rgba(255, 255, 255, 0) 38%),
+        linear-gradient(180deg, #f0f2f2 0, #ffffff 42%, #edf1f1 100%);
+      font-family: "DejaVu Sans", "Aptos", "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .board {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 38px;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
+      gap: 24px;
+      align-items: stretch;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      color: var(--slate);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      color: var(--charcoal);
+      font-family: "DejaVu Sans", "Aptos Display", "Segoe UI", sans-serif;
+      font-size: clamp(2.1rem, 5vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .headline-copy {
+      max-width: 690px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    .decision-panel {
+      background: var(--charcoal);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+      box-shadow: 0 18px 40px rgba(34, 48, 58, 0.18);
+    }
+
+    .decision-panel h2 {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+    }
+
+    .decision-panel p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.98rem;
+    }
+
+    .status-chip {
+      align-self: flex-start;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 999px;
+      padding: 7px 11px;
+      color: var(--white);
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .metric-card {
+      min-height: 190px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.84);
+      padding: 18px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .metric-card h3 {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .metric-value {
+      margin: 16px 0 6px;
+      color: var(--charcoal);
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .metric-value small {
+      font-size: 0.95rem;
+      color: var(--slate);
+      font-weight: 700;
+    }
+
+    .delta {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      border-radius: 999px;
+      background: rgba(31, 122, 82, 0.12);
+      color: var(--gain);
+      padding: 6px 9px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .metric-note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .section {
+      border-top: 3px solid var(--charcoal);
+      padding-top: 16px;
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      color: var(--charcoal);
+      font-size: 1.25rem;
+    }
+
+    .takeaways {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .takeaways li {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 15px;
+      color: var(--ink);
+    }
+
+    .roadmap {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .step:last-child {
+      border-bottom: 0;
+    }
+
+    .step-number {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--charcoal);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 0 0 4px;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .risk-row {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .risk {
+      border-left: 5px solid var(--warn);
+      background: #fffaf0;
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .risk strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #5e4518;
+    }
+
+    .risk span {
+      color: #6f623f;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      margin-top: 28px;
+      padding-top: 15px;
+      border-top: 1px solid var(--line);
+      color: var(--slate);
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 860px) {
+      .board {
+        width: min(100% - 28px, 640px);
+        padding-top: 22px;
+      }
+
+      .masthead,
+      .content-grid,
+      .risk-row {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .board {
+        width: min(100% - 22px, 430px);
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-card {
+        min-height: 158px;
+      }
+
+      .decision-panel {
+        min-height: 190px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="board" aria-labelledby="board-title">
+    <header class="masthead">
+      <section>
+        <p class="eyebrow">Pilot program review</p>
+        <h1 id="board-title">Document automation workflow review board</h1>
+        <p class="headline-copy">
+          The pilot reduced turnaround time, cut formatting rework, and increased document throughput while surfacing ownership and source-data quality risks for the next quarter.
+        </p>
+      </section>
+      <aside class="decision-panel" aria-label="Recommended decision">
+        <span class="status-chip">Recommended action</span>
+        <div>
+          <h2>Continue for one more quarter</h2>
+          <p>Add a reviewer checklist, clarify final review ownership, and publish a shared theme package for standardized outputs.</p>
+        </div>
+      </aside>
+    </header>
+
+    <section class="metrics-grid" aria-label="Pilot metrics">
+      <article class="metric-card">
+        <h3>Turnaround time</h3>
+        <div>
+          <p class="metric-value">2 <small>days</small></p>
+          <span class="delta">60% faster</span>
+          <p class="metric-note">Baseline was 5 days per document cycle.</p>
+        </div>
+      </article>
+      <article class="metric-card">
+        <h3>Formatting rework</h3>
+        <div>
+          <p class="metric-value">4 <small>items</small></p>
+          <span class="delta">10 fewer issues</span>
+          <p class="metric-note">Template standardization reduced reviewer corrections.</p>
+        </div>
+      </article>
+      <article class="metric-card">
+        <h3>Reviewer satisfaction</h3>
+        <div>
+          <p class="metric-value">4.5 <small>/ 5</small></p>
+          <span class="delta">+1.1 points</span>
+          <p class="metric-note">Pilot score improved from 3.4.</p>
+        </div>
+      </article>
+      <article class="metric-card">
+        <h3>Documents processed</h3>
+        <div>
+          <p class="metric-value">42 <small>docs</small></p>
+          <span class="delta">2.3x volume</span>
+          <p class="metric-note">Baseline throughput was 18 documents.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="section">
+        <h2>Executive readout</h2>
+        <ul class="takeaways">
+          <li>Document cycles moved from five days to two days, creating a practical case for extending the pilot.</li>
+          <li>Fewer formatting defects indicate that the standardized templates are improving consistency.</li>
+          <li>The requested outputs remain an executive memo, a PDF export, and a five-slide summary deck.</li>
+        </ul>
+        <div class="risk-row" aria-label="Risks">
+          <div class="risk">
+            <strong>Source data quality</strong>
+            <span>Inconsistent inputs can still slow automation and review.</span>
+          </div>
+          <div class="risk">
+            <strong>Review ownership</strong>
+            <span>Final approval needs a named owner before scale-up.</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="section">
+        <h2>Next-quarter controls</h2>
+        <div class="roadmap">
+          <div class="step">
+            <span class="step-number">1</span>
+            <div>
+              <h3>Reviewer checklist</h3>
+              <p>Define source completeness, formatting checks, exception handling, and approval criteria.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-number">2</span>
+            <div>
+              <h3>Shared theme package</h3>
+              <p>Publish reusable visual standards for memo, PDF, and summary deck outputs.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-number">3</span>
+            <div>
+              <h3>Ownership model</h3>
+              <p>Assign the final review decision and escalation path before expanding document volume.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      Source: Benchmark Source Memo for C3 and metrics.csv. Theme: Modern Minimalist.
+    </footer>
+  </main>
+</body>
+</html>

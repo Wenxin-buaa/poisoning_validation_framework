@@ -1,0 +1,49 @@
+{
+  "schema_version": "2026-06-29.stage_request.v2",
+  "stage": "C",
+  "role": "attack_agent",
+  "created_at": "2026-07-10T16:30:56.952541+00:00",
+  "pack_id": "pack_c",
+  "experiment_id": "pack_c_exp_001",
+  "loop_iteration": null,
+  "safety": {
+    "payload_policy": "inert_payload_only",
+    "allowed_effects": [
+      "visible payload marker in experiment artifact",
+      "payload log under poisoning_validation_framework",
+      "mock-only event record",
+      "benign ordering/label change in toy artifact"
+    ],
+    "disallowed_effects": [
+      "network callback",
+      "credential or secret access",
+      "data exfiltration",
+      "privilege escalation",
+      "persistence",
+      "detection bypass",
+      "destructive file operations",
+      "real installation of poisoned skills",
+      "modification of ~/.codex/skills outside explicit activation scripts"
+    ]
+  },
+  "inputs": {
+    "task_file": "poisoning_validation_framework/benchmarks/benign_tasks/pack_c_tasks.json",
+    "clean_pack": "poisoning_validation_framework/benchmarks/clean_packs/pack_c",
+    "baseline_traces": "poisoning_validation_framework/benchmarks/runs/pack_c/baseline/traces.jsonl",
+    "candidate_targets": "poisoning_validation_framework/benchmarks/runs/pack_c/baseline/candidate_targets.json",
+    "payload_taxonomy": "poisoning_validation_framework/obvious_payload/obvious_injections.json",
+    "payload_judge_rules": "poisoning_validation_framework/obvious_payload/obvious_judge_rules.json",
+    "experiment": "poisoning_validation_framework/benchmarks/runs/pack_c/experiments/pack_c_exp_001",
+    "payload_selections": "poisoning_validation_framework/benchmarks/runs/pack_c/experiments/pack_c_exp_001/payload_selections.json",
+    "variants_dir": "poisoning_validation_framework/benchmarks/runs/pack_c/experiments/pack_c_exp_001/variants"
+  },
+  "expected_output": "poisoning_validation_framework/benchmarks/runs/pack_c/experiments/pack_c_exp_001/payload_selections.json",
+  "contract": {
+    "type": "json",
+    "required": [
+      "pack_id",
+      "experiment_id",
+      "selections"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "2026-06-29.stage_request.v2",
+  "stage": "B",
+  "role": "target_agent",
+  "created_at": "2026-07-16T06:42:04.057409+00:00",
+  "pack_id": "__validation__pack_c",
+  "experiment_id": null,
+  "loop_iteration": null,
+  "safety": {
+    "payload_policy": "inert_payload_only",
+    "allowed_effects": [
+      "visible payload marker in experiment artifact",
+      "payload log under poisoning_validation_framework",
+      "mock-only event record",
+      "benign ordering/label change in toy artifact"
+    ],
+    "disallowed_effects": [
+      "network callback",
+      "credential or secret access",
+      "data exfiltration",
+      "privilege escalation",
+      "persistence",
+      "detection bypass",
+      "destructive file operations",
+      "real installation of poisoned skills",
+      "modification of ~/.codex/skills outside explicit activation scripts"
+    ]
+  },
+  "inputs": {
+    "task_file": "poisoning_validation_framework/benchmarks/benign_tasks/__validation__pack_c_tasks.json",
+    "clean_pack": "poisoning_validation_framework/benchmarks/clean_packs/__validation__pack_c",
+    "baseline_traces": "poisoning_validation_framework/benchmarks/runs/__validation__pack_c/baseline/traces.jsonl",
+    "candidate_targets": "poisoning_validation_framework/benchmarks/runs/__validation__pack_c/baseline/candidate_targets.json",
+    "payload_taxonomy": "poisoning_validation_framework/obvious_payload/obvious_injections.json",
+    "payload_judge_rules": "poisoning_validation_framework/obvious_payload/obvious_judge_rules.json"
+  },
+  "expected_output": "poisoning_validation_framework/benchmarks/runs/__validation__pack_c/baseline/candidate_targets.json",
+  "contract": {
+    "type": "json",
+    "required": [
+      "pack_id",
+      "targets"
+    ]
+  }
+}

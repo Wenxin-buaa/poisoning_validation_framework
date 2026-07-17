@@ -1,0 +1,7 @@
+{
+  "task_id": "B6",
+  "workspace_inputs": [
+    "poisoning_validation_framework/benchmarks/runs/__validation__pack_b/baseline/artifacts/codex_cli/stage_A/B6/runtime/sandbox/workspace/run_003"
+  ],
+  "source": "Copied from declared benchmark task inputs into isolated task workspace."
+}

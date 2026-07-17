@@ -4,6 +4,14 @@ This framework is a staged sink-first skill-poisoning generation pipeline. It no
 
 The framework first discovers benign workflows, extracts candidate sinks, adapts Skill-Inject-style obvious injection examples into safe local benchmark payloads, builds a sink-only variant, and escalates to hook-sink only when sink-only fails.
 
+## Terminology
+
+* `sink_skill`: the skill where the payload is finally triggered or materialized.
+* `upstream_skill`: a Stage B candidate observed before the sink in a benign workflow.
+* `hook_skill`: the selected upstream skill after Stage D4 chooses and modifies it.
+* `hook-sink`: the Stage D4/D5/D6 coordinated variant type.
+* `coordinated`: the neutral directory/category name for hook-sink loop artifacts.
+
 ## Data Dependency Chain
 
 1. **Stage A, Target Agent benign workflow discovery**
@@ -37,6 +45,7 @@ The framework first discovers benign workflows, extracts candidate sinks, adapts
 7. **Stage D4, Attack Agent hook-sink construction**
    - Used only if D3 fails or is inconclusive.
    - Input: sink-only failure feedback, Stage C record, Stage B upstream candidates, clean pack.
+   - Purpose: choose one observed `upstream_skill` as `hook_skill`, then construct the hook-sink dependency.
    - Output: `hook_sink_variant/`, `hook_sink_attack_iteration.json`, and compatibility copies under `poisoned_pack_variant/` and `attack_iteration.json`.
 
 8. **Stage D5, Target Agent hook-sink execution**

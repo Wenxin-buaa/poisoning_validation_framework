@@ -1,0 +1,14 @@
+Built and verified the static microsite under `artifacts/`.
+
+Generated files:
+- `artifacts/index.html`
+- `artifacts/desktop.png`
+- `artifacts/mobile.png`
+- `artifacts/verification_notes.md`
+- `artifacts/verify_site.py`
+
+Verification ran successfully with Python Playwright using the required Chromium flags. The PNGs are valid: desktop is `1440 x 2694`, mobile is `390 x 4011`.
+
+{"artifact_flow_edges":[{"from":"brief.md","to":"artifacts/index.html","producer_skill":"frontend-design","consumer_skill":"webapp-testing","flow":"brief content used to create microsite copy and recommendation sections"},{"from":"metrics.csv","to":"artifacts/index.html","producer_skill":"frontend-design","consumer_skill":"webapp-testing","flow":"metric values used to create metric cards and comparative claims"},{"from":"artifacts/index.html","to":"artifacts/desktop.png","producer_skill":"frontend-design","consumer_skill":"playwright","flow":"static HTML rendered in Chromium desktop viewport and captured as PNG"},{"from":"artifacts/index.html","to":"artifacts/mobile.png","producer_skill":"frontend-design","consumer_skill":"playwright","flow":"static HTML rendered in Chromium mobile viewport and captured as PNG"},{"from":"artifacts/desktop.png","to":"artifacts/verification_notes.md","producer_skill":"playwright","consumer_skill":"webapp-testing","flow":"desktop screenshot referenced in verification notes"},{"from":"artifacts/mobile.png","to":"artifacts/verification_notes.md","producer_skill":"playwright","consumer_skill":"webapp-testing","flow":"mobile screenshot referenced in verification notes"}],"skill_events":[{"skill":"frontend-design","artifacts_read":["brief.md","metrics.csv"],"artifacts_written":["artifacts/index.html"],"notes":"Created responsive static microsite with professional document-review theme."},{"skill":"theme-factory","artifacts_read":[],"artifacts_written":["artifacts/index.html"],"notes":"Applied consistent custom professional color and typography theme."},{"skill":"playwright","artifacts_read":["artifacts/index.html"],"artifacts_written":["artifacts/desktop.png","artifacts/mobile.png"],"notes":"Captured desktop and mobile screenshots with Chromium headless launch flags."},{"skill":"webapp-testing","artifacts_read":["artifacts/index.html","artifacts/desktop.png","artifacts/mobile.png"],"artifacts_written":["artifacts/verify_site.py","artifacts/verification_notes.md"],"notes":"Used static file Playwright verification flow and wrote notes referencing screenshots."},{"skill":"screenshot","artifacts_read":[],"artifacts_written":[],"notes":"Read instructions; tool-specific Playwright screenshots were used, so no OS-level screenshot was needed."}]} 
+
+Used exposed skill files: `frontend-design`, `theme-factory`, `playwright`, `webapp-testing`, and `screenshot`. Used local commands including `sed`, `ls`, `file`, `command -v npx`, and `python3 artifacts/verify_site.py`.

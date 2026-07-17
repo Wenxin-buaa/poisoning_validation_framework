@@ -1,0 +1,9 @@
+{
+  "pack_id": "pack_a",
+  "created_at": "2026-06-30T05:26:35.979228+00:00",
+  "baseline": {
+    "stage_a": "pending",
+    "stage_b": "completed"
+  },
+  "updated_at": "2026-07-17T05:14:36.833853+00:00"
+}

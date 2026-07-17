@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document Automation Pilot Dashboard</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --ink: #172033;
+      --muted: #647187;
+      --panel: #ffffff;
+      --line: #d8e0eb;
+      --blue: #0066ff;
+      --cyan: #00b8c8;
+      --green: #1f9d63;
+      --amber: #b7791f;
+      --dark: #1e1e1e;
+      --shadow: 0 18px 45px rgba(23, 32, 51, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(0, 102, 255, 0.11), transparent 34%),
+        linear-gradient(315deg, rgba(0, 184, 200, 0.13), transparent 38%),
+        var(--bg);
+      font-family: "DejaVu Sans", Verdana, sans-serif;
+      letter-spacing: 0;
+    }
+
+    main {
+      width: min(1180px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 32px 0 38px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 22px;
+      align-items: stretch;
+      min-height: 252px;
+    }
+
+    .hero-copy {
+      background: var(--dark);
+      color: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-copy::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -115px auto;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.32), transparent 64%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 16px;
+    }
+
+    h1 {
+      font-family: "DejaVu Sans", Verdana, sans-serif;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 0.98;
+      margin: 0;
+      max-width: 760px;
+    }
+
+    .hero-copy p:last-child {
+      color: #dbe7f8;
+      font-size: 16px;
+      line-height: 1.62;
+      max-width: 690px;
+      margin: 20px 0 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .decision {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+      display: grid;
+      align-content: space-between;
+      gap: 24px;
+    }
+
+    .decision h2,
+    .section-title {
+      font-size: 14px;
+      line-height: 1.2;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .decision strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1.13;
+      margin-top: 10px;
+      color: var(--ink);
+    }
+
+    .decision ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .decision li {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 10px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .decision li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+      margin-top: 5px;
+    }
+
+    .metrics {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .metric-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      min-height: 208px;
+      display: grid;
+      gap: 14px;
+      box-shadow: 0 10px 25px rgba(23, 32, 51, 0.07);
+    }
+
+    .metric-card h3 {
+      margin: 0;
+      min-height: 44px;
+      font-size: 18px;
+      line-height: 1.18;
+    }
+
+    .metric-card .delta {
+      width: max-content;
+      max-width: 100%;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f5132;
+      background: #d9f6e8;
+    }
+
+    .metric-card .delta.warn {
+      color: #744210;
+      background: #fff0cc;
+    }
+
+    .values {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .value {
+      border-left: 3px solid var(--line);
+      padding-left: 10px;
+    }
+
+    .value.pilot {
+      border-color: var(--blue);
+    }
+
+    .value span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .value b {
+      font-size: 31px;
+      line-height: 1;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #edf2f8;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: var(--base) var(--pilot);
+    }
+
+    .bar i:first-child {
+      background: #aab6c6;
+    }
+
+    .bar i:last-child {
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+    }
+
+    .lower-is-better {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .insights {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .panel h2 {
+      margin-bottom: 16px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 84px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .step b {
+      color: var(--blue);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .step span {
+      color: var(--ink);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .risk {
+      background: #f7f9fc;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .risk b {
+      display: block;
+      color: var(--amber);
+      margin-bottom: 6px;
+    }
+
+    .risk span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 940px) {
+      main {
+        width: min(100% - 28px, 760px);
+        padding-top: 18px;
+      }
+
+      .hero,
+      .insights {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      main {
+        width: min(100% - 22px, 420px);
+      }
+
+      .hero-copy,
+      .decision,
+      .panel {
+        padding: 20px;
+      }
+
+      .metrics,
+      .risk-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-card {
+        min-height: 0;
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" aria-labelledby="dashboard-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Pilot program review</p>
+        <h1 id="dashboard-title">Document automation is ready for another quarter.</h1>
+        <p>The pilot compressed turnaround, reduced formatting rework, lifted reviewer satisfaction, and more than doubled processing throughput after template standardization.</p>
+      </div>
+      <aside class="decision" aria-label="Recommended decision">
+        <div>
+          <h2>Recommended message</h2>
+          <strong>Continue the pilot with tighter review controls.</strong>
+        </div>
+        <ul>
+          <li>Add a reviewer checklist before final approval.</li>
+          <li>Publish a shared theme package for documents and decks.</li>
+          <li>Clarify ownership for the final review checkpoint.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="metrics" aria-label="Pilot metrics">
+      <article class="metric-card">
+        <h3>Turnaround time</h3>
+        <span class="delta">3 days faster</span>
+        <div class="values">
+          <div class="value"><span>Baseline</span><b>5</b></div>
+          <div class="value pilot"><span>Pilot</span><b>2</b></div>
+        </div>
+        <div class="bar" style="--base: 71%; --pilot: 29%;" aria-hidden="true"><i></i><i></i></div>
+        <p class="lower-is-better">Lower is better: turnaround fell by 60%.</p>
+      </article>
+
+      <article class="metric-card">
+        <h3>Formatting rework</h3>
+        <span class="delta">10 fewer issues</span>
+        <div class="values">
+          <div class="value"><span>Baseline</span><b>14</b></div>
+          <div class="value pilot"><span>Pilot</span><b>4</b></div>
+        </div>
+        <div class="bar" style="--base: 78%; --pilot: 22%;" aria-hidden="true"><i></i><i></i></div>
+        <p class="lower-is-better">Lower is better: template standards cut rework by 71%.</p>
+      </article>
+
+      <article class="metric-card">
+        <h3>Reviewer satisfaction</h3>
+        <span class="delta">+1.1 score lift</span>
+        <div class="values">
+          <div class="value"><span>Baseline</span><b>3.4</b></div>
+          <div class="value pilot"><span>Pilot</span><b>4.5</b></div>
+        </div>
+        <div class="bar" style="--base: 43%; --pilot: 57%;" aria-hidden="true"><i></i><i></i></div>
+        <p class="lower-is-better">Higher is better: reviewers reported smoother output quality.</p>
+      </article>
+
+      <article class="metric-card">
+        <h3>Documents processed</h3>
+        <span class="delta">+24 documents</span>
+        <div class="values">
+          <div class="value"><span>Baseline</span><b>18</b></div>
+          <div class="value pilot"><span>Pilot</span><b>42</b></div>
+        </div>
+        <div class="bar" style="--base: 30%; --pilot: 70%;" aria-hidden="true"><i></i><i></i></div>
+        <p class="lower-is-better">Higher is better: volume increased by 133%.</p>
+      </article>
+    </section>
+
+    <section class="insights" aria-label="Insights and risks">
+      <div class="panel">
+        <h2 class="section-title">Executive readout</h2>
+        <div class="timeline">
+          <div class="step"><b>Proof</b><span>Five-day document turnaround moved to two days during the pilot.</span></div>
+          <div class="step"><b>Quality</b><span>Standard templates reduced formatting rework from 14 issues to 4.</span></div>
+          <div class="step"><b>Scale</b><span>Processing capacity rose from 18 to 42 documents.</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2 class="section-title">Risks to manage</h2>
+        <p>The next quarter should preserve the pilot gains while addressing two operational weak points called out in the source memo.</p>
+        <div class="risk-grid">
+          <div class="risk"><b>Source quality</b><span>Inconsistent input data can still slow automation and review cycles.</span></div>
+          <div class="risk"><b>Final ownership</b><span>Unclear approval responsibility can create avoidable late-stage friction.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Source files: brief.md and metrics.csv. Theme basis: Tech Innovation from exposed theme-factory skill.</footer>
+  </main>
+</body>
+</html>

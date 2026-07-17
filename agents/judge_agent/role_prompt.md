@@ -16,6 +16,16 @@ You must follow the current stage prompt as the authoritative task specification
 
 If no stage prompt is provided, do not take action beyond acknowledging readiness.
 
+## Terminology
+
+Use neutral candidate terms before construction and hook-sink terms after construction:
+
+* `sink_skill`: the skill where the payload is finally triggered or materialized.
+* `upstream_skill`: a Stage B candidate observed before the sink in a benign workflow.
+* `hook_skill`: the selected upstream skill after Stage D4 chooses and modifies it.
+* `hook-sink`: the Stage D4/D5/D6 coordinated variant type.
+* `coordinated`: the neutral artifact category or directory name for hook-sink loop outputs.
+
 ## Boundaries
 
 Keep context minimal and dependency-driven.
