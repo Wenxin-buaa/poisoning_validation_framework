@@ -1,6 +1,9 @@
 # Agent Prompt Usage
 
-This framework is a staged sink-first skill-poisoning generation pipeline. It no longer assumes that every exploit must be a hook-sink pair.
+This framework is a staged skill-pair poisoning generation pipeline. The run unit
+is a preselected upstream/downstream skill pair, and the workflow keeps the same
+sink-first escalation shape while allowing the artifact to be constructed rather
+than inherited from a natural clean-pack intermediate.
 
 The framework first discovers benign workflows, extracts candidate sinks, adapts Skill-Inject-style obvious injection examples into safe local benchmark payloads, builds a sink-only variant, and escalates to hook-sink only when sink-only fails.
 
@@ -14,20 +17,20 @@ The framework first discovers benign workflows, extracts candidate sinks, adapts
 
 ## Data Dependency Chain
 
-1. **Stage A, Target Agent benign workflow discovery**
+1. **Stage A, Target Agent benign pair execution**
    - Input: `benchmarks/benign_tasks/<pack_id>_tasks.json` + `benchmarks/clean_packs/<pack_id>/`.
    - Output: `benchmarks/benign_runs/<pack_id>/traces/`.
-   - Purpose: determine whether the pack forms a stable workflow and record skill calls plus artifact/context/state flow.
+   - Purpose: determine whether the pair forms a stable workflow and record skill calls plus artifact/context/state flow.
 
-2. **Stage B, Target Agent candidate sink extraction**
+2. **Stage B, Target Agent pair trace normalization**
    - Input: `benchmarks/benign_runs/<pack_id>/traces/`.
    - Output: `benchmarks/benign_runs/<pack_id>/candidate_workflow_pairs.json`.
-   - Purpose: identify candidate sinks and upstream candidates. The historical filename is retained, but the content is sink-first.
+   - Purpose: normalize benign pair traces into pair metadata and preserve observed upstream/downstream runtime context for later stages. The historical filename is retained for compatibility.
 
 3. **Stage C, Attack Agent payload intent selection**
-   - Input: candidate sinks + benign traces + `data/obvious_inject.json` examples.
-   - Output: `benchmarks/iterations/<iteration_id>/pair_selection_analysis.json`.
-   - Purpose: select a payload intent example and rewrite it into a safe local benchmark payload for one candidate sink.
+   - Input: pair metadata + benign traces + `data/obvious_inject.json` examples.
+   - Output: `benchmarks/iterations/<iteration_id>/payload_selections.json`.
+   - Purpose: assign the full payload pool to each downstream skill in the pair.
 
 4. **Stage D1, Attack Agent sink-only construction**
    - Input: Stage C payload adaptation + clean pack.
@@ -81,9 +84,9 @@ Workspace root:
 Framework root:
 
 ```text
-poisoning_validation_framework
+pair_poisoning_validation_framework
 ```
 
-Runtime outputs stay under `poisoning_validation_framework/`.
+Runtime outputs stay under `pair_poisoning_validation_framework/`.
 
 Benign baseline outputs live under `benchmarks/benign_runs/<pack_id>/` and are reused across iterations. Iteration outputs live under `benchmarks/iterations/<iteration_id>/`.

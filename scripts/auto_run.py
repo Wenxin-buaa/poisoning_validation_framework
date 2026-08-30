@@ -10,15 +10,25 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from automation.payloads import PayloadResolver  # noqa: E402
 from automation.pipeline import VariantPipeline  # noqa: E402
 
 
-PROVIDERS = ["dry-run", "openai-compatible", "codex-cli"]
+PROVIDERS = ["dry-run", "openai-compatible", "codex-cli", "codex-sandbox", "claude-code-sandbox"]
+PAYLOAD_POOLS = ["obvious", "obvious-general-script", "skillject", "skillject-obvious-general-no003"]
+
+
+def add_payload_pool_arg(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--payload-pool",
+        choices=PAYLOAD_POOLS,
+        help="Payload pool to use for Stage C/variant payload resolution. Defaults to PVF_PAYLOAD_POOL or obvious.",
+    )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Automation entrypoint for poisoning_validation_framework"
+        description="Automation entrypoint for pair_poisoning_validation_framework"
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -36,6 +46,7 @@ def main() -> int:
     p.add_argument("--experiment-id")
     p.add_argument("--variant-id")
     p.add_argument("--loop-iteration", type=int)
+    add_payload_pool_arg(p)
 
     p = sub.add_parser("execute-stage", help="Build prompt and execute it with a provider")
     p.add_argument("--stage", required=True)
@@ -45,18 +56,42 @@ def main() -> int:
     p.add_argument("--loop-iteration", type=int)
     p.add_argument("--provider", default="dry-run", choices=PROVIDERS)
     p.add_argument("--no-ingest", action="store_true", help="Do not auto-ingest materialized provider/local output")
+    p.add_argument(
+        "--require-upstream-targets",
+        action="store_true",
+        help="For Stage C, keep pair-compatible candidate targets while preserving compatibility filtering metadata.",
+    )
+    add_payload_pool_arg(p)
 
-    p = sub.add_parser("auto-select-payloads", help="Semantically select five payload IDs per candidate target with the attack LLM")
+    p = sub.add_parser("auto-select-payloads", help="Select all payload IDs from the active payload pool for each candidate target")
     p.add_argument("--pack", required=True)
     p.add_argument("--experiment-id", required=True)
+    p.add_argument(
+        "--require-upstream-targets",
+        action="store_true",
+        help="Keep pair-compatible candidate targets while preserving compatibility filtering metadata.",
+    )
+    add_payload_pool_arg(p)
 
     p = sub.add_parser("rule-select-payloads", help="Deterministic fallback payload selection by skill-name matching")
     p.add_argument("--pack", required=True)
     p.add_argument("--experiment-id", required=True)
+    p.add_argument(
+        "--require-upstream-targets",
+        action="store_true",
+        help="Keep pair-compatible candidate targets while preserving compatibility filtering metadata.",
+    )
+    add_payload_pool_arg(p)
 
     p = sub.add_parser("expand-variants", help="Expand payload selections into per-variant workspaces")
     p.add_argument("--pack", required=True)
     p.add_argument("--experiment-id", required=True)
+    p.add_argument(
+        "--require-upstream-targets",
+        action="store_true",
+        help="Preserve pair-compatibility metadata when expanding variants.",
+    )
+    add_payload_pool_arg(p)
 
     p = sub.add_parser("limit-variant-tasks", help="Rewrite existing variants so each runs one selected task")
     p.add_argument("--pack", required=True)
@@ -82,11 +117,12 @@ def main() -> int:
     p.add_argument("--pack", required=True)
     p.add_argument("--experiment-id", required=True)
     p.add_argument("--provider", default="dry-run", choices=PROVIDERS)
+    add_payload_pool_arg(p)
 
     sub.add_parser("summarize", help="Run result summarization")
 
     args = parser.parse_args()
-    pipe = VariantPipeline()
+    pipe = VariantPipeline(payloads=PayloadResolver(payload_pool=getattr(args, "payload_pool", None)))
 
     if args.command == "init-baseline":
         print(pipe.paths.rel(pipe.init_baseline(args.pack)))
@@ -115,19 +151,32 @@ def main() -> int:
             loop_iteration=args.loop_iteration,
             provider_name=args.provider,
             auto_ingest=not args.no_ingest,
+            require_upstream_targets=args.require_upstream_targets,
         )))
         return 0
 
     if args.command == "auto-select-payloads":
-        print(pipe.paths.rel(pipe.auto_stage_c(args.pack, args.experiment_id)))
+        print(pipe.paths.rel(pipe.auto_stage_c(
+            args.pack,
+            args.experiment_id,
+            require_upstream_targets=args.require_upstream_targets,
+        )))
         return 0
 
     if args.command == "rule-select-payloads":
-        print(pipe.paths.rel(pipe.rule_stage_c(args.pack, args.experiment_id)))
+        print(pipe.paths.rel(pipe.rule_stage_c(
+            args.pack,
+            args.experiment_id,
+            require_upstream_targets=args.require_upstream_targets,
+        )))
         return 0
 
     if args.command == "expand-variants":
-        variants = pipe.expand_variants(args.pack, args.experiment_id)
+        variants = pipe.expand_variants(
+            args.pack,
+            args.experiment_id,
+            require_upstream_targets=args.require_upstream_targets,
+        )
         print(json.dumps({"variant_count": len(variants)}, indent=2))
         return 0
 

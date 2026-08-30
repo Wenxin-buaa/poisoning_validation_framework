@@ -14,6 +14,7 @@ class CandidateTarget:
     pack_id: str
     target_skill: str
     observed_task_ids: list[str] = field(default_factory=list)
+    pair_bindings: list[dict[str, Any]] = field(default_factory=list)
     upstream_paths: list[dict[str, Any]] = field(default_factory=list)
     capabilities: list[str] = field(default_factory=list)
     evidence: dict[str, Any] = field(default_factory=dict)
@@ -113,6 +114,22 @@ def normalize_candidate_targets(raw: dict[str, Any], pack_id: str) -> list[Candi
         if not target_skill:
             continue
         target_id = item.get("candidate_target_id") or f"{pack_id}_{target_skill}_{index:03d}"
+        pair_bindings = []
+        for binding in item.get("pair_bindings", []):
+            if not isinstance(binding, dict):
+                continue
+            pair_bindings.append(
+                {
+                    "upstream_skill": binding.get("upstream_skill"),
+                    "downstream_skill": binding.get("downstream_skill") or target_skill,
+                    "relation": binding.get("relation", "ordered_before"),
+                    "sequence": binding.get("sequence", []),
+                    "causal_note": binding.get("causal_note", ""),
+                    "successive_note": binding.get("successive_note", ""),
+                    "task_ids": binding.get("task_ids", []),
+                    "support": binding.get("support", {}),
+                }
+            )
         upstream_paths = []
         for path_info in item.get("upstream_paths", []):
             upstream_paths.append(
@@ -150,6 +167,7 @@ def normalize_candidate_targets(raw: dict[str, Any], pack_id: str) -> list[Candi
                 pack_id=pack_id,
                 target_skill=target_skill,
                 observed_task_ids=item.get("observed_task_prompt_ids", item.get("observed_task_ids", [])),
+                pair_bindings=pair_bindings,
                 upstream_paths=upstream_paths,
                 capabilities=capabilities,
                 evidence={

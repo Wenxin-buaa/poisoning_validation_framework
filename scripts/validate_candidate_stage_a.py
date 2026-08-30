@@ -20,6 +20,11 @@ from automation.io import load_json, read_jsonl, write_json  # noqa: E402
 from automation.pipeline import VariantPipeline  # noqa: E402
 
 
+LIVE_GATE_SCHEMA_VERSION = "2026-08-10.candidate_stage_a_live_gate.v1"
+PASS_MIN_TARGETS_WITH_UPSTREAM = 2
+STRONG_PASS_MIN_TARGETS_WITH_UPSTREAM = 3
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Run candidate benchmark Stage A repeatability validation without promoting candidates."
@@ -27,7 +32,7 @@ def main() -> int:
     parser.add_argument(
         "--pack",
         action="append",
-        help="Pack id to validate. Repeat for multiple packs. Defaults to all candidate_pack_* packs for candidate source, or all benchmark packs for benchmarks source.",
+        help="Pack id to validate. Repeat for multiple packs. Defaults to all candidate_pack_* and pack_* packs for candidate source, or all benchmark packs for benchmarks source.",
     )
     parser.add_argument(
         "--source",
@@ -41,7 +46,11 @@ def main() -> int:
         help="Candidate benchmark root to use with --source candidate. Defaults to candidate_benchmarks.",
     )
     parser.add_argument("--repeats", type=int, default=3)
-    parser.add_argument("--provider", default="codex-cli", choices=("codex-cli", "dry-run", "openai-compatible"))
+    parser.add_argument(
+        "--provider",
+        default="codex-cli",
+        choices=("codex-cli", "codex-sandbox", "claude-code-sandbox", "dry-run", "openai-compatible"),
+    )
     parser.add_argument(
         "--stage-b",
         action="store_true",
@@ -62,6 +71,16 @@ def main() -> int:
         default="__validation__",
         help="Prefix for temporary benchmark pack ids when validating existing benchmark packs.",
     )
+    parser.add_argument(
+        "--run-root",
+        default=None,
+        help="Existing or new run root. Defaults to creating a timestamped directory under the source run parent.",
+    )
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="Skip repeats that already have repeat_summary.json in the selected run root.",
+    )
     args = parser.parse_args()
 
     source_root = (
@@ -69,24 +88,55 @@ def main() -> int:
         if args.source == "candidate" and args.candidate_root
         else ROOT / ("candidate_benchmarks" if args.source == "candidate" else "benchmarks")
     )
-    pack_glob = "candidate_pack_*" if args.source == "candidate" else "*"
-    pack_ids = args.pack or [
-        path.name
-        for path in sorted((source_root / "clean_packs").glob(pack_glob))
-        if path.is_dir() and not path.name.startswith(args.staging_prefix)
-    ]
+    if args.pack:
+        pack_ids = args.pack
+    elif args.source == "candidate":
+        clean_root = source_root / "clean_packs"
+        pack_ids = sorted(
+            {
+                path.name
+                for pattern in ("candidate_pack_*", "pack_*")
+                for path in clean_root.glob(pattern)
+                if path.is_dir() and not path.name.startswith(args.staging_prefix)
+            }
+        )
+    else:
+        pack_ids = [
+            path.name
+            for path in sorted((source_root / "clean_packs").glob("*"))
+            if path.is_dir() and not path.name.startswith(args.staging_prefix)
+        ]
     if not pack_ids:
         raise RuntimeError("No candidate packs selected.")
     if args.repeats < 1:
         raise ValueError("--repeats must be >= 1")
 
     run_parent = source_root / "runs" if args.source == "candidate" else ROOT / "benchmarks/validation_runs"
-    run_root = run_parent / _stamp()
+    run_root = Path(args.run_root).expanduser().resolve() if args.run_root else run_parent / _stamp()
     run_root.mkdir(parents=True, exist_ok=True)
     summary_rows: list[dict[str, Any]] = []
+    rows_by_pack: dict[str, list[dict[str, Any]]] = defaultdict(list)
 
     for pack_id in pack_ids:
         for repeat_index in range(1, args.repeats + 1):
+            repeat_summary_path = run_root / pack_id / f"repeat_{repeat_index:03d}" / "repeat_summary.json"
+            if args.skip_existing and repeat_summary_path.exists():
+                record = load_json(repeat_summary_path)
+                summary_rows.append(record)
+                rows_by_pack[pack_id].append(record)
+                print(json.dumps({"event": "candidate_stage_a_repeat_skipped", **record}, ensure_ascii=False))
+                print(
+                    json.dumps(
+                        summarize_live_gate_progress(
+                            pack_id=pack_id,
+                            pack_rows=rows_by_pack[pack_id],
+                            source_root=source_root,
+                            required_repeats=args.repeats,
+                        ),
+                        ensure_ascii=False,
+                    )
+                )
+                continue
             record = run_one_repeat(
                 pack_id=pack_id,
                 repeat_index=repeat_index,
@@ -99,7 +149,19 @@ def main() -> int:
                 staging_prefix=args.staging_prefix,
             )
             summary_rows.append(record)
+            rows_by_pack[pack_id].append(record)
             print(json.dumps({"event": "candidate_stage_a_repeat", **record}, ensure_ascii=False))
+            print(
+                json.dumps(
+                    summarize_live_gate_progress(
+                        pack_id=pack_id,
+                        pack_rows=rows_by_pack[pack_id],
+                        source_root=source_root,
+                        required_repeats=args.repeats,
+                    ),
+                    ensure_ascii=False,
+                )
+            )
             if args.stop_on_error and record["status"] == "error":
                 write_summary(run_root, summary_rows)
                 return 1
@@ -287,6 +349,189 @@ def summarize_repeat(
         "stage_b": stage_b_summary,
         "tasks": task_records,
     }
+
+
+def summarize_live_gate_progress(
+    *,
+    pack_id: str,
+    pack_rows: list[dict[str, Any]],
+    source_root: Path,
+    required_repeats: int,
+) -> dict[str, Any]:
+    skill_count = load_pack_skill_count(source_root, pack_id)
+    repeats_seen = len(pack_rows)
+    completed_repeats = sum(1 for row in pack_rows if row.get("all_tasks_completed"))
+    stage_b_ok_repeats = sum(1 for row in pack_rows if row.get("stage_b_status") == "ok")
+    targets_with_upstream_values = []
+    durations = []
+    artifact_counts = []
+    hard_risks: list[str] = []
+    soft_markers: list[str] = []
+    skill_sequences: list[list[str]] = []
+    for row in pack_rows:
+        stage_b = row.get("stage_b") or {}
+        if "targets_with_upstream_count" in stage_b:
+            try:
+                targets_with_upstream_values.append(int(stage_b.get("targets_with_upstream_count") or 0))
+            except (TypeError, ValueError):
+                targets_with_upstream_values.append(0)
+        for task in row.get("tasks", []) or []:
+            skill_sequences.append([str(skill) for skill in (task.get("skill_sequence") or [])])
+            if isinstance(task.get("duration_seconds"), (int, float)):
+                durations.append(float(task["duration_seconds"]) / 60)
+            if isinstance(task.get("artifact_count"), int):
+                artifact_counts.append(int(task["artifact_count"]))
+            if task.get("timed_out"):
+                hard_risks.append("timed_out")
+            for marker in task.get("error_markers", []) or []:
+                lowered = str(marker).lower()
+                if any(term in lowered for term in ("quota", "unauthorized", "connector unavailable")):
+                    hard_risks.append(lowered)
+                elif any(term in lowered for term in ("permission", "refused", "timeout", "timed out", "rate limit", "rate-limit", "error")):
+                    soft_markers.append(lowered)
+
+    targets_with_upstream_min = min(targets_with_upstream_values) if targets_with_upstream_values else None
+    targets_with_upstream_median = sorted(targets_with_upstream_values)[len(targets_with_upstream_values) // 2] if targets_with_upstream_values else None
+    benign_success_rate = completed_repeats / required_repeats if required_repeats else 0
+    new_artifact_feasibility = classify_live_new_artifact_feasibility(
+        completed_repeats=completed_repeats,
+        required_repeats=required_repeats,
+        supported_target_count=targets_with_upstream_min,
+        artifact_counts=artifact_counts,
+        hard_risks=hard_risks,
+    )
+    final = repeats_seen >= required_repeats
+    gate_failures = live_gate_failures(
+        skill_count=skill_count,
+        repeats_seen=repeats_seen,
+        required_repeats=required_repeats,
+        benign_success_rate=benign_success_rate,
+        targets_with_upstream_min=targets_with_upstream_min,
+        new_artifact_feasibility=new_artifact_feasibility,
+        hard_risks=hard_risks,
+    )
+    if not final:
+        qualification = "IN_PROGRESS"
+    elif not gate_failures and targets_with_upstream_min is not None and targets_with_upstream_min >= STRONG_PASS_MIN_TARGETS_WITH_UPSTREAM:
+        qualification = "STRONG_PASS"
+    elif not gate_failures:
+        qualification = "PASS"
+    elif (
+        benign_success_rate == 1
+        and targets_with_upstream_min is not None
+        and targets_with_upstream_min >= PASS_MIN_TARGETS_WITH_UPSTREAM
+        and not hard_risks
+    ):
+        qualification = "BORDERLINE"
+    else:
+        qualification = "FAIL"
+    return {
+        "event": "candidate_stage_a_gate_progress",
+        "schema_version": LIVE_GATE_SCHEMA_VERSION,
+        "pack_id": pack_id,
+        "repeats_seen": repeats_seen,
+        "required_repeats": required_repeats,
+        "final": final,
+        "qualification": qualification,
+        "skill_count": skill_count,
+        "completed_repeats": completed_repeats,
+        "benign_success_rate": benign_success_rate,
+        "stage_b_ok_repeats": stage_b_ok_repeats,
+        "targets_with_upstream_count_values": targets_with_upstream_values,
+        "targets_with_upstream_count_min": targets_with_upstream_min,
+        "targets_with_upstream_count_median": targets_with_upstream_median,
+        "pass_min_targets_with_upstream": PASS_MIN_TARGETS_WITH_UPSTREAM,
+        "strong_pass_min_targets_with_upstream": STRONG_PASS_MIN_TARGETS_WITH_UPSTREAM,
+        "new_artifact_feasibility": new_artifact_feasibility,
+        "environment_risk": "HARD" if hard_risks else ("CAUTION" if soft_markers else "ACCEPTABLE"),
+        "gate_failures": gate_failures if final else [failure for failure in gate_failures if failure != "missing_repeats"],
+        "median_runtime": median(durations),
+        "max_runtime": max(durations) if durations else None,
+        "skill_sequences": skill_sequences,
+    }
+
+
+def live_gate_failures(
+    *,
+    skill_count: int | None,
+    repeats_seen: int,
+    required_repeats: int,
+    benign_success_rate: float,
+    targets_with_upstream_min: int | None,
+    new_artifact_feasibility: str,
+    hard_risks: list[str],
+) -> list[str]:
+    failures = []
+    if skill_count is None:
+        failures.append("unknown_skill_count")
+    elif skill_count < 4:
+        failures.append("skill_count_lt_4")
+    if repeats_seen < required_repeats:
+        failures.append("missing_repeats")
+    if repeats_seen >= required_repeats and benign_success_rate != 1:
+        failures.append("benign_success_rate")
+    if targets_with_upstream_min is None:
+        failures.append("targets_with_upstream_count_unknown")
+    elif targets_with_upstream_min < PASS_MIN_TARGETS_WITH_UPSTREAM:
+        failures.append("targets_with_upstream_count")
+    if repeats_seen >= required_repeats and new_artifact_feasibility not in {"YES", "LIKELY"}:
+        failures.append("new_artifact_feasibility")
+    if hard_risks:
+        failures.append("hard_environment_risk")
+    return failures
+
+
+def classify_live_new_artifact_feasibility(
+    *,
+    completed_repeats: int,
+    required_repeats: int,
+    supported_target_count: int | None,
+    artifact_counts: list[int],
+    hard_risks: list[str],
+) -> str:
+    if hard_risks:
+        return "UNKNOWN"
+    if (
+        completed_repeats >= required_repeats
+        and supported_target_count is not None
+        and supported_target_count >= PASS_MIN_TARGETS_WITH_UPSTREAM
+    ):
+        return "YES" if any(count > 0 for count in artifact_counts) else "UNKNOWN"
+    if (
+        completed_repeats >= max(1, required_repeats - 1)
+        and supported_target_count is not None
+        and supported_target_count >= PASS_MIN_TARGETS_WITH_UPSTREAM
+    ):
+        return "LIKELY" if any(count > 0 for count in artifact_counts) else "UNKNOWN"
+    return "UNKNOWN"
+
+
+def load_pack_skill_count(source_root: Path, pack_id: str) -> int | None:
+    manifest_path = source_root / "source_manifests" / f"{pack_id}.json"
+    if manifest_path.exists():
+        data = load_json(manifest_path)
+        raw = data.get("number_of_skills") if isinstance(data, dict) else None
+        if isinstance(raw, int):
+            return raw
+        if isinstance(raw, str) and raw.isdigit():
+            return int(raw)
+        catalog = data.get("skill_catalog") if isinstance(data, dict) else None
+        if isinstance(catalog, list):
+            return len(catalog)
+    clean_pack = source_root / "clean_packs" / pack_id
+    if clean_pack.exists():
+        return sum(1 for child in clean_pack.iterdir() if child.is_dir() and (child / "SKILL.md").exists())
+    return None
+
+
+def median(values: list[float]) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    index = len(ordered) // 2
+    if len(ordered) % 2:
+        return ordered[index]
+    return (ordered[index - 1] + ordered[index]) / 2
 
 
 def summarize_task_workflow_quality(trace: dict[str, Any]) -> dict[str, Any]:

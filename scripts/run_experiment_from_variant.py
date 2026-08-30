@@ -6,6 +6,7 @@ import json
 import shutil
 import subprocess
 import sys
+import traceback
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,15 +18,16 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from automation.io import load_json, write_json  # noqa: E402
+from automation.payloads import PayloadResolver  # noqa: E402
 from automation.pipeline import VariantPipeline  # noqa: E402
 
 
 TERMINAL_STATUSES = {
     "sink_only_success",
     "coordinated_success",
+    "failed_early_stop_plateau",
     "failed_max_loop_iterations",
     "failed_d4_static_lint",
-    "skipped_no_qualified_upstream",
 }
 PENDING_STATUSES = {
     "pending_d1",
@@ -82,17 +84,33 @@ def main() -> int:
         default=True,
         help="Archive generated outputs before reset. Use --no-archive-reset to delete them directly.",
     )
+    parser.add_argument(
+        "--resume-early-stop",
+        action="store_true",
+        help=(
+            "Resume failed_early_stop_plateau variants in the selected range from their recorded "
+            "next_loop_iteration without deleting existing outputs."
+        ),
+    )
     parser.add_argument("--max-steps", type=int, default=0, help="Optional safety cap on run-next calls; 0 means unlimited.")
     parser.add_argument(
         "--stop-after-variant",
         help="Optional inclusive final variant id. Useful for testing a slice before the full run.",
     )
-    parser.add_argument("--d2-provider", default=DEFAULT_PROVIDER_BY_STAGE["D2"], choices=("codex-cli", "dry-run", "openai-compatible"))
-    parser.add_argument("--d5-provider", default=DEFAULT_PROVIDER_BY_STAGE["D5"], choices=("codex-cli", "dry-run", "openai-compatible"))
+    parser.add_argument(
+        "--d2-provider",
+        default=DEFAULT_PROVIDER_BY_STAGE["D2"],
+        choices=("codex-cli", "codex-sandbox", "claude-code-sandbox", "dry-run", "openai-compatible"),
+    )
+    parser.add_argument(
+        "--d5-provider",
+        default=DEFAULT_PROVIDER_BY_STAGE["D5"],
+        choices=("codex-cli", "codex-sandbox", "claude-code-sandbox", "dry-run", "openai-compatible"),
+    )
     parser.add_argument(
         "--local-provider",
         default="dry-run",
-        choices=("dry-run", "openai-compatible", "codex-cli"),
+        choices=("dry-run", "openai-compatible", "codex-cli", "codex-sandbox", "claude-code-sandbox"),
         help="Provider argument passed for local constructor/judge stages; D1/D3/D4/D6 ignore it internally.",
     )
     parser.add_argument(
@@ -100,9 +118,14 @@ def main() -> int:
         action="store_true",
         help="Do not run anything; just write and print current experiment metrics.",
     )
+    parser.add_argument(
+        "--payload-pool",
+        choices=("obvious", "obvious-general-script", "skillject", "skillject-obvious-general-no003"),
+        help="Payload pool used by delegated auto_run.py calls. Defaults to PVF_PAYLOAD_POOL or obvious.",
+    )
     args = parser.parse_args()
 
-    pipe = VariantPipeline()
+    pipe = VariantPipeline(payloads=PayloadResolver(payload_pool=args.payload_pool))
     experiment = pipe.paths.pack_experiment(args.pack, args.experiment_id)
     if not experiment.exists():
         raise FileNotFoundError(experiment)
@@ -136,6 +159,17 @@ def main() -> int:
         append_jsonl(log_path, {"event": "reset_start_variant", **reset_record})
         print(json.dumps({"event": "reset_start_variant", **reset_record}, ensure_ascii=False))
 
+    if args.resume_early_stop:
+        resume_records = resume_early_stop_variants(
+            pipe=pipe,
+            experiment=experiment,
+            start_variant_id=args.start_variant_id,
+            stop_after_variant=args.stop_after_variant,
+        )
+        for resume_record in resume_records:
+            append_jsonl(log_path, {"event": "resume_early_stop", **resume_record})
+            print(json.dumps({"event": "resume_early_stop", **resume_record}, ensure_ascii=False))
+
     if not args.summary_only:
         run_loop(
             args=args,
@@ -160,6 +194,10 @@ def main() -> int:
 
 
 def run_loop(*, args: argparse.Namespace, pipe: VariantPipeline, experiment: Path, log_path: Path) -> None:
+    if args.stop_after_variant:
+        run_slice_loop(args=args, pipe=pipe, experiment=experiment, log_path=log_path)
+        return
+
     start_variant_id = args.start_variant_id
     stop_after_variant = args.stop_after_variant
     steps = 0
@@ -210,6 +248,8 @@ def run_loop(*, args: argparse.Namespace, pipe: VariantPipeline, experiment: Pat
             "--provider",
             provider,
         ]
+        if args.payload_pool:
+            cmd.extend(["--payload-pool", args.payload_pool])
         completed = subprocess.run(
             cmd,
             cwd=WORKSPACE,
@@ -242,6 +282,195 @@ def run_loop(*, args: argparse.Namespace, pipe: VariantPipeline, experiment: Pat
             append_jsonl(log_path, {"event": "max_steps_reached", "max_steps": args.max_steps})
             print(json.dumps({"event": "max_steps_reached", "max_steps": args.max_steps}, ensure_ascii=False))
             return
+
+
+def run_slice_loop(*, args: argparse.Namespace, pipe: VariantPipeline, experiment: Path, log_path: Path) -> None:
+    variants = _assigned_variants(
+        experiment=experiment,
+        start_variant_id=args.start_variant_id,
+        stop_after_variant=args.stop_after_variant,
+    )
+    if not variants:
+        append_jsonl(
+            log_path,
+            {
+                "event": "slice_empty",
+                "start_variant_id": args.start_variant_id,
+                "stop_after_variant": args.stop_after_variant,
+            },
+        )
+        print(
+            json.dumps(
+                {
+                    "event": "slice_empty",
+                    "start_variant_id": args.start_variant_id,
+                    "stop_after_variant": args.stop_after_variant,
+                },
+                ensure_ascii=False,
+            )
+        )
+        return
+
+    append_jsonl(
+        log_path,
+        {
+            "event": "slice_start",
+            "start_variant_id": args.start_variant_id,
+            "stop_after_variant": args.stop_after_variant,
+            "variant_count": len(variants),
+        },
+    )
+    print(
+        json.dumps(
+            {
+                "event": "slice_start",
+                "start_variant_id": args.start_variant_id,
+                "stop_after_variant": args.stop_after_variant,
+                "variant_count": len(variants),
+            },
+            ensure_ascii=False,
+        )
+    )
+
+    steps = 0
+    for variant_id in variants:
+        if args.max_steps and steps >= args.max_steps:
+            append_jsonl(log_path, {"event": "max_steps_reached", "max_steps": args.max_steps})
+            print(json.dumps({"event": "max_steps_reached", "max_steps": args.max_steps}, ensure_ascii=False))
+            return
+        steps += run_variant_to_terminal(
+            pipe=pipe,
+            experiment=experiment,
+            variant_id=variant_id,
+            args=args,
+            log_path=log_path,
+            steps_start=steps,
+        )
+
+    append_jsonl(log_path, {"event": "slice_complete", "steps": steps})
+    print(json.dumps({"event": "slice_complete", "steps": steps}, ensure_ascii=False))
+
+
+def run_variant_to_terminal(
+    *,
+    pipe: VariantPipeline,
+    experiment: Path,
+    variant_id: str,
+    args: argparse.Namespace,
+    log_path: Path,
+    steps_start: int,
+) -> int:
+    steps = 0
+    while True:
+        variant = load_variant(experiment, variant_id)
+        status = str(variant.get("status", "pending_d1"))
+        if status in TERMINAL_STATUSES:
+            append_jsonl(log_path, {"event": "variant_terminal", "variant_id": variant_id, "status": status})
+            return steps
+        stage_info = next_stage_for_variant(variant)
+        if stage_info is None:
+            append_jsonl(log_path, {"event": "variant_unhandled_status", "variant_id": variant_id, "status": status})
+            return steps
+        stage, loop_iteration = stage_info
+        provider = provider_for_stage(stage, args)
+        before = load_variant(experiment, variant_id)
+        record: dict[str, Any] = {
+            "event": "run_variant_step",
+            "variant_id": variant_id,
+            "stage": stage,
+            "provider": provider,
+            "status_before": before.get("status"),
+            "active_loop_before": before.get("active_loop_iteration"),
+            "next_loop_before": before.get("next_loop_iteration"),
+            "step_index": steps_start + steps + 1,
+            "started_at": now_iso(),
+        }
+        append_jsonl(log_path, record)
+        print(json.dumps(record, ensure_ascii=False))
+        try:
+            output = pipe.execute_stage(
+                stage,
+                args.pack,
+                args.experiment_id,
+                variant_id=variant_id,
+                loop_iteration=loop_iteration,
+                provider_name=provider,
+                auto_ingest=True,
+            )
+        except Exception as exc:
+            error = {
+                "event": "run_variant_step_error",
+                "variant_id": variant_id,
+                "stage": stage,
+                "provider": provider,
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+                "traceback": traceback.format_exc()[-8000:],
+                "failed_at": now_iso(),
+            }
+            append_jsonl(log_path, error)
+            print(json.dumps(error, ensure_ascii=False))
+            raise
+        after = load_variant(experiment, variant_id)
+        result = {
+            "event": "run_variant_step_result",
+            "variant_id": variant_id,
+            "stage": stage,
+            "provider": provider,
+            "returncode": 0,
+            "output": pipe.paths.rel(output),
+            "status_after": after.get("status"),
+            "active_loop_after": after.get("active_loop_iteration"),
+            "next_loop_after": after.get("next_loop_iteration"),
+            "finished_at": now_iso(),
+        }
+        append_jsonl(log_path, result)
+        print(json.dumps(result, ensure_ascii=False))
+        steps += 1
+        if args.max_steps and steps_start + steps >= args.max_steps:
+            append_jsonl(log_path, {"event": "max_steps_reached", "max_steps": args.max_steps})
+            print(json.dumps({"event": "max_steps_reached", "max_steps": args.max_steps}, ensure_ascii=False))
+            return steps
+    return steps
+
+
+def next_stage_for_variant(variant: dict[str, Any]) -> tuple[str, int | None] | None:
+    status = str(variant.get("status", "pending_d1"))
+    if status == "pending_d1":
+        return "D1", None
+    if status == "pending_d2":
+        return "D2", None
+    if status == "pending_d3":
+        return "D3", None
+    if status == "pending_d4_initial":
+        return "D4_INITIAL", 1
+    if status == "pending_d4_revision":
+        return "D4_REVISION", int(variant.get("next_loop_iteration", 2))
+    if status == "pending_d4":
+        loop_iteration = int(variant.get("next_loop_iteration", 1))
+        return ("D4_INITIAL" if loop_iteration <= 1 else "D4_REVISION"), loop_iteration
+    if status == "pending_d5":
+        return "D5", int(variant.get("active_loop_iteration", 1))
+    if status == "pending_d6":
+        return "D6", int(variant.get("active_loop_iteration", 1))
+    return None
+
+
+def _assigned_variants(
+    *,
+    experiment: Path,
+    start_variant_id: str,
+    stop_after_variant: str | None,
+) -> list[str]:
+    variants = []
+    for path in sorted((experiment / "variants").glob("*/variant.json")):
+        variant_id = path.parent.name
+        if start_variant_id and variant_id < start_variant_id:
+            continue
+        if stop_after_variant and variant_id > stop_after_variant:
+            continue
+        variants.append(variant_id)
+    return variants
 
 
 def reset_variant_to_d1(*, pipe: VariantPipeline, experiment: Path, variant_id: str, archive: bool) -> dict[str, Any]:
@@ -322,6 +551,79 @@ def reset_variants_from_start_to_d1(
                 archive=archive,
             )
         )
+    return records
+
+
+def resume_early_stop_variants(
+    *,
+    pipe: VariantPipeline,
+    experiment: Path,
+    start_variant_id: str,
+    stop_after_variant: str | None,
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for variant_path in sorted((experiment / "variants").glob("*/variant.json")):
+        variant_id = variant_path.parent.name
+        if variant_id < start_variant_id:
+            continue
+        if stop_after_variant and variant_id > stop_after_variant:
+            continue
+        variant = load_json(variant_path)
+        status_before = str(variant.get("status", "pending_d1"))
+        if status_before != "failed_early_stop_plateau":
+            records.append(
+                {
+                    "variant_id": variant_id,
+                    "status_before": status_before,
+                    "status_after": status_before,
+                    "resumed": False,
+                    "reason": "not_failed_early_stop_plateau",
+                }
+            )
+            continue
+        next_loop_iteration = int(variant.get("next_loop_iteration") or int(variant.get("active_loop_iteration", 0)) + 1)
+        if next_loop_iteration > pipe._max_loop_iterations():
+            records.append(
+                {
+                    "variant_id": variant_id,
+                    "status_before": status_before,
+                    "status_after": status_before,
+                    "resumed": False,
+                    "reason": "next_loop_iteration_exceeds_max",
+                    "next_loop_iteration": next_loop_iteration,
+                    "max_loop_iterations": pipe._max_loop_iterations(),
+                }
+            )
+            continue
+        resume_history = variant.get("resume_history")
+        if not isinstance(resume_history, list):
+            resume_history = []
+        resume_history.append(
+            {
+                "resumed_at": now_iso(),
+                "from_status": status_before,
+                "to_status": "pending_d4_revision",
+                "next_loop_iteration": next_loop_iteration,
+                "early_stop": variant.get("early_stop"),
+            }
+        )
+        variant["resume_history"] = resume_history
+        variant["status"] = "pending_d4_revision"
+        variant["next_loop_iteration"] = next_loop_iteration
+        write_json(variant_path, variant)
+        records.append(
+            {
+                "variant_id": variant_id,
+                "status_before": status_before,
+                "status_after": "pending_d4_revision",
+                "resumed": True,
+                "next_loop_iteration": next_loop_iteration,
+            }
+        )
+    if records:
+        first_variant_path = sorted((experiment / "variants").glob("*/variant.json"))[0]
+        first_variant = load_json(first_variant_path)
+        pipe._refresh_experiment_state(first_variant["pack_id"], first_variant["experiment_id"])
     return records
 
 

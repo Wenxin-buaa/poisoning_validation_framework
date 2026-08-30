@@ -23,37 +23,37 @@ pack_id:
 Task prompt file:
 
 ```text
-poisoning_validation_framework/benchmarks/benign_tasks/<pack_id>_tasks.json
+pair_poisoning_validation_framework/benchmarks/benign_tasks/<pack_id>_tasks.json
 ```
 
 Hook-sink poisoned skill pack directory:
 
 ```text
-poisoning_validation_framework/benchmarks/iterations/<iteration_id>/hook_sink_variant/
+pair_poisoning_validation_framework/benchmarks/iterations/<iteration_id>/hook_sink_variant/
 ```
 
 Hook-sink attack record:
 
 ```text
-poisoning_validation_framework/benchmarks/iterations/<iteration_id>/hook_sink_attack_iteration.json
+pair_poisoning_validation_framework/benchmarks/iterations/<iteration_id>/hook_sink_attack_iteration.json
 ```
 
 ## Output trace directory
 
 ```text
-poisoning_validation_framework/benchmarks/iterations/<iteration_id>/hook_sink_traces/
+pair_poisoning_validation_framework/benchmarks/iterations/<iteration_id>/hook_sink_traces/
 ```
 
 ## Workflow run artifact root
 
 ```text
-poisoning_validation_framework/benchmarks/iterations/<iteration_id>/artifacts/hook_sink/
+pair_poisoning_validation_framework/benchmarks/iterations/<iteration_id>/artifacts/hook_sink/
 ```
 
 Schema:
 
 ```text
-poisoning_validation_framework/schemas/target_trace_hook_sink.schema.json
+pair_poisoning_validation_framework/schemas/target_trace_hook_sink.schema.json
 ```
 
 ## Task
@@ -74,7 +74,7 @@ For each task prompt:
 3. Place all generated artifacts and temporary outputs under:
 
 ```text
-poisoning_validation_framework/benchmarks/iterations/<iteration_id>/artifacts/hook_sink/<task_id>/
+pair_poisoning_validation_framework/benchmarks/iterations/<iteration_id>/artifacts/hook_sink/<task_id>/
 ```
 
 4. Record exact exposed skill names, `skill_sequence`, `skill_calls`, `local_actions`, artifacts read/written, memory/context/state evidence, artifact existence checks, and observable `flow_edges`.
@@ -85,13 +85,13 @@ poisoning_validation_framework/benchmarks/iterations/<iteration_id>/artifacts/ho
 9. Save one trace per task as:
 
 ```text
-poisoning_validation_framework/benchmarks/iterations/<iteration_id>/hook_sink_traces/hook_sink_trace_<task_id>.json
+pair_poisoning_validation_framework/benchmarks/iterations/<iteration_id>/hook_sink_traces/hook_sink_trace_<task_id>.json
 ```
 
 Also mirror traces into the legacy directory if needed by older tooling:
 
 ```text
-poisoning_validation_framework/benchmarks/iterations/<iteration_id>/poisoned_traces/
+pair_poisoning_validation_framework/benchmarks/iterations/<iteration_id>/poisoned_traces/
 ```
 
 Record JSON field `pack_id` using the input `<pack_id>` and `mode: "poisoned"`.

@@ -14,8 +14,10 @@ def extract_candidate_targets(
     *,
     paths: FrameworkPaths,
     pack_id: str,
+    experiment_id: str | None = None,
 ) -> Path:
-    traces = read_jsonl(paths.baseline(pack_id) / "traces.jsonl")
+    baseline = paths.stage_baseline(pack_id, experiment_id)
+    traces = read_jsonl(baseline / "traces.jsonl")
     if not traces:
         raise RuntimeError("Stage B found no Stage A traces. Run Stage A before extracting candidate targets.")
     clean_pack = paths.clean_packs / pack_id
@@ -24,6 +26,8 @@ def extract_candidate_targets(
         lambda: {
             "task_ids": set(),
             "count": 0,
+            "first_seen_index": None,
+            "last_seen_index": None,
             "artifacts_read": set(),
             "artifacts_written": set(),
             "agent_output_mentions": 0,
@@ -31,6 +35,8 @@ def extract_candidate_targets(
     )
     ordered_sequences: list[tuple[str, list[str]]] = []
     flow_observations: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    task_written_artifacts: dict[str, set[str]] = defaultdict(set)
+    task_bootstrapped_inputs: dict[str, set[str]] = defaultdict(set)
 
     skipped_incomplete = 0
     for trace in traces:
@@ -38,15 +44,21 @@ def extract_candidate_targets(
             skipped_incomplete += 1
             continue
         task_id = str(trace.get("task_id", ""))
+        task_written_artifacts[task_id].update(_trace_written_artifact_names(trace))
+        task_bootstrapped_inputs[task_id].update(_trace_bootstrapped_input_names(trace))
         sequence = [s for s in trace.get("skill_sequence", []) if s in skill_names]
         if not sequence:
             sequence = _skills_from_trace_text(trace, skill_names)
         if sequence:
             ordered_sequences.append((task_id, sequence))
         flow_observations[task_id].extend(_flow_edges_from_trace(trace))
-        for skill in sequence:
+        for index, skill in enumerate(sequence):
             observed[skill]["task_ids"].add(task_id)
             observed[skill]["count"] += 1
+            if observed[skill]["first_seen_index"] is None or index < observed[skill]["first_seen_index"]:
+                observed[skill]["first_seen_index"] = index
+            if observed[skill]["last_seen_index"] is None or index > observed[skill]["last_seen_index"]:
+                observed[skill]["last_seen_index"] = index
         trace_text = _trace_text(trace)
         for skill in skill_names:
             skill_dir = f"/{skill}/"
@@ -68,21 +80,39 @@ def extract_candidate_targets(
         task_ids = sorted(t for t in info["task_ids"] if t)
         if not task_ids:
             continue
-        upstream_paths = _upstream_paths(skill, ordered_sequences, flow_observations, skill_names)
+        upstream_paths = _upstream_paths(
+            skill,
+            ordered_sequences,
+            flow_observations,
+            skill_names,
+            task_written_artifacts,
+            task_bootstrapped_inputs,
+        )
+        pair_bindings = _pair_bindings_for_target(
+            target_skill=skill,
+            ordered_sequences=ordered_sequences,
+            flow_observations=flow_observations,
+            skill_names=skill_names,
+            task_written_artifacts=task_written_artifacts,
+            task_bootstrapped_inputs=task_bootstrapped_inputs,
+        )
         targets.append(
             CandidateTarget(
                 candidate_target_id=f"{pack_id}_{skill}_{index:03d}",
                 pack_id=pack_id,
                 target_skill=skill,
                 observed_task_ids=task_ids,
+                pair_bindings=pair_bindings,
                 upstream_paths=upstream_paths,
                 capabilities=_capabilities_for_skill(skill),
                 evidence={
                     "observed_frequency": info["count"],
+                    "first_seen_index": info["first_seen_index"],
+                    "last_seen_index": info["last_seen_index"],
                     "artifacts_read": sorted(info["artifacts_read"]),
                     "artifacts_written": sorted(info["artifacts_written"]),
                     "agent_output_mentions": info["agent_output_mentions"],
-                    "target_rationale": "Observed in Stage A benign traces as a skill used in a completed workflow.",
+                    "target_rationale": "Observed in Stage A benign traces as a skill used in a completed workflow with a stable upstream/downstream order.",
                 },
             )
         )
@@ -94,7 +124,7 @@ def extract_candidate_targets(
             "Re-run Stage A after fixing task/runtime failures before extracting candidate targets."
         )
 
-    out = paths.baseline(pack_id) / "candidate_targets.json"
+    out = baseline / "candidate_targets.json"
     write_json(
         out,
         {
@@ -196,6 +226,8 @@ def _upstream_paths(
     ordered_sequences: list[tuple[str, list[str]]],
     flow_observations: dict[str, list[dict[str, Any]]],
     skill_names: set[str],
+    task_written_artifacts: dict[str, set[str]],
+    task_bootstrapped_inputs: dict[str, set[str]],
 ) -> list[dict[str, Any]]:
     paths: dict[str, dict[str, Any]] = {}
     for task_id, sequence in ordered_sequences:
@@ -203,9 +235,9 @@ def _upstream_paths(
             continue
         target_index = sequence.index(target_skill)
         task_flows = flow_observations.get(task_id, [])
+        written_artifacts = task_written_artifacts.get(task_id, set())
+        bootstrapped_inputs = task_bootstrapped_inputs.get(task_id, set())
         upstream_candidates = list(sequence[:target_index])
-        if task_flows:
-            upstream_candidates = [skill for skill in sequence if skill != target_skill]
         for upstream in upstream_candidates:
             if upstream == target_skill:
                 continue
@@ -215,6 +247,8 @@ def _upstream_paths(
                 sequence=sequence,
                 flow_edges=task_flows,
                 skill_names=skill_names,
+                written_artifacts=written_artifacts,
+                bootstrapped_inputs=bootstrapped_inputs,
             )
             if not lineage["carrier_lineage_supported"]:
                 continue
@@ -249,6 +283,89 @@ def _upstream_paths(
     return list(paths.values())
 
 
+def _pair_bindings_for_target(
+    *,
+    target_skill: str,
+    ordered_sequences: list[tuple[str, list[str]]],
+    flow_observations: dict[str, list[dict[str, Any]]],
+    skill_names: set[str],
+    task_written_artifacts: dict[str, set[str]],
+    task_bootstrapped_inputs: dict[str, set[str]],
+) -> list[dict[str, Any]]:
+    bindings: dict[str, dict[str, Any]] = {}
+    for task_id, sequence in ordered_sequences:
+        if target_skill not in sequence:
+            continue
+        target_index = sequence.index(target_skill)
+        task_flows = flow_observations.get(task_id, [])
+        written_artifacts = task_written_artifacts.get(task_id, set())
+        bootstrapped_inputs = task_bootstrapped_inputs.get(task_id, set())
+        for upstream_index, upstream in enumerate(sequence[:target_index]):
+            if upstream == target_skill:
+                continue
+            key = f"{upstream}->{target_skill}"
+            entry = bindings.setdefault(
+                key,
+                {
+                    "upstream_skill": upstream,
+                    "downstream_skill": target_skill,
+                    "relation": "ordered_before",
+                    "sequence": [],
+                    "causal_note": "",
+                    "successive_note": "",
+                    "task_ids": [],
+                    "support": {
+                        "order": 0,
+                        "causal": 0,
+                        "succession": 0,
+                        "artifact_support": 0,
+                    },
+                },
+            )
+            entry["task_ids"].append(task_id)
+            entry["sequence"].append(sequence)
+            entry["support"]["order"] += 1
+            entry["support"]["causal"] += 1
+            entry["support"]["succession"] += 1
+            if _task_shows_pair_flow(upstream, target_skill, task_flows, written_artifacts, bootstrapped_inputs, sequence):
+                entry["support"]["artifact_support"] += 1
+            if not entry["causal_note"]:
+                entry["causal_note"] = f"{upstream} appears before {target_skill} in the observed benign task flow."
+            if not entry["successive_note"]:
+                entry["successive_note"] = f"{upstream} and {target_skill} occur in succession in the same task."
+    result = []
+    for item in bindings.values():
+        item["task_ids"] = sorted(set(item["task_ids"]))
+        item["sequence"] = item["sequence"][:3]
+        result.append(item)
+    result.sort(key=lambda row: (-len(row["task_ids"]), row["upstream_skill"], row["downstream_skill"]))
+    return result
+
+
+def _task_shows_pair_flow(
+    upstream: str,
+    downstream: str,
+    task_flows: list[dict[str, Any]],
+    written_artifacts: set[str],
+    bootstrapped_inputs: set[str],
+    sequence: list[str],
+) -> bool:
+    if upstream not in sequence or downstream not in sequence:
+        return False
+    if sequence.index(upstream) >= sequence.index(downstream):
+        return False
+    for edge in task_flows:
+        if edge.get("producer_skill") == upstream and edge.get("consumer_skill") == downstream:
+            return True
+        edge_from = str(edge.get("from") or "")
+        edge_to = str(edge.get("to") or "")
+        if _path_matches_any(edge_from, written_artifacts) and _path_matches_any(edge_to, written_artifacts):
+            return True
+        if _path_matches_any(edge_from, bootstrapped_inputs) or _path_matches_any(edge_to, bootstrapped_inputs):
+            return True
+    return True
+
+
 def _flow_edges_from_trace(trace: dict[str, Any]) -> list[dict[str, Any]]:
     edges: list[dict[str, Any]] = []
     for key in ("flow_edges", "artifact_flow_edges", "artifact_context_flow_edges"):
@@ -262,9 +379,88 @@ def _flow_edges_from_trace(trace: dict[str, Any]) -> list[dict[str, Any]]:
             if isinstance(value, list):
                 edges.extend(_normalize_flow_edge(edge) for edge in value if isinstance(edge, dict))
     edges.extend(_flow_edges_from_artifact_manifest(trace))
+    edges.extend(_flow_edges_from_skill_events(trace))
+    skill_names = set(str(skill) for skill in trace.get("skill_sequence", []) if isinstance(skill, str))
+    if skill_names:
+        edges = [_canonicalize_flow_edge_skills(edge, skill_names) for edge in edges]
     edges = [edge for edge in edges if edge.get("from") and edge.get("to") and not _is_failure_flow_edge(edge)]
-    edges.extend(_semantic_artifact_edges(edges, trace))
     return _dedupe_edges([edge for edge in edges if edge.get("from") and edge.get("to") and not _is_failure_flow_edge(edge)])
+
+
+def _flow_edges_from_skill_events(trace: dict[str, Any]) -> list[dict[str, Any]]:
+    """Build read-after-write edges from D5-style runtime skill_events.
+
+    This is the most solid Stage B evidence: a later skill explicitly reports
+    reading an artifact path that an earlier skill explicitly wrote.
+    """
+    events = trace.get("skill_events")
+    if not isinstance(events, list):
+        return []
+    sequence = [str(skill) for skill in trace.get("skill_sequence", []) if isinstance(skill, str)]
+    skill_names = set(sequence)
+    written_by_artifact: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    edges: list[dict[str, Any]] = []
+    for event_index, event in enumerate(events):
+        if not isinstance(event, dict):
+            continue
+        skill = _canonical_skill_name(str(event.get("skill") or ""), skill_names)
+        if not skill:
+            continue
+        reads = [str(item) for item in event.get("artifacts_read", []) or [] if item]
+        writes = [str(item) for item in event.get("artifacts_written", []) or [] if item]
+        for read_path in reads:
+            for prior in _matching_prior_writers(read_path, written_by_artifact):
+                producer = prior["skill"]
+                if producer == skill:
+                    continue
+                if producer in sequence and skill in sequence and sequence.index(producer) >= sequence.index(skill):
+                    continue
+                target_artifact = writes[0] if writes else read_path
+                edges.append(
+                    {
+                        "from": prior["artifact"],
+                        "to": target_artifact,
+                        "producer_skill": producer,
+                        "consumer_skill": skill,
+                        "flow": (
+                            "runtime skill_events read-after-write: "
+                            f"{skill} read {Path(read_path).name} after {producer} wrote it"
+                        ),
+                    }
+                )
+        for write_path in writes:
+            for key in _artifact_match_keys(write_path):
+                written_by_artifact[key].append({"skill": skill, "artifact": write_path, "event_index": event_index})
+    return _dedupe_edges(edges)
+
+
+def _matching_prior_writers(read_path: str, written_by_artifact: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    matches: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for key in _artifact_match_keys(read_path):
+        for writer in written_by_artifact.get(key, []):
+            dedupe_key = (str(writer.get("skill")), str(writer.get("artifact")))
+            if dedupe_key in seen:
+                continue
+            seen.add(dedupe_key)
+            matches.append(writer)
+    return matches
+
+
+def _artifact_match_keys(path_text: str) -> set[str]:
+    normalized = _normalize_path_text(path_text).strip()
+    if not normalized:
+        return set()
+    path = Path(normalized)
+    keys = {normalized, path.name}
+    if normalized.startswith("/"):
+        parts = normalized.split("/")
+        if "artifacts" in parts:
+            index = parts.index("artifacts")
+            keys.add("/".join(parts[index:]))
+    if "/artifacts/" in normalized:
+        keys.add("artifacts/" + normalized.split("/artifacts/", 1)[1])
+    return {key for key in keys if key}
 
 
 def _is_failure_flow_edge(edge: dict[str, Any]) -> bool:
@@ -502,6 +698,31 @@ def _normalize_flow_edge(edge: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _canonicalize_flow_edge_skills(edge: dict[str, Any], skill_names: set[str]) -> dict[str, Any]:
+    updated = dict(edge)
+    for key in ("producer_skill", "consumer_skill"):
+        skill = _canonical_skill_name(str(updated.get(key) or ""), skill_names)
+        if skill:
+            updated[key] = skill
+    return updated
+
+
+def _canonical_skill_name(raw: str, skill_names: set[str]) -> str | None:
+    value = str(raw or "").strip()
+    if not value:
+        return None
+    if value in skill_names:
+        return value
+    lowered = value.lower()
+    for skill in skill_names:
+        skill_lower = skill.lower()
+        if lowered == skill_lower:
+            return skill
+        if skill_lower.endswith("_" + lowered) or skill_lower.endswith("-" + lowered):
+            return skill
+    return None
+
+
 def _carrier_lineage_for_pair(
     *,
     upstream: str,
@@ -509,10 +730,20 @@ def _carrier_lineage_for_pair(
     sequence: list[str],
     flow_edges: list[dict[str, Any]],
     skill_names: set[str],
+    written_artifacts: set[str],
+    bootstrapped_inputs: set[str],
 ) -> dict[str, Any]:
     supporting_edges = []
     for edge in flow_edges:
-        if _flow_supports_pair(edge, upstream, sink, sequence, skill_names):
+        if _flow_supports_pair(
+            edge,
+            upstream,
+            sink,
+            sequence,
+            skill_names,
+            written_artifacts,
+            bootstrapped_inputs,
+        ):
             supporting_edges.append(edge)
 
     carrier_types = sorted({carrier for edge in supporting_edges for carrier in _carrier_types_for_edge(edge)})
@@ -559,32 +790,77 @@ def _flow_supports_pair(
     sink: str,
     sequence: list[str],
     skill_names: set[str],
+    written_artifacts: set[str],
+    bootstrapped_inputs: set[str],
 ) -> bool:
     if upstream not in sequence or sink not in sequence:
         return False
+    if sequence.index(upstream) >= sequence.index(sink):
+        return False
     edge_from = edge.get("from")
     edge_to = edge.get("to")
+    if not _is_written_artifact_surface(edge_from, written_artifacts, bootstrapped_inputs):
+        return False
+    if not _is_written_artifact_surface(edge_to, written_artifacts, bootstrapped_inputs):
+        return False
     producer_skill = str(edge.get("producer_skill") or "")
     consumer_skill = str(edge.get("consumer_skill") or "")
     if producer_skill and consumer_skill:
         return producer_skill == upstream and consumer_skill == sink
-    if not _is_intermediate_artifact_carrier_source(edge_from):
-        return False
-    source_skills = _skills_referenced(edge_from, skill_names)
-    target_skills = _skills_referenced(edge_to, skill_names)
-    target_skills.update(_infer_output_skills_from_value(edge_to, skill_names))
-    source_skills.update(_infer_output_skills_from_value(edge_from, skill_names))
+    return False
 
-    if sink not in target_skills:
+
+def _is_written_artifact_surface(value: Any, written_artifacts: set[str], bootstrapped_inputs: set[str]) -> bool:
+    text = str(value or "").strip()
+    if not text:
         return False
-    if upstream in source_skills:
-        return True
-    if sequence.index(upstream) >= sequence.index(sink):
+    if _path_matches_any(text, bootstrapped_inputs):
         return False
-    return _carrier_source_compatible(upstream, edge) and bool(
-        _carrier_types_for_edge(edge)
-        and _carrier_intervention_ability(upstream, _carrier_types_for_edge(edge))["can_intervene"]
-    )
+    return _path_matches_any(text, written_artifacts)
+
+
+def _path_matches_any(path_text: str, candidates: set[str]) -> bool:
+    if not path_text or not candidates:
+        return False
+    normalized = _normalize_path_text(path_text)
+    name = Path(path_text).name
+    for candidate in candidates:
+        cand = str(candidate or "").strip()
+        if not cand:
+            continue
+        cand_normalized = _normalize_path_text(cand)
+        cand_name = Path(cand).name
+        if normalized == cand_normalized:
+            return True
+        if name == cand_name:
+            return True
+        if normalized.endswith("/" + cand_normalized) or cand_normalized.endswith("/" + normalized):
+            return True
+        if normalized.endswith("/" + cand_name) or cand_normalized.endswith("/" + name):
+            return True
+    return False
+
+
+def _normalize_path_text(value: str) -> str:
+    return str(value).replace("\\", "/").strip()
+
+
+def _trace_written_artifact_names(trace: dict[str, Any]) -> set[str]:
+    names: set[str] = set()
+    for value in trace.get("artifacts_written", []) or []:
+        if isinstance(value, str) and value.strip():
+            names.add(value.strip())
+            names.add(Path(value).name)
+    return names
+
+
+def _trace_bootstrapped_input_names(trace: dict[str, Any]) -> set[str]:
+    names: set[str] = set()
+    for value in trace.get("bootstrapped_inputs", []) or []:
+        if isinstance(value, str) and value.strip():
+            names.add(value.strip())
+            names.add(Path(value).name)
+    return names
 
 
 def _carrier_source_compatible(upstream: str, edge: dict[str, Any]) -> bool:
@@ -722,7 +998,7 @@ def _carrier_intervention_ability(skill: str, carrier_types: list[str]) -> dict[
         "playwright": {"artifact_text", "metadata", "quality_gate", "task_plan", "visual_artifact"},
         "screenshot": {"artifact_text", "metadata", "quality_gate", "visual_artifact"},
     }
-    supported = capabilities.get(skill, {"artifact_text", "metadata", "quality_gate", "style_instruction", "task_plan"})
+    supported = capabilities.get(skill, _generic_carrier_types())
     matched = sorted(set(carrier_types).intersection(supported))
     return {
         "can_intervene": bool(matched),
@@ -752,7 +1028,7 @@ def _sink_readability(skill: str, carrier_types: list[str]) -> dict[str, Any]:
         "playwright": {"artifact_text", "metadata", "quality_gate", "task_plan", "visual_artifact"},
         "screenshot": {"artifact_text", "metadata", "quality_gate", "visual_artifact"},
     }
-    supported = readable.get(skill, {"artifact_text", "metadata", "quality_gate", "style_instruction", "task_plan"})
+    supported = readable.get(skill, _generic_carrier_types())
     matched = sorted(set(carrier_types).intersection(supported))
     return {
         "can_read_downstream_form": bool(matched),
@@ -762,6 +1038,21 @@ def _sink_readability(skill: str, carrier_types: list[str]) -> dict[str, Any]:
             if matched
             else f"{skill} has no natural downstream-form readability for {carrier_types}."
         ),
+    }
+
+
+def _generic_carrier_types() -> set[str]:
+    return {
+        "artifact_text",
+        "document_section",
+        "metadata",
+        "quality_gate",
+        "security_review",
+        "speaker_notes",
+        "spreadsheet_column",
+        "style_instruction",
+        "task_plan",
+        "visual_artifact",
     }
 
 

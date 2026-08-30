@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -45,12 +46,52 @@ class ResolvedPayload:
 
 
 class PayloadResolver:
-    def __init__(self, paths: FrameworkPaths | None = None):
+    def __init__(
+        self,
+        paths: FrameworkPaths | None = None,
+        *,
+        payload_path: Path | str | None = None,
+        judge_rules_path: Path | str | None = None,
+        payload_pool: str | None = None,
+    ):
         self.paths = paths or FrameworkPaths.discover()
-        self.payload_path = self.paths.framework_root / "obvious_payload" / "obvious_injections.json"
-        self.judge_rules_path = self.paths.framework_root / "obvious_payload" / "obvious_judge_rules.json"
+        pool = payload_pool or os.environ.get("PVF_PAYLOAD_POOL", "obvious")
+        if payload_path is not None:
+            self.payload_path = self._resolve_path(payload_path)
+        elif pool == "skillject":
+            self.payload_path = self.paths.framework_root / "obvious_payload" / "skillject_injections.json"
+        elif pool == "obvious-general-script":
+            self.payload_path = self.paths.framework_root / "obvious_payload" / "obvious_general_script_injections.json"
+        elif pool == "skillject-obvious-general-no003":
+            self.payload_path = self.paths.framework_root / "obvious_payload" / "skillject_obvious_general_no003_injections.json"
+        else:
+            self.payload_path = self.paths.framework_root / "obvious_payload" / "obvious_injections.json"
+        if judge_rules_path is not None:
+            self.judge_rules_path = self._resolve_path(judge_rules_path)
+        elif payload_path is not None and self.payload_path.name == "skillject_injections.json":
+            self.judge_rules_path = self.payload_path.with_name("skillject_judge_rules.json")
+        elif payload_path is not None and self.payload_path.name == "obvious_general_script_injections.json":
+            self.judge_rules_path = self.payload_path.with_name("obvious_judge_rules.json")
+        elif payload_path is not None and self.payload_path.name == "skillject_obvious_general_no003_injections.json":
+            self.judge_rules_path = self.payload_path.with_name("skillject_obvious_general_no003_judge_rules.json")
+        elif payload_path is not None:
+            self.judge_rules_path = self.payload_path.with_name("obvious_judge_rules.json")
+        elif pool == "skillject":
+            self.judge_rules_path = self.paths.framework_root / "obvious_payload" / "skillject_judge_rules.json"
+        elif pool == "obvious-general-script":
+            self.judge_rules_path = self.paths.framework_root / "obvious_payload" / "obvious_judge_rules.json"
+        elif pool == "skillject-obvious-general-no003":
+            self.judge_rules_path = self.paths.framework_root / "obvious_payload" / "skillject_obvious_general_no003_judge_rules.json"
+        else:
+            self.judge_rules_path = self.paths.framework_root / "obvious_payload" / "obvious_judge_rules.json"
         self._payloads: dict[int, dict[str, Any]] | None = None
         self._judge_rules: dict[int, dict[str, Any]] | None = None
+
+    def _resolve_path(self, path: Path | str) -> Path:
+        path = Path(path)
+        if path.is_absolute():
+            return path
+        return self.paths.workspace_root / path
 
     def resolve(self, payload_id: int) -> ResolvedPayload:
         payloads = self._load_payloads()

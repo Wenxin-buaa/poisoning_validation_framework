@@ -13,9 +13,9 @@ class FrameworkPaths:
     def discover(cls, start: Path | None = None) -> "FrameworkPaths":
         root = (start or Path(__file__)).resolve()
         for candidate in [root, *root.parents]:
-            if candidate.name == "poisoning_validation_framework":
+            if candidate.name in {"pair_poisoning_validation_framework", "poisoning_validation_framework"}:
                 return cls(framework_root=candidate, workspace_root=candidate.parent)
-        raise RuntimeError("Could not locate poisoning_validation_framework root")
+        raise RuntimeError("Could not locate pair_poisoning_validation_framework root")
 
     @property
     def benchmarks(self) -> Path:
@@ -73,6 +73,14 @@ class FrameworkPaths:
 
     def baseline(self, pack_id: str) -> Path:
         return self.pack_run(pack_id) / "baseline"
+
+    def experiment_baseline(self, pack_id: str, experiment_id: str) -> Path:
+        return self.pack_experiment(pack_id, experiment_id) / "baseline"
+
+    def stage_baseline(self, pack_id: str, experiment_id: str | None = None) -> Path:
+        if experiment_id:
+            return self.experiment_baseline(pack_id, experiment_id)
+        return self.baseline(pack_id)
 
     def rel(self, path: Path) -> str:
         try:
