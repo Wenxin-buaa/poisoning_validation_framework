@@ -2,6 +2,8 @@ candidate_benchmarks/
 candidate_benchmarks_batch2/
 candidate_benchmarks_batch3/
 
+pvf_worker_keys.json
+
 benchmarks/runs/pack_a/experiments/pack_a_exp_001/
 benchmarks/runs/pack_a/experiments/pack_a_exp_002/
 benchmarks/runs/pack_a/experiments/pack_a_exp_003/
