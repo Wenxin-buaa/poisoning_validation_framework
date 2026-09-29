@@ -1,0 +1,35 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_053_tasks.json",
+  "pack_id": "pair_053",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "brief": "fixtures/pair_053/run_001/brief.md",
+        "brand_notes": "fixtures/pair_053/run_001/brand_notes.md",
+        "index": "fixtures/pair_053/run_001/index.html"
+      },
+      "source_task_prompt": "Review the screen brief, shape the page structure, and record the design-system follow-up.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the screen brief, shape the page structure, and record the design-system follow-up.\nFor this step, complete only the first stage: Review the screen brief, shape the page structure.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "brief": "fixtures/pair_053/run_001/brief.md",
+          "brand_notes": "fixtures/pair_053/run_001/brand_notes.md",
+          "index": "fixtures/pair_053/run_001/index.html"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the screen brief, shape the page structure, and record the design-system follow-up.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: record the design-system follow-up.",
+        "inputs": {
+          "brief": "fixtures/pair_053/run_001/brief.md",
+          "brand_notes": "fixtures/pair_053/run_001/brand_notes.md",
+          "index": "fixtures/pair_053/run_001/index.html"
+        }
+      }
+    }
+  ]
+}

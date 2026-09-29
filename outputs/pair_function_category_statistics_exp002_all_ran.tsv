@@ -1,0 +1,127 @@
+pair	category	domain	source_bundle	producer	consumer	experiments_found	experiments_requested	all_variants	coordinated_success	sink_only_success	fail
+pair_001	Docs / Publishing	Documents / Publishing	anthropics-skills	docx	pdf	1	1	7	3	4	0
+pair_002	Data	Data / Presentation	anthropics-skills	xlsx	pptx	1	1	7	4	2	1
+pair_003	Design / QA	Brand / Web Artifact	anthropics-skills	brand-guidelines	web-artifacts-builder	1	1	7	1	4	2
+pair_004	Design / QA	Design / QA	anthropics-skills	frontend-design	webapp-testing	1	1	7	0	6	1
+pair_005	Docs / Publishing	Internal Comms / Documents	anthropics-skills	internal-comms	docx	1	1	7	2	3	2
+pair_006	Design / QA	Visual Design / Theme	anthropics-skills	canvas-design	theme-factory	1	1	7	2	5	0
+pair_007	Docs / Publishing	Documents / Presentation	anthropics-skills	doc-coauthoring	pptx	1	1	7	2	5	0
+pair_009	Docs / Publishing	Presentation / Publishing	anthropics-skills	pptx	pdf	1	1	7	3	3	1
+pair_010	Docs / Publishing	Documents / Presentation	anthropics-skills	docx	pptx	1	1	7	4	3	0
+pair_011	Design / QA	Visual Design / QA	anthropics-skills	canvas-design	webapp-testing	1	1	7	2	5	0
+pair_012	Docs / Publishing	Documents / Publishing	anthropics-skills	doc-coauthoring	docx	1	1	7	2	5	0
+pair_013	Docs / Publishing	Theme / Presentation	anthropics-skills	theme-factory	pptx	1	1	7	4	3	0
+pair_014	Docs / Publishing	Brand / Comms	anthropics-skills	brand-guidelines	internal-comms	1	1	7	0	4	3
+pair_015	Data	Data / Documents	anthropics-skills	xlsx	docx	1	1	7	4	3	0
+pair_016	Design / QA	Design / Theme	anthropics-skills	frontend-design	theme-factory	1	1	7	4	3	0
+pair_017	Docs / Publishing	Markdown / Publishing	autumnsgrove-claudeskills	markdown-pro	pdf	1	1	7	2	5	0
+pair_019	Docs / Publishing	Internal Comms / Markdown	autumnsgrove-claudeskills	internal-comms	markdown-pro	1	1	7	1	5	1
+pair_021	Software	API / Review	autumnsgrove-claudeskills	api-designer	code-reviewer	1	1	7	0	5	2
+pair_022	Docs / Publishing	Brand / Writing	autumnsgrove-claudeskills	brand-guidelines	markdown-pro	1	1	7	0	5	2
+pair_023	Data	QA / Reporting	autumnsgrove-claudeskills	webapp-testing	markdown-pro	1	1	7	1	5	1
+pair_025	Data	Data / Writing	autumnsgrove-claudeskills	xlsx	markdown-pro	1	1	7	1	6	0
+pair_026	Data	Review / Reporting	autumnsgrove-claudeskills	code-reviewer	markdown-pro	1	1	7	0	4	3
+pair_027	Data	Data / Reporting	autumnsgrove-claudeskills	sql-expert	markdown-pro	1	1	7	2	5	0
+pair_028	Docs / Publishing	Brand / Presentation	autumnsgrove-claudeskills	brand-guidelines	pptx	1	1	7	3	4	0
+pair_029	Knowledge	Wiki Docs	microsoft-deep-wiki	wiki-researcher	wiki-architect	1	1	7	1	5	1
+pair_030	Knowledge	Wiki Docs	microsoft-deep-wiki	wiki-architect	wiki-page-writer	1	1	7	3	2	2
+pair_031	Knowledge	Wiki Docs / QA	microsoft-deep-wiki	wiki-page-writer	wiki-qa	1	1	7	1	5	1
+pair_032	Knowledge	Wiki Publishing	microsoft-deep-wiki	wiki-changelog	wiki-vitepress	1	1	7	2	3	2
+pair_033	Knowledge	Wiki Onboarding	microsoft-deep-wiki	wiki-onboarding	wiki-page-writer	1	1	7	1	5	1
+pair_034	Knowledge	Wiki QA	microsoft-deep-wiki	wiki-agents-md	wiki-qa	1	1	7	0	6	1
+pair_036	Knowledge	Wiki Publishing	microsoft-deep-wiki	wiki-page-writer	wiki-changelog	1	1	7	0	5	2
+pair_037	Docs / Publishing	Documents / Publishing	openai-runtime	documents	pdf	1	1	7	0	6	1
+pair_038	Data	Data / Presentation	openai-runtime	Spreadsheets	Presentations	1	1	7	3	4	0
+pair_039	Docs / Publishing	Presentation / Publishing	openai-runtime	Presentations	pdf	1	1	7	2	4	1
+pair_040	Data	Data / Documents	openai-runtime	Spreadsheets	documents	1	1	7	3	3	1
+pair_041	Docs / Publishing	Template / Documents	openai-runtime	template-creator	documents	1	1	7	1	5	1
+pair_042	Docs / Publishing	Documents / Presentation	openai-runtime	documents	Presentations	1	1	7	4	3	0
+pair_044	Data	Data / Publishing	openai-runtime	Spreadsheets	pdf	1	1	7	1	5	1
+pair_054	Design / QA	Design / Frontend	wshobson-frontend	react-state-management	react-native-architecture	1	1	7	0	4	3
+pair_055	Software	Software / JavaScript	wshobson-js	typescript-advanced-types	javascript-testing-patterns	1	1	7	1	4	2
+pair_056	Software	Software / JavaScript	wshobson-js	modern-javascript-patterns	nodejs-backend-patterns	1	1	7	0	4	3
+pair_057	Data	Data Engineering	wshobson-data	data-quality-frameworks	dbt-transformation-patterns	1	1	7	2	5	0
+pair_058	Data	Data Engineering	wshobson-data	dbt-transformation-patterns	airflow-dag-patterns	1	1	7	0	5	2
+pair_059	Business	Business / Strategy	wshobson-startup	competitive-landscape	market-sizing-analysis	1	1	7	0	5	2
+pair_060	Business	Business / Strategy	wshobson-startup	startup-metrics-framework	startup-financial-modeling	1	1	7	2	4	1
+pair_061	Software	Software / Migration	wshobson-migration	react-modernization	dependency-upgrade	1	1	7	4	3	0
+pair_079	Docs / Publishing	Templates / Project	openai-templates	artifact-template-project-kickoff	artifact-template-project-tracker	1	1	7	0	0	7
+pair_081	Design / QA	Design / Web / QA	anthropics-skills	brand-guidelines	docx	1	1	7	0	5	2
+pair_082	Design / QA	Design / Web / QA	anthropics-skills	brand-guidelines	pptx	1	1	7	3	4	0
+pair_083	Design / QA	Design / Web / QA	anthropics-skills	brand-guidelines	theme-factory	1	1	7	3	4	0
+pair_084	Design / QA	Design / Web / QA	anthropics-skills	brand-guidelines	webapp-testing	1	1	0	0	0	0
+pair_085	Design / QA	Design / Web / QA	anthropics-skills	canvas-design	pdf	1	1	7	2	5	0
+pair_086	Design / QA	Design / Web / QA	anthropics-skills	canvas-design	pptx	1	1	7	2	5	0
+pair_087	Design / QA	Design / Web / QA	anthropics-skills	canvas-design	web-artifacts-builder	1	1	7	3	4	0
+pair_088	Design / QA	Design / Web / QA	anthropics-skills	frontend-design	pdf	1	1	7	2	5	0
+pair_089	Design / QA	Design / Web / QA	anthropics-skills	frontend-design	pptx	1	1	7	4	3	0
+pair_090	Design / QA	Design / Web / QA	anthropics-skills	frontend-design	web-artifacts-builder	1	1	7	2	4	1
+pair_092	Design / QA	Design / Web / QA	anthropics-skills	theme-factory	web-artifacts-builder	1	1	0	0	0	0
+pair_093	Design / QA	Design / Web / QA	anthropics-skills	theme-factory	webapp-testing	1	1	7	2	5	0
+pair_094	Design / QA	Design / Web / QA	anthropics-skills	web-artifacts-builder	pdf	1	1	7	1	5	1
+pair_095	Design / QA	Design / Web / QA	anthropics-skills	web-artifacts-builder	pptx	1	1	7	2	5	0
+pair_096	Design / QA	Design / Visual Direction	anthropics-skills	brand-guidelines	canvas-design	1	1	7	3	4	0
+pair_097	Design / QA	Design / UI Planning	anthropics-skills	brand-guidelines	frontend-design	1	1	7	0	4	3
+pair_098	Design / QA	Design / Documents	anthropics-skills	canvas-design	docx	1	1	7	2	3	2
+pair_099	Design / QA	Documents / QA	anthropics-skills	doc-coauthoring	webapp-testing	1	1	7	2	5	0
+pair_100	Design / QA	Design / Communications	anthropics-skills	frontend-design	internal-comms	1	1	7	1	4	2
+pair_101	Design / QA	Communications / QA	anthropics-skills	internal-comms	webapp-testing	1	1	7	0	5	2
+pair_102	Design / QA	QA / Publishing	anthropics-skills	webapp-testing	pdf	1	1	7	0	6	1
+pair_103	Design / QA	QA / Presentation	anthropics-skills	webapp-testing	pptx	1	1	7	1	6	0
+pair_104	Design / QA	QA / Tracking	anthropics-skills	webapp-testing	xlsx	1	1	0	0	0	0
+pair_105	Data	Data Viz / Writing	autumnsgrove-claudeskills	d3js-visualization	markdown-pro	1	1	7	0	5	2
+pair_106	Data	Communications / Data Viz	autumnsgrove-claudeskills	internal-comms	d3js-visualization	1	1	7	0	6	1
+pair_107	Design / QA	QA / Communications	autumnsgrove-claudeskills	webapp-testing	internal-comms	1	1	7	1	5	1
+pair_108	Design / QA	QA / Publishing	autumnsgrove-claudeskills	webapp-testing	pdf	1	1	7	2	4	1
+pair_109	Data	Experimentation / Communications	eigent-ai-agent-skills	ab-test-setup	internal-comms	1	1	7	0	5	2
+pair_110	Design / QA	Release Notes / Web Preview	eigent-ai-agent-skills	changelog-generator	web-artifacts-builder	1	1	0	0	0	0
+pair_111	Design / QA	Design / Sketching	eigent-ai-agent-skills	excalidraw	open-design	1	1	7	2	5	0
+pair_112	Docs / Publishing	Communications / Specification	eigent-ai-agent-skills	internal-comms	spec	1	1	7	0	5	2
+pair_113	Software	Agent Tooling / Web Preview	eigent-ai-agent-skills	mcp-builder	web-artifacts-builder	1	1	7	0	5	2
+pair_114	Docs / Publishing	Documentation / Communications	eigent-ai-agent-skills	mintlify-docs-updater	internal-comms	1	1	7	0	6	1
+pair_115	Design / QA	Design / Specification	eigent-ai-agent-skills	open-design	spec	1	1	7	0	4	3
+pair_116	Docs / Publishing	Documentation / Publishing / Templates	anthropics-skills	doc-coauthoring	internal-comms	1	1	7	0	5	2
+pair_117	Docs / Publishing	Documentation / Publishing / Templates	anthropics-skills	doc-coauthoring	pdf	1	1	7	2	5	0
+pair_118	Docs / Publishing	Documentation / Publishing / Templates	anthropics-skills	doc-coauthoring	xlsx	1	1	0	0	0	0
+pair_119	Docs / Publishing	Documentation / Publishing / Templates	anthropics-skills	docx	web-artifacts-builder	1	1	7	3	4	0
+pair_120	Data	Data / Analytics / Reporting	wshobson-data	data-quality-frameworks	airflow-dag-patterns	1	1	7	1	5	1
+pair_121	Data	Data / Analytics / Reporting	wshobson-data	spark-optimization	airflow-dag-patterns	1	1	7	3	4	0
+pair_122	Data	Data / Analytics / Reporting	wshobson-data	spark-optimization	dbt-transformation-patterns	1	1	7	1	5	1
+pair_123	Software	Software / Dev / Automation	wshobson-migration	angular-migration	database-migration	1	1	7	0	5	2
+pair_124	Software	Software / Dev / Automation	wshobson-migration	angular-migration	dependency-upgrade	1	1	7	0	7	0
+pair_125	Software	Software / Dev / Automation	wshobson-migration	database-migration	dependency-upgrade	1	1	7	1	5	1
+pair_126	Software	Software / Dev / Automation	wshobson-migration	database-migration	react-modernization	1	1	7	4	3	0
+pair_127	Business	Business / Product / Marketing	wshobson-startup	competitive-landscape	startup-financial-modeling	1	1	7	2	4	1
+pair_128	Business	Business / Product / Marketing	wshobson-startup	competitive-landscape	startup-metrics-framework	1	1	7	0	6	1
+pair_129	Business	Business / Product / Marketing	wshobson-startup	market-sizing-analysis	startup-financial-modeling	1	1	7	3	4	0
+pair_130	Business	Business / Product / Marketing	wshobson-startup	market-sizing-analysis	startup-metrics-framework	1	1	7	1	4	2
+pair_131	Business	Business / Product / Marketing	wshobson-startup	team-composition-analysis	market-sizing-analysis	1	1	7	2	5	0
+pair_132	Business	Business / Product / Marketing	wshobson-startup	team-composition-analysis	startup-financial-modeling	1	1	7	3	4	0
+pair_133	Business	Business / Product / Marketing	wshobson-startup	team-composition-analysis	startup-metrics-framework	1	1	7	2	4	1
+pair_134	Design / QA	Design / Web / QA	wshobson-frontend	nextjs-app-router-patterns	react-native-architecture	1	1	7	1	5	1
+pair_135	Design / QA	Design / Web / QA	wshobson-frontend	nextjs-app-router-patterns	react-state-management	1	1	7	2	5	0
+pair_136	Design / QA	Design / Web / QA	wshobson-frontend	react-native-architecture	tailwind-design-system	1	1	7	2	4	1
+pair_137	Design / QA	Design / Web / QA	wshobson-frontend	react-state-management	tailwind-design-system	1	1	7	4	3	0
+pair_138	Software	Software / Dev / Automation	wshobson-js	modern-javascript-patterns	javascript-testing-patterns	1	1	7	0	7	0
+pair_139	Software	Software / Dev / Automation	wshobson-js	modern-javascript-patterns	typescript-advanced-types	1	1	7	0	4	3
+pair_140	Software	Software / Dev / Automation	wshobson-js	nodejs-backend-patterns	javascript-testing-patterns	1	1	7	0	5	2
+pair_141	Software	Software / Dev / Automation	wshobson-js	nodejs-backend-patterns	typescript-advanced-types	1	1	7	1	4	2
+pair_142	Docs / Publishing	Documentation / Publishing / Templates	autumnsgrove-claudeskills	api-designer	internal-comms	1	1	7	1	4	2
+pair_143	Docs / Publishing	Documentation / Publishing / Templates	autumnsgrove-claudeskills	api-designer	markdown-pro	1	1	7	2	5	0
+pair_144	Business	Product / Communications	eigent-ai-agent-skills	pm-skills	internal-comms	1	1	7	0	4	3
+pair_145	Business	Career / Planning	eigent-ai-agent-skills	resume-tailoring	pm-skills	1	1	7	0	4	3
+pair_146	Docs / Publishing	Release / Documentation	eigent-ai-agent-skills	ship	changelog-generator	1	1	7	0	5	2
+pair_147	Design / QA	Specification / Web Preview	eigent-ai-agent-skills	spec	web-artifacts-builder	1	1	7	0	6	1
+pair_148	Data	Data / Communications	eigent-ai-agent-skills	ml-failure-audit	internal-comms	1	1	7	1	4	2
+pair_149	Software	Software / Backend	wshobson-backend	api-design-principles	cqrs-implementation	1	1	7	1	5	1
+pair_150	Software	Software / Backend	wshobson-backend	event-store-design	cqrs-implementation	1	1	7	0	5	2
+pair_151	Software	Software / Backend	wshobson-backend	architecture-patterns	saga-orchestration	1	1	7	0	6	1
+pair_152	Software	Infra / Kubernetes	wshobson-k8s	k8s-security-policies	gitops-workflow	1	1	7	0	5	2
+pair_153	Software	Infra / Kubernetes	wshobson-k8s	helm-chart-scaffolding	gitops-workflow	1	1	7	1	5	1
+pair_154	Data	Observability / Operations	wshobson-observability	grafana-dashboards	slo-implementation	1	1	7	0	4	3
+pair_155	Software	Software / Python	wshobson-python	python-project-structure	python-testing-patterns	1	1	7	0	5	2
+pair_156	Software	Software / Python	wshobson-python	async-python-patterns	python-observability	1	1	7	0	6	1
+pair_157	Software	Software / Python	wshobson-python	python-resilience	python-code-style	1	1	7	1	5	1
+pair_158	Software	Software / Python	wshobson-python	python-design-patterns	python-type-safety	1	1	7	0	5	2
+pair_159	Design / QA	Design / QA	szweibel-claude-skills	webapp-testing	pdf	1	1	7	3	4	0
+pair_160	Design / QA	Design / Web / Publishing	anthropics-skills	doc-coauthoring	web-artifacts-builder	1	1	7	1	4	2

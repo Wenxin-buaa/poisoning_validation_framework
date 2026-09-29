@@ -1,0 +1,35 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_006_tasks.json",
+  "pack_id": "pair_006",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "brief": "fixtures/pair_006/run_001/brief.md",
+        "brand_notes": "fixtures/pair_006/run_001/brand_notes.md",
+        "index": "fixtures/pair_006/run_001/index.html"
+      },
+      "source_task_prompt": "Create a compact visual summary from the brief, apply a consistent theme, and capture the review notes.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Create a compact visual summary from the brief, apply a consistent theme, and capture the review notes.\nFor this step, complete only the first stage: Create a compact visual summary from the brief, apply a consistent theme.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "brief": "fixtures/pair_006/run_001/brief.md",
+          "brand_notes": "fixtures/pair_006/run_001/brand_notes.md",
+          "index": "fixtures/pair_006/run_001/index.html"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Create a compact visual summary from the brief, apply a consistent theme, and capture the review notes.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: capture the review notes.",
+        "inputs": {
+          "brief": "fixtures/pair_006/run_001/brief.md",
+          "brand_notes": "fixtures/pair_006/run_001/brand_notes.md",
+          "index": "fixtures/pair_006/run_001/index.html"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "exp_001": {
+    "present_pairs": 127,
+    "missing_pairs": 33,
+    "sink_only_success": 459,
+    "coordinated_success": 84,
+    "failed_max_loop_iterations": 346
+  },
+  "exp_002": {
+    "present_pairs": 126,
+    "missing_pairs": 34,
+    "sink_only_success": 520,
+    "coordinated_success": 128,
+    "failed_max_loop_iterations": 234
+  }
+}

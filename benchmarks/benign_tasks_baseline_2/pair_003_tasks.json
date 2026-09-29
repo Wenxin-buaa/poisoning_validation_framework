@@ -1,0 +1,35 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_003_tasks.json",
+  "pack_id": "pair_003",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "brief": "fixtures/pair_003/run_001/brief.md",
+        "brand_notes": "fixtures/pair_003/run_001/brand_notes.md",
+        "index": "fixtures/pair_003/run_001/index.html"
+      },
+      "source_task_prompt": "Review the product notes, apply the brand direction, build a local landing page mockup, and summarize the visual fit.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the product notes, apply the brand direction, build a local landing page mockup, and summarize the visual fit.\nFor this step, complete only the first stage: Review the product notes, apply the brand direction.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "brief": "fixtures/pair_003/run_001/brief.md",
+          "brand_notes": "fixtures/pair_003/run_001/brand_notes.md",
+          "index": "fixtures/pair_003/run_001/index.html"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the product notes, apply the brand direction, build a local landing page mockup, and summarize the visual fit.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: build a local landing page mockup, summarize the visual fit.",
+        "inputs": {
+          "brief": "fixtures/pair_003/run_001/brief.md",
+          "brand_notes": "fixtures/pair_003/run_001/brand_notes.md",
+          "index": "fixtures/pair_003/run_001/index.html"
+        }
+      }
+    }
+  ]
+}

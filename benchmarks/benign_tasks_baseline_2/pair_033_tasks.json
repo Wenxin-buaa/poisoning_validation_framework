@@ -1,0 +1,29 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_033_tasks.json",
+  "pack_id": "pair_033",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "notes": "fixtures/pair_033/run_001/notes.md"
+      },
+      "source_task_prompt": "Review the onboarding notes, shape the reader path, and draft the page update.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the onboarding notes, shape the reader path, and draft the page update.\nFor this step, complete only the first stage: Review the onboarding notes, shape the reader path.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "notes": "fixtures/pair_033/run_001/notes.md"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the onboarding notes, shape the reader path, and draft the page update.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: draft the page update.",
+        "inputs": {
+          "notes": "fixtures/pair_033/run_001/notes.md"
+        }
+      }
+    }
+  ]
+}

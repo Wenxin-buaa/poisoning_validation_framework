@@ -1,0 +1,763 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_index.v1",
+  "source_dir": "benchmarks/benign_tasks",
+  "output_dir": "benchmarks/benign_tasks_baseline_2",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "files": [
+    {
+      "source_file": "benchmarks/benign_tasks/pair_001_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_001_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_002_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_002_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_003_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_003_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_004_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_004_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_005_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_005_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_006_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_006_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_007_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_007_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_009_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_009_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_010_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_010_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_011_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_011_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_012_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_012_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_013_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_013_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_014_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_014_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_015_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_015_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_016_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_016_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_017_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_017_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_019_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_019_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_021_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_021_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_022_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_022_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_023_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_023_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_025_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_025_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_026_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_026_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_027_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_027_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_028_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_028_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_029_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_029_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_030_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_030_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_031_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_031_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_032_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_032_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_033_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_033_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_034_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_034_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_036_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_036_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_037_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_037_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_038_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_038_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_039_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_039_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_040_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_040_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_041_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_041_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_042_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_042_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_044_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_044_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_045_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_045_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_046_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_046_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_047_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_047_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_048_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_048_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_049_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_049_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_050_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_050_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_051_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_051_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_052_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_052_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_053_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_053_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_054_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_054_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_055_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_055_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_056_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_056_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_057_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_057_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_058_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_058_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_059_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_059_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_060_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_060_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_061_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_061_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_062_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_062_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_063_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_063_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_064_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_064_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_065_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_065_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_066_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_066_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_067_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_067_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_068_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_068_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_069_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_069_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_070_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_070_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_071_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_071_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_072_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_072_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_073_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_073_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_074_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_074_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_075_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_075_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_076_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_076_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_077_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_077_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_078_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_078_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_081_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_081_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_082_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_082_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_083_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_083_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_084_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_084_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_085_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_085_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_086_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_086_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_087_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_087_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_088_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_088_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_089_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_089_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_090_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_090_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_092_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_092_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_093_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_093_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_094_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_094_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_095_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_095_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_096_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_096_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_097_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_097_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_098_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_098_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_099_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_099_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_100_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_100_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_101_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_101_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_102_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_102_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_103_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_103_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_104_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_104_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_105_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_105_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_106_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_106_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_107_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_107_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_108_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_108_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_109_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_109_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_110_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_110_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_111_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_111_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_112_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_112_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_113_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_113_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_114_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_114_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_115_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_115_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_116_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_116_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_117_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_117_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_118_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_118_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_119_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_119_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_120_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_120_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_121_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_121_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_122_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_122_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_123_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_123_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_124_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_124_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_125_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_125_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_126_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_126_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_127_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_127_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_128_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_128_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_129_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_129_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_130_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_130_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_131_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_131_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_132_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_132_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_133_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_133_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_134_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_134_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_135_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_135_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_136_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_136_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_137_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_137_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_138_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_138_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_139_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_139_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_140_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_140_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_141_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_141_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_142_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_142_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_143_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_143_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_144_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_144_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_145_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_145_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_146_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_146_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_147_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_147_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_148_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_148_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_149_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_149_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_150_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_150_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_151_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_151_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_152_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_152_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_153_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_153_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_154_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_154_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_155_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_155_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_156_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_156_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_157_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_157_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_158_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_158_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_159_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_159_tasks.json",
+      "task_count": 1
+    },
+    {
+      "source_file": "benchmarks/benign_tasks/pair_160_tasks.json",
+      "output_file": "benchmarks/benign_tasks_baseline_2/pair_160_tasks.json",
+      "task_count": 1
+    }
+  ]
+}

@@ -2,7 +2,12 @@ candidate_benchmarks/
 candidate_benchmarks_batch2/
 candidate_benchmarks_batch3/
 
+# Local execution output, upload cache, and credentials.
+benchmarks/runs/
+benchmarks/.cache/
 pvf_worker_keys.json
+pvf_worker_keys_exp003.json
+.DS_Store
 
 benchmarks/runs/pack_a/experiments/pack_a_exp_001/
 benchmarks/runs/pack_a/experiments/pack_a_exp_002/

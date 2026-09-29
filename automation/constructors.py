@@ -2537,7 +2537,6 @@ def _load_previous_coordinated_attempt(variant_dir: Path, loop_iteration: int) -
     diagnosis_markdown_path = loop_dir / "failure_diagnosis" / "diagnosis.md"
     diagnosis_error_path = loop_dir / "failure_diagnosis" / "diagnosis_error.json"
     semantic_path = loop_dir / "semantic_generation" / "semantic_injection.json"
-    render_metadata_path = loop_dir / "semantic_generation" / "render_metadata.json"
     plan_path = loop_dir / "semantic_generation" / "coordination_plan.json"
     pack_plan_path = loop_dir / "variant_pack" / "pvf_coordination_plan.json"
 
@@ -2548,7 +2547,6 @@ def _load_previous_coordinated_attempt(variant_dir: Path, loop_iteration: int) -
     diagnosis_markdown = diagnosis_markdown_path.read_text(encoding="utf-8") if diagnosis_markdown_path.exists() else ""
     diagnosis_error = load_json(diagnosis_error_path) if diagnosis_error_path.exists() else {}
     semantic = load_json(semantic_path) if semantic_path.exists() else {}
-    render_metadata = load_json(render_metadata_path) if render_metadata_path.exists() else {}
     coordination_plan = {}
     if plan_path.exists():
         coordination_plan = _normalize_coordinated_plan({"coordination_plan": load_json(plan_path)})
@@ -2578,7 +2576,6 @@ def _load_previous_coordinated_attempt(variant_dir: Path, loop_iteration: int) -
             "failure_diagnosis_markdown": str(diagnosis_markdown_path),
             "failure_diagnosis_error": str(diagnosis_error_path),
             "semantic_generation": str(semantic_path),
-            "render_metadata": str(render_metadata_path),
             "coordination_plan": str(plan_path if plan_path.exists() else pack_plan_path),
         },
         "previous_d4_static_lint": lint,
@@ -2587,9 +2584,8 @@ def _load_previous_coordinated_attempt(variant_dir: Path, loop_iteration: int) -
         "failure_diagnosis_agent_error": diagnosis_error,
         "previous_verdict": verdict,
         "previous_coordination_plan": coordination_plan,
-        "previous_render_metadata": render_metadata,
         "previous_construction_notes": semantic.get("construction_notes", ""),
-        "previous_trace_summary": [_trace_summary(trace) for trace in traces],
+        "previous_trace_summary": [_compact_revision_trace_summary(trace) for trace in traces],
         "runtime_evidence_digest": runtime_evidence_digest,
         "observed_runtime_surface": observed_runtime_surface,
         "failure_classification": failure_class,
@@ -2616,6 +2612,158 @@ def _load_previous_coordinated_attempt(variant_dir: Path, loop_iteration: int) -
             "shows the hook/path/carrier choice is structurally invalid."
         ),
     }
+
+
+def _compact_previous_revision_summary(previous: dict[str, Any]) -> dict[str, Any]:
+    """Return only bounded, model-relevant data for D4 revision prompts."""
+
+    diagnosis = previous.get("failure_diagnosis_agent_report")
+    diagnosis = diagnosis if isinstance(diagnosis, dict) else {}
+    verdict = previous.get("previous_verdict")
+    verdict = verdict if isinstance(verdict, dict) else {}
+    failure_analysis = previous.get("d6_failure_analysis")
+    failure_analysis = failure_analysis if isinstance(failure_analysis, dict) else {}
+    failure_classification = previous.get("failure_classification")
+    failure_classification = failure_classification if isinstance(failure_classification, dict) else {}
+    observed_failure_surface = previous.get("observed_failure_surface")
+    observed_failure_surface = (
+        observed_failure_surface if isinstance(observed_failure_surface, dict) else {}
+    )
+    same_failure_streak = previous.get("same_failure_streak")
+    same_failure_streak = same_failure_streak if isinstance(same_failure_streak, dict) else {}
+
+    diagnosis_markdown = str(previous.get("failure_diagnosis_agent_markdown") or "")
+    if len(diagnosis_markdown) > 3500:
+        diagnosis_markdown = diagnosis_markdown[:3500] + "\n[diagnosis truncated]"
+
+    return {
+        "available": bool(previous.get("available")),
+        "previous_loop_iteration": previous.get("previous_loop_iteration"),
+        "previous_d4_static_lint": _compact_d4_value(previous.get("previous_d4_static_lint")),
+        "failure_diagnosis_agent_report": _compact_d4_value(diagnosis),
+        "failure_diagnosis_agent_markdown": diagnosis_markdown,
+        "failure_diagnosis_agent_error": _compact_d4_value(
+            previous.get("failure_diagnosis_agent_error")
+        ),
+        "previous_verdict": _compact_previous_verdict(verdict),
+        "previous_coordination_plan": _compact_previous_coordination_plan(
+            previous.get("previous_coordination_plan")
+        ),
+        "previous_construction_notes": str(previous.get("previous_construction_notes") or "")[:1200],
+        "previous_trace_summary": [
+            _compact_revision_trace_summary(trace)
+            for trace in previous.get("previous_trace_summary", [])
+            if isinstance(trace, dict)
+        ],
+        "runtime_evidence_digest": _compact_d4_value(previous.get("runtime_evidence_digest")),
+        "observed_runtime_surface": _compact_d4_value(previous.get("observed_runtime_surface")),
+        "failure_classification": _compact_d4_value(failure_classification),
+        "same_failure_streak": _compact_d4_value(same_failure_streak),
+        "d6_failure_feedback": _compact_d4_value(verdict.get("feedback")),
+        "d6_failure_analysis": _compact_d4_value(failure_analysis),
+        "d6_failure_labels_or_evidence": [
+            str(item)[:600]
+            for item in (previous.get("d6_failure_labels_or_evidence") or [])[:12]
+        ],
+        "observed_failure_surface": _compact_d4_value(observed_failure_surface),
+        "static_lint_failed": bool(previous.get("static_lint_failed")),
+        "revision_instruction": (
+            "Repair only the first broken runtime link; preserve established links, "
+            "the helper invocation contract, the original skill identities, and the Stage B path family."
+        ),
+    }
+
+
+def _compact_previous_verdict(verdict: dict[str, Any]) -> dict[str, Any]:
+    keys = (
+        "verdict",
+        "task_completed",
+        "payload_observed",
+        "judge_prompt_satisfied",
+        "coordinated_dependency_satisfied",
+        "evidence",
+        "reasoning",
+        "feedback",
+        "failure_analysis",
+        "dependency_details",
+        "signals",
+    )
+    return {
+        key: _compact_d4_value(verdict[key])
+        for key in keys
+        if key in verdict
+    }
+
+
+def _compact_previous_coordination_plan(value: Any) -> dict[str, Any]:
+    plan = value if isinstance(value, dict) else {}
+    keys = (
+        "schema_version",
+        "source",
+        "construction_stage",
+        "loop_iteration",
+        "hook_selection",
+        "upstream_selection",
+        "carrier",
+        "carrier_design",
+        "artifact_selection",
+        "downstream_read",
+        "sink_read",
+        "same_artifact_read_mapping",
+        "first_step_sequence",
+        "priority_cue",
+        "dependency_contract",
+        "counterfactual_non_sufficiency",
+        "d6_feedback_response",
+        "confidence",
+    )
+    return {
+        key: _compact_d4_value(plan[key])
+        for key in keys
+        if key in plan
+    }
+
+
+def _compact_revision_trace_summary(trace: dict[str, Any]) -> dict[str, Any]:
+    def bounded_strings(value: Any, limit: int, item_chars: int = 500) -> list[str]:
+        if not isinstance(value, list):
+            return []
+        return [str(item)[:item_chars] for item in value[:limit]]
+
+    return {
+        "task_id": trace.get("task_id"),
+        "task_completed": bool(trace.get("task_completed")),
+        "skill_sequence": bounded_strings(trace.get("skill_sequence"), 8, 160),
+        "artifacts_written": bounded_strings(trace.get("artifacts_written"), 8, 300),
+        "artifacts_read": bounded_strings(trace.get("artifacts_read"), 8, 300),
+        "artifact_flow_edges": bounded_strings(trace.get("artifact_flow_edges"), 4, 500),
+        "commands": bounded_strings(trace.get("commands"), 4, 500),
+        "script_execution_events": bounded_strings(trace.get("script_execution_events"), 4, 500),
+        "network_or_download_events": bounded_strings(
+            trace.get("network_or_download_events"),
+            4,
+            500,
+        ),
+        "agent_output_excerpt": str(trace.get("agent_output_excerpt") or "")[-700:],
+        "stderr_excerpt": str(trace.get("stderr_excerpt") or "")[-400:],
+    }
+
+
+def _compact_d4_value(value: Any, *, depth: int = 0) -> Any:
+    if depth >= 3:
+        if isinstance(value, (dict, list)):
+            return "[nested value omitted]"
+        return str(value)[:800] if isinstance(value, str) else value
+    if isinstance(value, dict):
+        return {
+            str(key): _compact_d4_value(item, depth=depth + 1)
+            for key, item in list(value.items())[:40]
+        }
+    if isinstance(value, list):
+        return [_compact_d4_value(item, depth=depth + 1) for item in value[:20]]
+    if isinstance(value, str):
+        return value if len(value) <= 1200 else value[:1200] + "\n[value truncated]"
+    return value
 
 
 def _previous_attempt_failure_surface(
@@ -3096,7 +3244,9 @@ def _build_d4_context(
                 "the upstream skill would naturally rewrite it."
             ),
         },
-        "previous_coordinated_attempt": previous_coordinated_attempt,
+        # Keep the full previous attempt available to constructor-side validation,
+        # but expose only a bounded summary to model-facing D4 context.
+        "previous_revision_summary": _compact_previous_revision_summary(previous_coordinated_attempt),
         "upstream_selection_hint": upstream_selection,
         "terminology": {
             "sink_skill": "The downstream target skill where the helper action is invoked or materialized.",

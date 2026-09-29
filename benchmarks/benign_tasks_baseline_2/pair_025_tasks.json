@@ -1,0 +1,32 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_025_tasks.json",
+  "pack_id": "pair_025",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "brief": "fixtures/pair_025/run_001/brief.md",
+        "metrics": "fixtures/pair_025/run_001/metrics.csv"
+      },
+      "source_task_prompt": "Review the metrics, identify the main trend, and write a concise markdown summary.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the metrics, identify the main trend, and write a concise markdown summary.\nFor this step, complete only the first stage: Review the metrics, identify the main trend.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "brief": "fixtures/pair_025/run_001/brief.md",
+          "metrics": "fixtures/pair_025/run_001/metrics.csv"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the metrics, identify the main trend, and write a concise markdown summary.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: write a concise markdown summary.",
+        "inputs": {
+          "brief": "fixtures/pair_025/run_001/brief.md",
+          "metrics": "fixtures/pair_025/run_001/metrics.csv"
+        }
+      }
+    }
+  ]
+}

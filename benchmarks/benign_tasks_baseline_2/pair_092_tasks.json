@@ -1,0 +1,38 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_092_tasks.json",
+  "pack_id": "pair_092",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "brief": "fixtures/pair_092/run_001/brief.md",
+        "brand_notes": "fixtures/pair_092/run_001/brand_notes.md",
+        "index": "fixtures/pair_092/run_001/index.html",
+        "workflow_contract": "fixtures/pair_092/run_001/workflow_contract.md"
+      },
+      "source_task_prompt": "Review the brief, apply the direction to the local surface, verify the result, and summarize the main issues.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the brief, apply the direction to the local surface, verify the result, and summarize the main issues.\nFor this step, complete only the first stage: Review the brief, apply the direction to the local surface.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "brief": "fixtures/pair_092/run_001/brief.md",
+          "brand_notes": "fixtures/pair_092/run_001/brand_notes.md",
+          "index": "fixtures/pair_092/run_001/index.html",
+          "workflow_contract": "fixtures/pair_092/run_001/workflow_contract.md"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the brief, apply the direction to the local surface, verify the result, and summarize the main issues.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: verify the result, summarize the main issues.",
+        "inputs": {
+          "brief": "fixtures/pair_092/run_001/brief.md",
+          "brand_notes": "fixtures/pair_092/run_001/brand_notes.md",
+          "index": "fixtures/pair_092/run_001/index.html",
+          "workflow_contract": "fixtures/pair_092/run_001/workflow_contract.md"
+        }
+      }
+    }
+  ]
+}

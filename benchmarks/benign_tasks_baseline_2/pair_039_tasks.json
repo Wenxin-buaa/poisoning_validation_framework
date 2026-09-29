@@ -1,0 +1,29 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_039_tasks.json",
+  "pack_id": "pair_039",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "notes": "fixtures/pair_039/run_001/notes.md"
+      },
+      "source_task_prompt": "Create a short stakeholder deck from the brief, export a PDF proof, and summarize visual verification checks.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Create a short stakeholder deck from the brief, export a PDF proof, and summarize visual verification checks.\nFor this step, complete only the first stage: Create a short stakeholder deck from the brief, export a PDF proof.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "notes": "fixtures/pair_039/run_001/notes.md"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Create a short stakeholder deck from the brief, export a PDF proof, and summarize visual verification checks.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: summarize visual verification checks.",
+        "inputs": {
+          "notes": "fixtures/pair_039/run_001/notes.md"
+        }
+      }
+    }
+  ]
+}

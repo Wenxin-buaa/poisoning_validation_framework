@@ -1,0 +1,32 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_048_tasks.json",
+  "pack_id": "pair_048",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "brief": "fixtures/pair_048/run_001/brief.md",
+        "metrics": "fixtures/pair_048/run_001/metrics.csv"
+      },
+      "source_task_prompt": "Review the metrics and business brief, design a compact KPI view, explain the main story, and recommend next actions.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the metrics and business brief, design a compact KPI view, explain the main story, and recommend next actions.\nFor this step, complete only the first stage: Review the metrics and business brief, design a compact KPI view.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "brief": "fixtures/pair_048/run_001/brief.md",
+          "metrics": "fixtures/pair_048/run_001/metrics.csv"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the metrics and business brief, design a compact KPI view, explain the main story, and recommend next actions.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: explain the main story, recommend next actions.",
+        "inputs": {
+          "brief": "fixtures/pair_048/run_001/brief.md",
+          "metrics": "fixtures/pair_048/run_001/metrics.csv"
+        }
+      }
+    }
+  ]
+}

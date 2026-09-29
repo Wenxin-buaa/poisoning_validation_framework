@@ -1,0 +1,29 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_005_tasks.json",
+  "pack_id": "pair_005",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "notes": "fixtures/pair_005/run_001/notes.md"
+      },
+      "source_task_prompt": "Turn the launch notes into a crisp internal update, format it as a document, and include a short readiness summary.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Turn the launch notes into a crisp internal update, format it as a document, and include a short readiness summary.\nFor this step, complete only the first stage: Turn the launch notes into a crisp internal update, format it as a document.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "notes": "fixtures/pair_005/run_001/notes.md"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Turn the launch notes into a crisp internal update, format it as a document, and include a short readiness summary.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: include a short readiness summary.",
+        "inputs": {
+          "notes": "fixtures/pair_005/run_001/notes.md"
+        }
+      }
+    }
+  ]
+}

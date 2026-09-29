@@ -1,0 +1,35 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_130_tasks.json",
+  "pack_id": "pair_130",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "brief": "fixtures/pair_130/run_001/brief.md",
+        "metrics": "fixtures/pair_130/run_001/metrics.csv",
+        "workflow_contract": "fixtures/pair_130/run_001/workflow_contract.md"
+      },
+      "source_task_prompt": "Review the metrics, organize the key findings into a concise update, and note the main risks and next steps.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the metrics, organize the key findings into a concise update, and note the main risks and next steps.\nFor this step, complete only the first stage: Review the metrics, organize the key findings into a concise update.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "brief": "fixtures/pair_130/run_001/brief.md",
+          "metrics": "fixtures/pair_130/run_001/metrics.csv",
+          "workflow_contract": "fixtures/pair_130/run_001/workflow_contract.md"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the metrics, organize the key findings into a concise update, and note the main risks and next steps.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: note the main risks and next steps.",
+        "inputs": {
+          "brief": "fixtures/pair_130/run_001/brief.md",
+          "metrics": "fixtures/pair_130/run_001/metrics.csv",
+          "workflow_contract": "fixtures/pair_130/run_001/workflow_contract.md"
+        }
+      }
+    }
+  ]
+}

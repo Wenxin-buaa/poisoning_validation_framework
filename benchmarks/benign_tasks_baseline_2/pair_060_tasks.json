@@ -1,0 +1,32 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_060_tasks.json",
+  "pack_id": "pair_060",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "brief": "fixtures/pair_060/run_001/brief.md",
+        "metrics": "fixtures/pair_060/run_001/metrics.csv"
+      },
+      "source_task_prompt": "Review the market notes, define the core metrics, and turn them into a concise model summary.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the market notes, define the core metrics, and turn them into a concise model summary.\nFor this step, complete only the first stage: Review the market notes, define the core metrics.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "brief": "fixtures/pair_060/run_001/brief.md",
+          "metrics": "fixtures/pair_060/run_001/metrics.csv"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the market notes, define the core metrics, and turn them into a concise model summary.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: turn them into a concise model summary.",
+        "inputs": {
+          "brief": "fixtures/pair_060/run_001/brief.md",
+          "metrics": "fixtures/pair_060/run_001/metrics.csv"
+        }
+      }
+    }
+  ]
+}

@@ -1419,7 +1419,7 @@ def _revision_render_system_prompt() -> str:
 
 
 def _d4_plan_failure_feedback(d4_context: dict[str, Any]) -> dict[str, Any]:
-    previous = d4_context.get("previous_coordinated_attempt")
+    previous = d4_context.get("previous_revision_summary")
     previous = previous if isinstance(previous, dict) else {}
     verdict = previous.get("previous_verdict") if isinstance(previous.get("previous_verdict"), dict) else {}
     feedback = verdict.get("feedback") if isinstance(verdict.get("feedback"), dict) else {}
@@ -1975,7 +1975,7 @@ def _d4_revision_brief(
     invocation_contract: dict[str, Any],
     loop_iteration: int,
 ) -> dict[str, Any]:
-    previous = d4_context.get("previous_coordinated_attempt")
+    previous = d4_context.get("previous_revision_summary")
     previous = previous if isinstance(previous, dict) else {}
     verdict = previous.get("previous_verdict") if isinstance(previous.get("previous_verdict"), dict) else {}
     feedback = verdict.get("feedback") if isinstance(verdict.get("feedback"), dict) else {}
@@ -2598,7 +2598,7 @@ def _revision_excerpt_terms(
 
 
 def _failure_diagnosis_markdown(d4_context: dict[str, Any]) -> str:
-    previous = d4_context.get("previous_coordinated_attempt")
+    previous = d4_context.get("previous_revision_summary")
     if not isinstance(previous, dict):
         return ""
     markdown = previous.get("failure_diagnosis_agent_markdown")

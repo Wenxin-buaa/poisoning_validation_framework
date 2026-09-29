@@ -605,10 +605,12 @@ class CodexSandboxProvider(CodexCLIProvider):
         ".ruff_cache",
         ".venv",
         "__pycache__",
+        "lo_root",
         "node_modules",
         "venv",
     }
-    SANDBOX_COPY_SKIP_PATH_PREFIXES = (".venv", "venv-")
+    SANDBOX_COPY_SKIP_PATH_PREFIXES = (".venv", "venv")
+    SANDBOX_COPY_SKIP_PATH_SUFFIXES = ("_venv",)
 
     def __init__(self) -> None:
         super().__init__()
@@ -1169,10 +1171,14 @@ class CodexSandboxProvider(CodexCLIProvider):
             dst.write_bytes(content)
 
     def _should_skip_sandbox_copy_path(self, relative: Path) -> bool:
+        if len(relative.parts) >= 2 and relative.parts[0] == "artifacts" and relative.parts[1] == "build":
+            return True
         for part in relative.parts:
             if part in self.SANDBOX_COPY_SKIP_PATH_PARTS:
                 return True
             if any(part.startswith(prefix) for prefix in self.SANDBOX_COPY_SKIP_PATH_PREFIXES):
+                return True
+            if any(part.endswith(suffix) for suffix in self.SANDBOX_COPY_SKIP_PATH_SUFFIXES):
                 return True
         return False
 
@@ -1182,7 +1188,10 @@ class CodexSandboxProvider(CodexCLIProvider):
             f"find {project_dir} -maxdepth 1 "
             "\\( -name '.venv*' -o -name 'venv*' -o -name 'node_modules' "
             "-o -name '.cache' -o -name '.pytest_cache' -o -name '.mypy_cache' -o -name '.ruff_cache' \\) "
-            "-exec rm -rf {} +"
+            "-exec rm -rf {} +; "
+            f"find {project_dir}/artifacts -maxdepth 2 "
+            "\\( -name 'build' -o -name 'lo_root' -o -name '.cache' -o -name '__pycache__' \\) "
+            "-exec rm -rf {} + 2>/dev/null || true"
         )
         try:
             await sandbox.commands.run(command=cleanup_command)

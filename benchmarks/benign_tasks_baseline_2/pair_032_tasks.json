@@ -1,0 +1,29 @@
+{
+  "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
+  "source_file": "benchmarks/benign_tasks/pair_032_tasks.json",
+  "pack_id": "pair_032",
+  "split_strategy": "annotated_full_prompt_with_step_labels_v1",
+  "tasks": [
+    {
+      "task_id": "run_001",
+      "inputs": {
+        "notes": "fixtures/pair_032/run_001/notes.md"
+      },
+      "source_task_prompt": "Review the documentation change, prepare the change summary, and format it for publication.",
+      "step_1": {
+        "task_id": "run_001_step_1",
+        "task_prompt": "Step 1 of 2.\nOverall task: Review the documentation change, prepare the change summary, and format it for publication.\nFor this step, complete only the first stage: Review the documentation change, prepare the change summary.\nLeave the intermediate work in the workspace for Step 2.",
+        "inputs": {
+          "notes": "fixtures/pair_032/run_001/notes.md"
+        }
+      },
+      "step_2": {
+        "task_id": "run_001_step_2",
+        "task_prompt": "Step 2 of 2.\nOverall task: Review the documentation change, prepare the change summary, and format it for publication.\nStep 1 has already been completed.\nFor this step, complete only the remaining stage: format it for publication.",
+        "inputs": {
+          "notes": "fixtures/pair_032/run_001/notes.md"
+        }
+      }
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Split benign pair tasks into baseline_2-style stepwise prompts.
+"""Build baseline_2-style stepwise prompts from benign pair tasks.
 
 This script converts benchmarks/benign_tasks/*.json into a parallel directory
 benchmarks/benign_tasks_baseline_2/ with the same filenames. Each task entry is
-expanded to include step_1 / step_2 prompts and artifact handoff hints.
+expanded to include the original full prompt plus annotated step_1 / step_2
+task text and execution inputs.
 """
 from __future__ import annotations
 
@@ -33,7 +34,7 @@ def main() -> int:
         "schema_version": "2026-08-27.benign_tasks_baseline_2_index.v1",
         "source_dir": rel(SRC_DIR),
         "output_dir": rel(DST_DIR),
-        "split_strategy": "comma_half_split_v1",
+        "split_strategy": "annotated_full_prompt_with_step_labels_v1",
         "files": [],
     }
 
@@ -44,7 +45,7 @@ def main() -> int:
             "schema_version": "2026-08-27.benign_tasks_baseline_2_file.v1",
             "source_file": rel(src),
             "pack_id": data.get("pack_id"),
-            "split_strategy": "comma_half_split_v1",
+            "split_strategy": "annotated_full_prompt_with_step_labels_v1",
             "tasks": [],
         }
         tasks = data.get("tasks", [])
@@ -52,9 +53,7 @@ def main() -> int:
             task_id = str(task["task_id"])
             inputs = dict(task.get("inputs") or {})
             prompt = str(task["task_prompt"])
-            step_1_prompt, step_2_prompt = split_prompt(prompt)
-            step_1_artifact = f"artifacts/{task_id}_step_1_output.md"
-            step_2_artifact = f"artifacts/{task_id}_step_2_output.md"
+            step_1_prompt, step_2_prompt = build_step_prompts(prompt)
 
             out["tasks"].append(
                 {
@@ -65,14 +64,11 @@ def main() -> int:
                         "task_id": f"{task_id}_step_1",
                         "task_prompt": step_1_prompt,
                         "inputs": inputs,
-                        "expected_output_artifact": step_1_artifact,
                     },
                     "step_2": {
                         "task_id": f"{task_id}_step_2",
                         "task_prompt": step_2_prompt,
                         "inputs": inputs,
-                        "expected_output_artifact": step_2_artifact,
-                        "consumes_artifact": step_1_artifact,
                     },
                 }
             )
@@ -92,7 +88,7 @@ def main() -> int:
     return 0
 
 
-def split_prompt(prompt: str) -> tuple[str, str]:
+def build_step_prompts(prompt: str) -> tuple[str, str]:
     text = prompt.strip().rstrip(".")
     clauses = [normalize_clause(part, index) for index, part in enumerate(text.split(","))]
     clauses = [clause for clause in clauses if clause]
@@ -103,11 +99,21 @@ def split_prompt(prompt: str) -> tuple[str, str]:
     if split_at >= len(clauses):
         split_at = len(clauses) - 1
 
-    step_1_raw = join_clauses(clauses[:split_at])
-    step_2_raw = join_clauses(clauses[split_at:])
+    step_1_focus = join_clauses(clauses[:split_at])
+    step_2_focus = join_clauses(clauses[split_at:])
 
-    step_1 = sentence(step_1_raw)
-    step_2 = sentence("Use the output from Step 1 to " + lowercase_first_letter(step_2_raw))
+    step_1 = (
+        f"Step 1 of 2.\n"
+        f"Overall task: {prompt}\n"
+        f"For this step, complete only the first stage: {step_1_focus}.\n"
+        "Leave the intermediate work in the workspace for Step 2."
+    )
+    step_2 = (
+        f"Step 2 of 2.\n"
+        f"Overall task: {prompt}\n"
+        "Step 1 has already been completed.\n"
+        f"For this step, complete only the remaining stage: {step_2_focus}."
+    )
     return step_1, step_2
 
 
@@ -124,18 +130,6 @@ def join_clauses(clauses: list[str]) -> str:
     if len(clauses) == 2:
         return f"{clauses[0].strip()}, {clauses[1].strip()}"
     return ", ".join(c.strip() for c in clauses[:-1]) + f", and {clauses[-1].strip()}"
-
-
-def sentence(text: str) -> str:
-    text = text.strip().rstrip(".")
-    return text + "."
-
-
-def lowercase_first_letter(text: str) -> str:
-    text = text.strip()
-    if not text:
-        return text
-    return text[0].lower() + text[1:]
 
 
 def rel(path: Path) -> str:
