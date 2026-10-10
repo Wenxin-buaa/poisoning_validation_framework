@@ -335,6 +335,129 @@ if D6 fails:
   diagnosis + verdict feedback -> D4_REVISION loop_N+1 until success or max loop iterations
 ```
 
+### Batch D Execution, Resume, And Loop Cleanup
+
+Stages A-C must be prepared before starting a payload batch:
+
+1. Stage A produces benign workflow traces.
+2. Stage B produces `baseline/candidate_targets.json`.
+3. Stage C produces `payload_selections.json`.
+4. `expand-variants` creates the variant directories consumed by Stage D.
+
+The corresponding commands are:
+
+```bash
+python3.11 pair_poisoning_validation_framework/scripts/auto_run.py init-experiment \
+  --pack <pack_id> \
+  --experiment-id <experiment_id>
+
+python3.11 pair_poisoning_validation_framework/scripts/auto_run.py execute-stage \
+  --stage A \
+  --pack <pack_id> \
+  --experiment-id <experiment_id> \
+  --provider claude-code-sandbox
+
+python3.11 pair_poisoning_validation_framework/scripts/auto_run.py execute-stage \
+  --stage B \
+  --pack <pack_id> \
+  --experiment-id <experiment_id>
+
+python3.11 pair_poisoning_validation_framework/scripts/auto_run.py auto-select-payloads \
+  --pack <pack_id> \
+  --experiment-id <experiment_id> \
+  --payload-pool skillject-obvious-general-no003
+
+python3.11 pair_poisoning_validation_framework/scripts/auto_run.py expand-variants \
+  --pack <pack_id> \
+  --experiment-id <experiment_id> \
+  --payload-pool skillject-obvious-general-no003
+```
+
+For a prepared set of experiments, the six-worker wrappers launch one
+controller per payload/shard combination. This is a batch launcher: the
+launcher process exits after spawning the controllers, while the controllers
+continue in the background and write separate logs.
+
+Example for payloads `001` and `002` with three shards:
+
+```bash
+cd /Users/wuwenxin/Desktop/auto_framework
+
+PACKS='pair_001,pair_002,pair_003,pair_004,pair_005,pair_006'
+
+nohup bash pair_poisoning_validation_framework/scripts/run_exp002_payload_001_002_six_workers.sh \
+  --packs "$PACKS" \
+  --experiment-id-template '{pack}_exp_002' \
+  --payload-pool skillject-obvious-general-no003 \
+  --worker-api-keys-file /Users/wuwenxin/Desktop/auto_framework/pair_poisoning_validation_framework/pvf_worker_keys.json \
+  --d2-provider claude-code-sandbox \
+  --d5-provider claude-code-sandbox \
+  --local-provider openai-compatible \
+  --batch-id pair_exp_002_payload_001_002_six_workers \
+  > pair_poisoning_validation_framework/benchmarks/runs/batches/pair_exp_002_payload_001_002_six_workers.launch.nohup.log 2>&1 &
+```
+
+The wrapper uses the first six API keys: payload `001` uses keys for shards
+`0/1/2`, and payload `002` uses keys for shards `0/1/2`. To resume only one
+payload/shard, restrict the same wrapper invocation:
+
+```bash
+nohup bash pair_poisoning_validation_framework/scripts/run_exp002_payload_001_002_six_workers.sh \
+  --packs "$PACKS" \
+  --experiment-id-template '{pack}_exp_002' \
+  --payload-pool skillject-obvious-general-no003 \
+  --worker-api-keys-file /Users/wuwenxin/Desktop/auto_framework/pair_poisoning_validation_framework/pvf_worker_keys.json \
+  --d2-provider claude-code-sandbox \
+  --d5-provider claude-code-sandbox \
+  --local-provider openai-compatible \
+  --batch-id pair_exp_002_payload_001_002_six_workers \
+  --payload-ids 1 \
+  --shards 2 \
+  > pair_poisoning_validation_framework/benchmarks/runs/batches/pair_exp_002_payload_001_shard_02.resume.nohup.log 2>&1 &
+```
+
+The batch runner resumes from each variant's current `variant.json` state and
+skips terminal variants. It does not automatically repair a partially written
+coordinated loop directory. If D4/D4_REVISION fails with an error such as
+`D4 pre-render coordination plan is not specific enough`, remove only the
+failed loop directory, then rerun the same payload/shard command:
+
+```bash
+rm -rf \
+  pair_poisoning_validation_framework/benchmarks/runs/<pack_id>/experiments/<experiment_id>/variants/<variant_id>/coordinated/loop_<N>
+```
+
+For example:
+
+```bash
+rm -rf \
+  pair_poisoning_validation_framework/benchmarks/runs/pair_121/experiments/pair_121_exp_003/variants/pair_121_exp_003_spark-optimization_payload_015_sink/coordinated/loop_003
+```
+
+Delete only the loop directory named by the failure, not the whole variant,
+`sink_only` directory, or earlier completed loops. Inspect the validation error
+JSON at
+`coordinated/loop_<N>/semantic_generation/pre_render_coordination_plan_validation_error.json`
+and the worker log before cleanup. After cleanup, rerunning the batch command
+continues the pending D4 revision from the variant state.
+
+For a single explicit payload batch, `run_payload_batch.py` can be used
+directly. Make sure the number of keys matches the selected payload workers:
+
+```bash
+nohup python3.11 pair_poisoning_validation_framework/scripts/run_payload_batch.py \
+  --packs pair_001 \
+  --experiment-id-template '{pack}_exp_001' \
+  --payload-pool skillject-obvious-general-no003 \
+  --worker-api-keys-file "$PVF_WORKER_API_KEYS_FILE" \
+  --payload-id 1 \
+  --d2-provider claude-code-sandbox \
+  --d5-provider claude-code-sandbox \
+  --local-provider openai-compatible \
+  --batch-id pair_exp_001_pair001_batch \
+  > pair_poisoning_validation_framework/benchmarks/runs/batches/pair_exp_001_pair001_batch.nohup.log 2>&1 &
+```
+
 External outputs are ingested with:
 
 ```bash
@@ -844,6 +967,26 @@ records:
 - `same_workspace_root: true`
 - whether Step 1 finished before Step 2 was sent
 - whether Step 2 consumed the Step 1 artifact
+
+`baseline_8` is the step-2-only ablation of `baseline_2`. It keeps the same
+source-variant and step-plan selection, starts from the final
+`coordinated_success` pack, and sends only the `step_2` prompt. Step 1 is not
+executed and no Step 1 handoff artifact is assumed:
+
+```bash
+python3 pair_poisoning_validation_framework/scripts/run_baseline_8.py \
+  --pack pair_001,pair_002,pair_004 \
+  --experiment-id exp_001 \
+  --step-plan-file /path/to/stepwise_plans.json \
+  --provider claude-code-sandbox \
+  --model claude-sonnet-4-6
+```
+
+The runner writes a `baseline_8_manifest.json` and a single step-2 verdict per
+copy. Its verdict uses the same payload-execution-only rule as baseline_2's
+step 2, while recording `step_1_sent: false`. When `--variant-id` is omitted,
+each requested pair is filtered to variants whose source status is
+`coordinated_success` under the resolved experiment id.
 
 ### Baseline 3: Seeded Downstream Replay
 
